@@ -71,3 +71,254 @@ footer {
     text-align: center;
     padding: 20px;
 }
+/* =========================================
+   FAMILY TREE
+========================================= */
+
+.family-tree-section {
+    max-width: 1400px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.tree-intro {
+    max-width: 700px;
+    margin: 10px auto 40px;
+    line-height: 1.7;
+}
+
+
+/* Main tree */
+
+.family-tree {
+    width: 100%;
+    padding: 20px;
+}
+
+
+/* Central couple */
+
+.central-couple {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+
+.marriage-symbol {
+    font-size: 32px;
+    padding: 10px;
+}
+
+
+/* Connector */
+
+.main-connector {
+    width: 3px;
+    height: 50px;
+    background: #b8860b;
+    margin: 0 auto;
+}
+
+
+/* Generation title */
+
+.generation-title {
+    font-size: 25px;
+    margin: 20px 0 30px;
+    color: #3b2f2f;
+}
+
+
+/* Children */
+
+.children-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(220px, 1fr));
+
+    gap: 25px;
+
+    max-width: 1200px;
+
+    margin: 0 auto;
+}
+
+
+/* Member card */
+
+.member-card {
+    background: white;
+
+    border-radius: 18px;
+
+    padding: 20px;
+
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.10);
+
+    border: 2px solid transparent;
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+
+    cursor: pointer;
+}
+
+
+.member-card:hover {
+
+    transform: translateY(-6px);
+
+    box-shadow:
+        0 14px 30px rgba(0, 0, 0, 0.16);
+
+    border-color: #b8860b;
+}
+
+
+/* Photo */
+
+.member-photo {
+    width: 100px;
+    height: 100px;
+
+    margin: 0 auto 15px;
+
+    border-radius: 50%;
+
+    overflow: hidden;
+
+    background: #eee7d7;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.member-photo img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+
+.member-photo-placeholder {
+    font-size: 30px;
+
+    font-weight: bold;
+
+    color: #8f6808;
+}
+
+
+/* Member information */
+
+.member-info h4 {
+    font-size: 18px;
+
+    margin-bottom: 8px;
+
+    color: #2d241c;
+}
+
+
+.member-relationship {
+    font-size: 13px;
+
+    color: #777;
+
+    margin-bottom: 8px;
+}
+
+
+.member-status {
+    display: inline-block;
+
+    font-size: 12px;
+
+    padding: 5px 12px;
+
+    border-radius: 20px;
+
+    background: #e8f5e9;
+
+    color: #2e7d32;
+}
+
+
+/* Deceased member */
+
+.member-card.deceased {
+
+    border-color: #d6cfc2;
+
+}
+
+
+.member-card.deceased .member-status {
+
+    background: #eee;
+
+    color: #666;
+}
+
+
+/* Loading */
+
+.loading-tree {
+
+    font-size: 18px;
+
+    padding: 50px;
+
+    color: #777;
+}
+
+
+/* Error */
+
+.tree-error {
+
+    background: #fff0f0;
+
+    color: #a33;
+
+    padding: 20px;
+
+    border-radius: 12px;
+}
+
+
+/* Mobile */
+
+@media (max-width: 600px) {
+
+    .family-tree {
+        padding: 10px;
+    }
+
+    .central-couple {
+        flex-direction: column;
+    }
+
+    .marriage-symbol {
+        font-size: 26px;
+    }
+
+    .children-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .member-card {
+        max-width: 320px;
+        margin: 0 auto;
+        width: 100%;
+    }
+
+}

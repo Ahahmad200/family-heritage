@@ -32,7 +32,7 @@ async function loadFamilyTree() {
     }
 
 
-    // Get all family relationships
+    // Get all relationships
     const { data: relationships, error: relationshipsError } =
         await supabase
             .from("relationships")
@@ -55,7 +55,7 @@ async function loadFamilyTree() {
     }
 
 
-    // Find the Patriarch
+    // Find Patriarch
     const patriarch = members.find(
         member =>
             member.full_name ===
@@ -63,7 +63,7 @@ async function loadFamilyTree() {
     );
 
 
-    // Find the Matriarch
+    // Find Matriarch
     const matriarch = members.find(
         member =>
             member.full_name ===
@@ -84,11 +84,8 @@ async function loadFamilyTree() {
 
 
     /*
-       Find the children who are connected
-       to BOTH the Patriarch and Matriarch.
-
-       This is important because the Patriarch
-       also has a son from his previous marriage.
+       Find children belonging to BOTH
+       the Patriarch and Matriarch.
     */
 
     const patriarchChildren = relationships
@@ -115,25 +112,23 @@ async function loadFamilyTree() {
         );
 
 
-    // Children belonging to BOTH parents
     const commonChildren = patriarchChildren.filter(
         id => matriarchChildren.includes(id)
     );
 
 
-    const children = members
-        .filter(member =>
+    const children = members.filter(
+        member =>
             commonChildren.includes(member.id)
-        );
+    );
 
 
-    // Sort children by name for now
     children.sort((a, b) =>
         a.full_name.localeCompare(b.full_name)
     );
 
 
-    // Create the main tree
+    // Clear loading message
     familyTree.innerHTML = "";
 
 
@@ -142,14 +137,13 @@ async function loadFamilyTree() {
     tree.className = "family-tree";
 
 
-    // =========================
+    // =========================================
     // CENTRAL COUPLE
-    // =========================
+    // =========================================
 
     const couple = document.createElement("div");
 
     couple.className = "central-couple";
-
 
     couple.innerHTML = `
         ${createMemberCard(
@@ -167,11 +161,13 @@ async function loadFamilyTree() {
         )}
     `;
 
-
     tree.appendChild(couple);
 
 
-    // Connecting line
+    // =========================================
+    // MAIN CONNECTOR
+    // =========================================
+
     const mainLine = document.createElement("div");
 
     mainLine.className = "main-connector";
@@ -179,9 +175,9 @@ async function loadFamilyTree() {
     tree.appendChild(mainLine);
 
 
-    // =========================
-    // CHILDREN
-    // =========================
+    // =========================================
+    // CHILDREN TITLE
+    // =========================================
 
     const childrenTitle = document.createElement("h3");
 
@@ -193,6 +189,10 @@ async function loadFamilyTree() {
     tree.appendChild(childrenTitle);
 
 
+    // =========================================
+    // CHILDREN GRID
+    // =========================================
+
     const childrenContainer = document.createElement("div");
 
     childrenContainer.className = "children-grid";
@@ -200,20 +200,125 @@ async function loadFamilyTree() {
 
     children.forEach(child => {
 
-        const childCard = document.createElement("div");
+        const childWrapper = document.createElement("div");
 
-        childCard.innerHTML =
+        childWrapper.className = "child-wrapper";
+
+
+        // Child card
+        childWrapper.innerHTML =
             createMemberCard(
                 child,
                 "Child of Alh Aliyu & Haj Aisha"
             );
 
-        childrenContainer.appendChild(childCard);
+
+        // Find this child's children
+        const grandchildren = relationships
+            .filter(
+                relationship =>
+                    relationship.related_person_id === child.id &&
+                    relationship.relationship_type === "child"
+            )
+            .map(
+                relationship =>
+                    members.find(
+                        member =>
+                            member.id === relationship.person_id
+                    )
+            )
+            .filter(Boolean);
+
+
+        // Add expandable section
+        if (grandchildren.length > 0) {
+
+            const expandButton =
+                document.createElement("button");
+
+            expandButton.className =
+                "expand-family-button";
+
+            expandButton.textContent =
+                `Show ${grandchildren.length} children ▼`;
+
+
+            const grandchildrenContainer =
+                document.createElement("div");
+
+            grandchildrenContainer.className =
+                "grandchildren-container";
+
+
+            grandchildrenContainer.style.display =
+                "none";
+
+
+            grandchildren.forEach(grandchild => {
+
+                const card =
+                    document.createElement("div");
+
+                card.innerHTML =
+                    createMemberCard(
+                        grandchild,
+                        `Child of ${child.full_name}`
+                    );
+
+                grandchildrenContainer.appendChild(card);
+
+            });
+
+
+            expandButton.addEventListener(
+                "click",
+                () => {
+
+                    const isHidden =
+                        grandchildrenContainer.style.display ===
+                        "none";
+
+
+                    if (isHidden) {
+
+                        grandchildrenContainer.style.display =
+                            "grid";
+
+                        expandButton.textContent =
+                            `Hide ${grandchildren.length} children ▲`;
+
+                    } else {
+
+                        grandchildrenContainer.style.display =
+                            "none";
+
+                        expandButton.textContent =
+                            `Show ${grandchildren.length} children ▼`;
+                    }
+
+                }
+            );
+
+
+            childWrapper.appendChild(expandButton);
+
+            childWrapper.appendChild(
+                grandchildrenContainer
+            );
+
+        }
+
+
+        childrenContainer.appendChild(
+            childWrapper
+        );
 
     });
 
 
-    tree.appendChild(childrenContainer);
+    tree.appendChild(
+        childrenContainer
+    );
 
 
     familyTree.appendChild(tree);
@@ -221,40 +326,45 @@ async function loadFamilyTree() {
 }
 
 
-/*
-    Creates a family member card.
-*/
+// =========================================
+// MEMBER CARD
+// =========================================
 
 function createMemberCard(member, relationship) {
 
-    const status = member.is_deceased
-        ? "Deceased"
-        : "Living";
+    const status =
+        member.is_deceased
+            ? "Deceased"
+            : "Living";
 
 
-    const photo = member.photo_url
-        ? `
-            <img
-                src="${member.photo_url}"
-                alt="${member.full_name}"
-            >
-        `
-        : `
-            <div class="member-photo-placeholder">
-                ${getInitials(member.full_name)}
-            </div>
-        `;
+    const photo =
+        member.photo_url
+            ? `
+                <img
+                    src="${member.photo_url}"
+                    alt="${member.full_name}"
+                >
+            `
+            : `
+                <div class="member-photo-placeholder">
+                    ${getInitials(member.full_name)}
+                </div>
+            `;
 
 
     return `
         <div
-            class="member-card
-            ${member.is_deceased ? "deceased" : ""}"
+            class="
+                member-card
+                ${member.is_deceased ? "deceased" : ""}
+            "
         >
 
             <div class="member-photo">
                 ${photo}
             </div>
+
 
             <div class="member-info">
 
@@ -262,9 +372,11 @@ function createMemberCard(member, relationship) {
                     ${member.full_name}
                 </h4>
 
+
                 <p class="member-relationship">
                     ${relationship}
                 </p>
+
 
                 <p class="member-status">
                     ${status}
@@ -277,17 +389,24 @@ function createMemberCard(member, relationship) {
 }
 
 
-/*
-    Creates initials when no photo exists.
-*/
+// =========================================
+// INITIALS
+// =========================================
 
 function getInitials(name) {
 
-    const words = name.trim().split(" ");
+    const words =
+        name.trim().split(" ");
+
 
     if (words.length === 1) {
-        return words[0].charAt(0).toUpperCase();
+
+        return words[0]
+            .charAt(0)
+            .toUpperCase();
+
     }
+
 
     return (
         words[0].charAt(0) +
@@ -295,5 +414,9 @@ function getInitials(name) {
     ).toUpperCase();
 }
 
+
+// =========================================
+// START
+// =========================================
 
 loadFamilyTree();

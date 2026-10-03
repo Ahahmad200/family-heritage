@@ -322,3 +322,70 @@ footer {
     }
 
 }
+/* =========================================
+   EXPANDABLE FAMILY BRANCHES
+========================================= */
+
+.child-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+.expand-family-button {
+    margin-top: 12px;
+
+    background: #3b2f2f;
+
+    color: white;
+
+    border: none;
+
+    padding: 9px 16px;
+
+    border-radius: 20px;
+
+    font-size: 13px;
+
+    cursor: pointer;
+}
+
+
+.expand-family-button:hover {
+    background: #8f6808;
+}
+
+
+.grandchildren-container {
+    width: 100%;
+
+    margin-top: 20px;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fit, minmax(180px, 1fr));
+
+    gap: 15px;
+
+    padding-top: 20px;
+
+    border-top: 2px solid #e7c98b;
+}
+
+
+.grandchildren-container .member-card {
+    padding: 15px;
+}
+
+
+.grandchildren-container .member-photo {
+    width: 75px;
+    height: 75px;
+}
+
+
+.grandchildren-container .member-info h4 {
+    font-size: 15px;
+    }

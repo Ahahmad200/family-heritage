@@ -12,14 +12,16 @@ async function loadFamilyTree() {
 
     // Get all family members
     const { data: members, error: membersError } = await supabase
-        .from("members")
-        .select(`
-            id,
-            full_name,
-            is_deceased,
-            photo_url,
-            biography
-        `);
+    .from("members")
+    .select(`
+        id,
+        full_name,
+        is_deceased,
+        photo_url,
+        biography,
+        date_of_birth,
+        place_of_birth
+    `);
 
     if (membersError) {
 

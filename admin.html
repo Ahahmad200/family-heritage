@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Family Administration | Our Family Heritage</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+
+<body>
+
+    <header>
+
+        <h1>Family Administration</h1>
+
+        <p>
+            Manage our family records and heritage
+        </p>
+
+    </header>
+
+
+    <main>
+
+        <section class="admin-section">
+
+            <h2>Administrator Dashboard</h2>
+
+            <p class="admin-intro">
+                From here you can manage family members,
+                relationships, announcements and other
+                family records.
+            </p>
+
+
+            <!-- DASHBOARD STATISTICS -->
+
+            <div class="admin-stats">
+
+                <div class="admin-stat-card">
+
+                    <h3 id="totalMembers">
+                        0
+                    </h3>
+
+                    <p>Total Members</p>
+
+                </div>
+
+
+                <div class="admin-stat-card">
+
+                    <h3 id="livingMembers">
+                        0
+                    </h3>
+
+                    <p>Living Members</p>
+
+                </div>
+
+
+                <div class="admin-stat-card">
+
+                    <h3 id="deceasedMembers">
+                        0
+                    </h3>
+
+                    <p>Deceased Members</p>
+
+                </div>
+
+            </div>
+
+
+            <!-- MEMBER MANAGEMENT -->
+
+            <div class="admin-panel">
+
+                <div class="admin-panel-header">
+
+                    <div>
+
+                        <h2>Family Members</h2>
+
+                        <p>
+                            Add, edit or remove family members.
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        id="addMemberButton"
+                        class="admin-primary-button"
+                    >
+                        + Add Member
+                    </button>
+
+                </div>
+
+
+                <!-- SEARCH -->
+
+                <div class="admin-search">
+
+                    <input
+                        type="text"
+                        id="memberSearch"
+                        placeholder="Search family member..."
+                    >
+
+                </div>
+
+
+                <!-- MEMBERS LIST -->
+
+                <div id="membersList">
+
+                    <p class="admin-loading">
+                        Loading family members...
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- MEMBER FORM -->
+
+            <div
+                id="memberFormContainer"
+                class="admin-form-container"
+                style="display: none;"
+            >
+
+                <div class="admin-form-header">
+
+                    <h2 id="memberFormTitle">
+                        Add Family Member
+                    </h2>
+
+                    <button
+                        id="closeMemberForm"
+                        class="admin-close-button"
+                    >
+                        ×
+                    </button>
+
+                </div>
+
+
+                <form id="memberForm">
+
+                    <input
+                        type="hidden"
+                        id="memberId"
+                    >
+
+
+                    <label for="fullName">
+                        Full Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="fullName"
+                        required
+                    >
+
+
+                    <label for="gender">
+                        Gender
+                    </label>
+
+                    <select id="gender">
+
+                        <option value="">
+                            Select gender
+                        </option>
+
+                        <option value="Male">
+                            Male
+                        </option>
+
+                        <option value="Female">
+                            Female
+                        </option>
+
+                    </select>
+
+
+                    <label for="dateOfBirth">
+                        Date of Birth
+                    </label>
+
+                    <input
+                        type="date"
+                        id="dateOfBirth"
+                    >
+
+
+                    <label for="placeOfBirth">
+                        Place of Birth
+                    </label>
+
+                    <input
+                        type="text"
+                        id="placeOfBirth"
+                    >
+
+
+                    <label for="photoUrl">
+                        Photo URL
+                    </label>
+
+                    <input
+                        type="url"
+                        id="photoUrl"
+                        placeholder="https://..."
+                    >
+
+
+                    <label for="isDeceased">
+                        Status
+                    </label>
+
+                    <select id="isDeceased">
+
+                        <option value="false">
+                            Living
+                        </option>
+
+                        <option value="true">
+                            Deceased
+                        </option>
+
+                    </select>
+
+
+                    <label for="dateOfDeath">
+                        Date of Death
+                    </label>
+
+                    <input
+                        type="date"
+                        id="dateOfDeath"
+                    >
+
+
+                    <label for="biography">
+                        Biography
+                    </label>
+
+                    <textarea
+                        id="biography"
+                        rows="7"
+                        placeholder="Write the member's biography..."
+                    ></textarea>
+
+
+                    <div class="admin-form-buttons">
+
+                        <button
+                            type="submit"
+                            class="admin-primary-button"
+                        >
+                            Save Member
+                        </button>
+
+                        <button
+                            type="button"
+                            id="cancelMemberForm"
+                            class="admin-secondary-button"
+                        >
+                            Cancel
+                        </button>
+
+                    </div>
+
+
+                    <p id="memberMessage"></p>
+
+                </form>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+
+        <p>
+            © 2026 Our Family Heritage
+        </p>
+
+    </footer>
+
+
+    <script
+        type="module"
+        src="js/admin.js"
+    ></script>
+
+</body>
+
+</html>

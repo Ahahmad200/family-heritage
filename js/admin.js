@@ -109,16 +109,18 @@ async function loadMembers() {
 
     if (error) {
 
-        console.error(error);
+    console.error("MEMBERS ERROR:", error);
 
-        membersList.innerHTML = `
-            <p class="admin-error">
-                Unable to load family members.
-            </p>
-        `;
+    membersList.innerHTML = `
+        <p class="admin-error">
+            Unable to load family members.
+            <br><br>
+            ${error.message}
+        </p>
+    `;
 
-        return;
-    }
+    return;
+}
 
 
     allMembers = data || [];

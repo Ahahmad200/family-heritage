@@ -705,3 +705,444 @@ memberSearch.addEventListener(
 // ===============================
 
 loadMembers();
+// =================================
+// RELATIONSHIP MANAGEMENT
+// =================================
+
+const relationshipPerson =
+    document.getElementById("relationshipPerson");
+
+const relationshipType =
+    document.getElementById("relationshipType");
+
+const relatedPerson =
+    document.getElementById("relatedPerson");
+
+const saveRelationshipButton =
+    document.getElementById("saveRelationshipButton");
+
+const relationshipMessage =
+    document.getElementById("relationshipMessage");
+
+const relationshipsList =
+    document.getElementById("relationshipsList");
+
+
+// =================================
+// LOAD MEMBERS INTO DROPDOWNS
+// =================================
+
+function loadRelationshipMembers() {
+
+    relationshipPerson.innerHTML = `
+        <option value="">
+            Select person
+        </option>
+    `;
+
+    relatedPerson.innerHTML = `
+        <option value="">
+            Select related person
+        </option>
+    `;
+
+
+    allMembers.forEach(member => {
+
+        const option1 =
+            document.createElement("option");
+
+        option1.value =
+            member.id;
+
+        option1.textContent =
+            member.full_name;
+
+        relationshipPerson.appendChild(
+            option1
+        );
+
+
+        const option2 =
+            document.createElement("option");
+
+        option2.value =
+            member.id;
+
+        option2.textContent =
+            member.full_name;
+
+        relatedPerson.appendChild(
+            option2
+        );
+
+    });
+
+}
+
+
+// =================================
+// LOAD EXISTING RELATIONSHIPS
+// =================================
+
+async function loadRelationships() {
+
+    relationshipsList.innerHTML = `
+        <p class="admin-loading">
+            Loading relationships...
+        </p>
+    `;
+
+
+    const { data, error } =
+        await supabase
+            .from("relationships")
+            .select(`
+                id,
+                person_id,
+                related_person_id,
+                relationship_type
+            `);
+
+
+    if (error) {
+
+        console.error(
+            "LOAD RELATIONSHIPS ERROR:",
+            error
+        );
+
+
+        relationshipsList.innerHTML = `
+            <p class="admin-error">
+                Unable to load relationships.
+                <br>
+                ${error.message}
+            </p>
+        `;
+
+        return;
+
+    }
+
+
+    if (!data || data.length === 0) {
+
+        relationshipsList.innerHTML = `
+            <p class="admin-empty">
+                No relationships have been added yet.
+            </p>
+        `;
+
+        return;
+
+    }
+
+
+    relationshipsList.innerHTML = "";
+
+
+    data.forEach(relationship => {
+
+        const person =
+            allMembers.find(
+                member =>
+                    member.id ===
+                    relationship.person_id
+            );
+
+
+        const relatedPersonData =
+            allMembers.find(
+                member =>
+                    member.id ===
+                    relationship.related_person_id
+            );
+
+
+        if (!person || !relatedPersonData) {
+
+            return;
+
+        }
+
+
+        const row =
+            document.createElement("div");
+
+        row.className =
+            "relationship-row";
+
+
+        let relationshipText =
+            relationship.relationship_type;
+
+
+        if (
+            relationship.relationship_type ===
+            "child"
+        ) {
+
+            relationshipText =
+                "Child of";
+
+        }
+
+
+        if (
+            relationship.relationship_type ===
+            "parent"
+        ) {
+
+            relationshipText =
+                "Parent of";
+
+        }
+
+
+        if (
+            relationship.relationship_type ===
+            "spouse"
+        ) {
+
+            relationshipText =
+                "Spouse of";
+
+        }
+
+
+        row.innerHTML = `
+
+            <div class="relationship-info">
+
+                <strong>
+                    ${person.full_name}
+                </strong>
+
+                <span>
+                    ${relationshipText}
+                </span>
+
+                <strong>
+                    ${relatedPersonData.full_name}
+                </strong>
+
+            </div>
+
+
+            <button
+                class="admin-delete-button delete-relationship-button"
+                data-id="${relationship.id}"
+            >
+                Delete
+            </button>
+
+        `;
+
+
+        relationshipsList.appendChild(
+            row
+        );
+
+    });
+
+
+    // =================================
+    // DELETE RELATIONSHIP BUTTONS
+    // =================================
+
+    document
+        .querySelectorAll(
+            ".delete-relationship-button"
+        )
+        .forEach(button => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    deleteRelationship(
+                        button.dataset.id
+                    );
+
+                }
+            );
+
+        });
+
+}
+
+
+// =================================
+// SAVE RELATIONSHIP
+// =================================
+
+saveRelationshipButton.addEventListener(
+    "click",
+    async function() {
+
+        const personId =
+            relationshipPerson.value;
+
+        const type =
+            relationshipType.value;
+
+        const relatedPersonId =
+            relatedPerson.value;
+
+
+        if (
+            !personId ||
+            !type ||
+            !relatedPersonId
+        ) {
+
+            relationshipMessage.textContent =
+                "Please select all relationship fields.";
+
+            return;
+
+        }
+
+
+        if (
+            personId === relatedPersonId
+        ) {
+
+            relationshipMessage.textContent =
+                "A person cannot be related to themselves.";
+
+            return;
+
+        }
+
+
+        relationshipMessage.textContent =
+            "Saving relationship...";
+
+
+        const { error } =
+            await supabase
+                .from("relationships")
+                .insert([
+
+                    {
+                        person_id:
+                            personId,
+
+                        related_person_id:
+                            relatedPersonId,
+
+                        relationship_type:
+                            type
+
+                    }
+
+                ]);
+
+
+        if (error) {
+
+            console.error(
+                "SAVE RELATIONSHIP ERROR:",
+                error
+            );
+
+
+            relationshipMessage.textContent =
+                "Unable to save relationship: " +
+                error.message;
+
+            return;
+
+        }
+
+
+        relationshipMessage.textContent =
+            "Relationship saved successfully!";
+
+
+        relationshipPerson.value =
+            "";
+
+        relationshipType.value =
+            "";
+
+        relatedPerson.value =
+            "";
+
+
+        await loadRelationships();
+
+    }
+);
+
+
+// =================================
+// DELETE RELATIONSHIP
+// =================================
+
+async function deleteRelationship(id) {
+
+    const confirmed =
+        confirm(
+            "Are you sure you want to delete this relationship?"
+        );
+
+
+    if (!confirmed) {
+
+        return;
+
+    }
+
+
+    const { error } =
+        await supabase
+            .from("relationships")
+            .delete()
+            .eq(
+                "id",
+                id
+            );
+
+
+    if (error) {
+
+        console.error(
+            "DELETE RELATIONSHIP ERROR:",
+            error
+        );
+
+
+        alert(
+            "Unable to delete relationship.\n\n" +
+            error.message
+        );
+
+        return;
+
+    }
+
+
+    alert(
+        "Relationship deleted successfully."
+    );
+
+
+    await loadRelationships();
+
+}
+
+
+// =================================
+// START RELATIONSHIP MANAGEMENT
+// =================================
+
+loadMembers().then(() => {
+
+    loadRelationshipMembers();
+
+    loadRelationships();
+
+});

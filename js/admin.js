@@ -1,5 +1,5 @@
 import { supabase } from "./supabase.js";
-
+alert("ADMIN JS IS WORKING");
 // =========================================
 // ELEMENTS
 // =========================================

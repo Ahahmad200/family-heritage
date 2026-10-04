@@ -1,6 +1,7 @@
 import { supabase } from "./supabase.js";
 
 const familyTree = document.getElementById("familyTree");
+
 window.familyMembers = [];
 
 async function loadFamilyTree() {
@@ -21,6 +22,7 @@ async function loadFamilyTree() {
         `);
 
     if (membersError) {
+
         console.error(membersError);
 
         familyTree.innerHTML = `
@@ -31,6 +33,9 @@ async function loadFamilyTree() {
 
         return;
     }
+
+    // Make members available to the popup
+    window.familyMembers = members;
 
 
     // Get all relationships
@@ -44,6 +49,7 @@ async function loadFamilyTree() {
             `);
 
     if (relationshipsError) {
+
         console.error(relationshipsError);
 
         familyTree.innerHTML = `
@@ -84,10 +90,7 @@ async function loadFamilyTree() {
     }
 
 
-    /*
-       Find children belonging to BOTH
-       the Patriarch and Matriarch.
-    */
+    // Find children belonging to BOTH parents
 
     const patriarchChildren = relationships
         .filter(
@@ -201,9 +204,11 @@ async function loadFamilyTree() {
 
     children.forEach(child => {
 
-        const childWrapper = document.createElement("div");
+        const childWrapper =
+            document.createElement("div");
 
-        childWrapper.className = "child-wrapper";
+        childWrapper.className =
+            "child-wrapper";
 
 
         // Child card
@@ -215,23 +220,26 @@ async function loadFamilyTree() {
 
 
         // Find this child's children
-        const grandchildren = relationships
-            .filter(
-                relationship =>
-                    relationship.related_person_id === child.id &&
-                    relationship.relationship_type === "child"
-            )
-            .map(
-                relationship =>
-                    members.find(
-                        member =>
-                            member.id === relationship.person_id
-                    )
-            )
-            .filter(Boolean);
+
+        const grandchildren =
+            relationships
+                .filter(
+                    relationship =>
+                        relationship.related_person_id === child.id &&
+                        relationship.relationship_type === "child"
+                )
+                .map(
+                    relationship =>
+                        members.find(
+                            member =>
+                                member.id === relationship.person_id
+                        )
+                )
+                .filter(Boolean);
 
 
         // Add expandable section
+
         if (grandchildren.length > 0) {
 
             const expandButton =
@@ -273,7 +281,12 @@ async function loadFamilyTree() {
 
             expandButton.addEventListener(
                 "click",
-                () => {
+                (event) => {
+
+                    // Prevent the button click
+                    // from affecting the member card
+                    event.stopPropagation();
+
 
                     const isHidden =
                         grandchildrenContainer.style.display ===
@@ -295,13 +308,17 @@ async function loadFamilyTree() {
 
                         expandButton.textContent =
                             `Show ${grandchildren.length} children ▼`;
+
                     }
 
                 }
             );
 
 
-            childWrapper.appendChild(expandButton);
+            childWrapper.appendChild(
+                expandButton
+            );
+
 
             childWrapper.appendChild(
                 grandchildrenContainer
@@ -355,13 +372,13 @@ function createMemberCard(member, relationship) {
 
 
     return `
-    <div
-        class="
-            member-card
-            ${member.is_deceased ? "deceased" : ""}
-        "
-        data-member-id="${member.id}"
-    >
+        <div
+            class="
+                member-card
+                ${member.is_deceased ? "deceased" : ""}
+            "
+            data-member-id="${member.id}"
+        >
 
             <div class="member-photo">
                 ${photo}
@@ -417,11 +434,6 @@ function getInitials(name) {
 }
 
 
-// =========================================
-// START
-// =========================================
-
-loadFamilyTree();
 // =========================================
 // MEMBER BIOGRAPHY POPUP
 // =========================================
@@ -575,3 +587,10 @@ document.addEventListener(
 
     }
 );
+
+
+// =========================================
+// START
+// =========================================
+
+loadFamilyTree();

@@ -500,6 +500,21 @@ function openMemberModal(member) {
         <p class="modal-member-status ${statusClass}">
             ${status}
         </p>
+        <div class="modal-member-details">
+
+    ${
+        member.date_of_birth
+            ? `<p>🎂 <strong>Date of Birth:</strong> ${member.date_of_birth}</p>`
+            : ""
+    }
+
+    ${
+        member.place_of_birth
+            ? `<p>📍 <strong>Place of Birth:</strong> ${member.place_of_birth}</p>`
+            : ""
+    }
+
+</div>
 
 
         <div class="modal-member-biography">

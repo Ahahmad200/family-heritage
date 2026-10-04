@@ -389,3 +389,250 @@ footer {
 .grandchildren-container .member-info h4 {
     font-size: 15px;
     }
+/* =========================================
+   MEMBER BIOGRAPHY POPUP
+========================================= */
+
+.member-modal {
+    display: none;
+
+    position: fixed;
+
+    z-index: 9999;
+
+    left: 0;
+    top: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background: rgba(0, 0, 0, 0.75);
+
+    padding: 20px;
+
+    align-items: center;
+    justify-content: center;
+}
+
+
+.member-modal-content {
+    position: relative;
+
+    background: #fff;
+
+    width: 100%;
+    max-width: 500px;
+
+    max-height: 90vh;
+
+    overflow-y: auto;
+
+    border-radius: 25px;
+
+    padding: 35px 25px;
+
+    text-align: center;
+
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.3);
+
+    animation:
+        memberModalOpen 0.3s ease;
+}
+
+
+@keyframes memberModalOpen {
+
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+}
+
+
+/* Close button */
+
+.close-member-modal {
+
+    position: absolute;
+
+    top: 12px;
+    right: 15px;
+
+    width: 40px;
+    height: 40px;
+
+    border-radius: 50%;
+
+    border: none;
+
+    background: #3b2f2f;
+
+    color: white;
+
+    font-size: 28px;
+
+    line-height: 1;
+
+    cursor: pointer;
+}
+
+
+.close-member-modal:hover {
+    background: #b8860b;
+}
+
+
+/* Modal photo */
+
+.modal-member-photo {
+
+    width: 150px;
+    height: 150px;
+
+    margin: 0 auto 20px;
+
+    border-radius: 50%;
+
+    overflow: hidden;
+
+    background: #eee7d7;
+
+    border: 5px solid #e7c98b;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+}
+
+
+.modal-member-photo img {
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+
+.modal-member-placeholder {
+
+    font-size: 45px;
+
+    font-weight: bold;
+
+    color: #8f6808;
+}
+
+
+/* Modal name */
+
+.modal-member-name {
+
+    font-size: 28px;
+
+    color: #2d241c;
+
+    margin-bottom: 10px;
+}
+
+
+/* Modal relationship */
+
+.modal-member-relationship {
+
+    color: #8f6808;
+
+    font-weight: bold;
+
+    margin-bottom: 15px;
+}
+
+
+/* Modal status */
+
+.modal-member-status {
+
+    display: inline-block;
+
+    padding: 7px 15px;
+
+    border-radius: 20px;
+
+    background: #e8f5e9;
+
+    color: #2e7d32;
+
+    font-size: 13px;
+
+    margin-bottom: 20px;
+}
+
+
+.modal-member-status.deceased {
+
+    background: #eee;
+
+    color: #666;
+}
+
+
+/* Biography */
+
+.modal-member-biography {
+
+    text-align: left;
+
+    line-height: 1.8;
+
+    color: #444;
+
+    border-top: 1px solid #eee;
+
+    padding-top: 20px;
+
+    margin-top: 10px;
+}
+
+
+.modal-member-biography-title {
+
+    font-size: 18px;
+
+    color: #3b2f2f;
+
+    margin-bottom: 10px;
+}
+
+
+/* Mobile */
+
+@media (max-width: 600px) {
+
+    .member-modal {
+        padding: 15px;
+    }
+
+    .member-modal-content {
+        padding: 30px 20px;
+        max-height: 92vh;
+    }
+
+    .modal-member-photo {
+        width: 125px;
+        height: 125px;
+    }
+
+    .modal-member-name {
+        font-size: 23px;
+    }
+
+}

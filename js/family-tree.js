@@ -1,6 +1,7 @@
 import { supabase } from "./supabase.js";
 
 const familyTree = document.getElementById("familyTree");
+window.familyMembers = [];
 
 async function loadFamilyTree() {
 

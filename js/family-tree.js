@@ -354,12 +354,13 @@ function createMemberCard(member, relationship) {
 
 
     return `
-        <div
-            class="
-                member-card
-                ${member.is_deceased ? "deceased" : ""}
-            "
-        >
+    <div
+        class="
+            member-card
+            ${member.is_deceased ? "deceased" : ""}
+        "
+        data-member-id="${member.id}"
+    >
 
             <div class="member-photo">
                 ${photo}
@@ -420,3 +421,156 @@ function getInitials(name) {
 // =========================================
 
 loadFamilyTree();
+// =========================================
+// MEMBER BIOGRAPHY POPUP
+// =========================================
+
+const memberModal =
+    document.getElementById("memberModal");
+
+const modalMemberContent =
+    document.getElementById("modalMemberContent");
+
+const closeMemberModal =
+    document.getElementById("closeMemberModal");
+
+
+// Open member popup
+
+function openMemberModal(member) {
+
+    const status =
+        member.is_deceased
+            ? "Deceased"
+            : "Living";
+
+
+    const statusClass =
+        member.is_deceased
+            ? "deceased"
+            : "";
+
+
+    const photo =
+        member.photo_url
+            ? `
+                <img
+                    src="${member.photo_url}"
+                    alt="${member.full_name}"
+                >
+            `
+            : `
+                <div class="modal-member-placeholder">
+                    ${getInitials(member.full_name)}
+                </div>
+            `;
+
+
+    const biography =
+        member.biography
+            ? member.biography
+            : "Biography will be added soon.";
+
+
+    modalMemberContent.innerHTML = `
+
+        <div class="modal-member-photo">
+            ${photo}
+        </div>
+
+
+        <h2 class="modal-member-name">
+            ${member.full_name}
+        </h2>
+
+
+        <p class="modal-member-status ${statusClass}">
+            ${status}
+        </p>
+
+
+        <div class="modal-member-biography">
+
+            <h3 class="modal-member-biography-title">
+                Biography
+            </h3>
+
+            <p>
+                ${biography}
+            </p>
+
+        </div>
+
+    `;
+
+
+    memberModal.style.display = "flex";
+}
+
+
+// Close popup
+
+function closeMemberModalWindow() {
+
+    memberModal.style.display = "none";
+
+}
+
+
+// Close button
+
+closeMemberModal.addEventListener(
+    "click",
+    closeMemberModalWindow
+);
+
+
+// Close when clicking outside
+
+memberModal.addEventListener(
+    "click",
+    function(event) {
+
+        if (event.target === memberModal) {
+
+            closeMemberModalWindow();
+
+        }
+
+    }
+);
+
+
+// Make every member card clickable
+
+document.addEventListener(
+    "click",
+    function(event) {
+
+        const card =
+            event.target.closest(".member-card");
+
+        if (!card) {
+            return;
+        }
+
+
+        const memberId =
+            card.dataset.memberId;
+
+
+        const member =
+            window.familyMembers?.find(
+                member =>
+                    member.id === memberId
+            );
+
+
+        if (member) {
+
+            openMemberModal(member);
+
+        }
+
+    }
+);

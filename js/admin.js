@@ -1,3 +1,4 @@
+alert("ADMIN JS IS WORKING");
 import { supabase } from "./supabase.js";
 
 

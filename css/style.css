@@ -636,3 +636,107 @@ footer {
     }
 
 }
+/* ================================= */
+/* RELATIONSHIP MANAGEMENT */
+/* ================================= */
+
+.relationship-form {
+    background: #f8f5ed;
+    padding: 20px;
+    border-radius: 15px;
+    margin-top: 20px;
+}
+
+.relationship-form h3,
+.relationship-list-section h3 {
+    color: #3b2f2f;
+    margin-bottom: 15px;
+}
+
+.relationship-form label {
+    display: block;
+    margin-top: 12px;
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+.relationship-form select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: white;
+    font-size: 15px;
+}
+
+.relationship-list-section {
+    margin-top: 25px;
+}
+
+/* Scrollable relationship list */
+
+#relationshipsList {
+    max-height: 420px;
+    overflow-y: auto;
+    padding: 5px;
+    background: #f8f5ed;
+    border-radius: 12px;
+}
+
+/* Individual relationship */
+
+.relationship-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    background: white;
+    padding: 12px 15px;
+    margin-bottom: 8px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.relationship-info {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.relationship-info strong {
+    color: #3b2f2f;
+}
+
+.relationship-info span {
+    color: #b8860b;
+    font-weight: bold;
+}
+
+.delete-relationship-button {
+    flex-shrink: 0;
+    padding: 7px 12px;
+    font-size: 13px;
+}
+
+
+/* Mobile */
+
+@media (max-width: 600px) {
+
+    .relationship-row {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .relationship-info {
+        display: block;
+        line-height: 1.7;
+    }
+
+    .delete-relationship-button {
+        width: 100%;
+    }
+
+}

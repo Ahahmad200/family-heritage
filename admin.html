@@ -293,6 +293,124 @@
                 </form>
 
             </div>
+            <!-- ================================= -->
+<!-- RELATIONSHIP MANAGEMENT -->
+<!-- ================================= -->
+
+<div class="admin-panel">
+
+    <div class="admin-panel-header">
+
+        <div>
+
+            <h2>Family Relationships</h2>
+
+            <p>
+                Create and manage relationships
+                between family members.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ADD RELATIONSHIP FORM -->
+
+    <div class="relationship-form">
+
+        <h3>Add Family Relationship</h3>
+
+
+        <label for="relationshipPerson">
+            Person
+        </label>
+
+        <select id="relationshipPerson">
+
+            <option value="">
+                Select person
+            </option>
+
+        </select>
+
+
+        <label for="relationshipType">
+            Relationship
+        </label>
+
+        <select id="relationshipType">
+
+            <option value="">
+                Select relationship
+            </option>
+
+            <option value="child">
+                Child of
+            </option>
+
+            <option value="parent">
+                Parent of
+            </option>
+
+            <option value="spouse">
+                Spouse of
+            </option>
+
+        </select>
+
+
+        <label for="relatedPerson">
+            Related Person
+        </label>
+
+        <select id="relatedPerson">
+
+            <option value="">
+                Select related person
+            </option>
+
+        </select>
+
+
+        <div class="admin-form-buttons">
+
+            <button
+                type="button"
+                id="saveRelationshipButton"
+                class="admin-primary-button"
+            >
+                Save Relationship
+            </button>
+
+        </div>
+
+
+        <p id="relationshipMessage"></p>
+
+    </div>
+
+
+    <!-- EXISTING RELATIONSHIPS -->
+
+    <div class="relationship-list-section">
+
+        <h3>
+            Existing Relationships
+        </h3>
+
+
+        <div id="relationshipsList">
+
+            <p class="admin-loading">
+                Loading relationships...
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
 
         </section>
 

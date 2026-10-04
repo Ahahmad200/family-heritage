@@ -1,1 +1,3 @@
-alert("ADMIN JS FILE IS LOADING");
+import { supabase } from "./supabase.js";
+
+alert("SUPABASE JS LOADED");

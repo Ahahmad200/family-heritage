@@ -1385,7 +1385,48 @@ if (existingModal) {
 
 
     document.body.appendChild(modal);
+    
+// Enlarge member photo when clicked
 
+const memberPhoto =
+    modal.querySelector(".admin-view-member-photo");
+
+if (memberPhoto) {
+
+    memberPhoto.style.cursor = "pointer";
+
+    memberPhoto.addEventListener(
+        "click",
+        function() {
+
+            const photoModal =
+                document.createElement("div");
+
+            photoModal.className =
+                "admin-photo-fullscreen";
+
+            photoModal.innerHTML = `
+                <img
+                    src="${member.photo_url}"
+                    alt="${member.full_name}"
+                >
+            `;
+
+            document.body.appendChild(
+                photoModal
+            );
+
+            photoModal.addEventListener(
+                "click",
+                function() {
+                    photoModal.remove();
+                }
+            );
+
+        }
+    );
+
+                }
 
     // CLOSE BUTTON
 

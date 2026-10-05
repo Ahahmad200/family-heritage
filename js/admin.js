@@ -1295,7 +1295,16 @@ async function viewMember(memberId) {
             ? member.biography
             : "No biography has been added yet.";
 
+// Remove any existing member popup
 
+const existingModal =
+    document.querySelector(
+        ".admin-member-view-modal"
+    );
+
+if (existingModal) {
+    existingModal.remove();
+}
     const modal =
         document.createElement("div");
 

@@ -281,23 +281,28 @@ function displayMembers(members) {
 
             <div class="admin-member-actions">
 
-                <button
-                    class="admin-edit-button"
-                    data-id="${member.id}"
-                >
-                    Edit
-                </button>
+    <button
+        class="admin-view-button"
+        data-id="${member.id}"
+    >
+        View
+    </button>
 
+    <button
+        class="admin-edit-button"
+        data-id="${member.id}"
+    >
+        Edit
+    </button>
 
-                <button
-                    class="admin-delete-button"
-                    data-id="${member.id}"
-                >
-                    Delete
-                </button>
+    <button
+        class="admin-delete-button"
+        data-id="${member.id}"
+    >
+        Delete
+    </button>
 
-            </div>
-
+</div>
         `;
 
 

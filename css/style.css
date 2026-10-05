@@ -740,3 +740,139 @@ footer {
     }
 
 }
+/* =========================================
+   BEAUTIFUL FAMILY MEMBER CARDS
+   ========================================= */
+
+#membersList {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+}
+
+
+/* MEMBER CARD */
+
+.member-card {
+    background: white;
+    border-radius: 18px;
+    padding: 18px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.10);
+    transition: transform 0.2s ease,
+                box-shadow 0.2s ease;
+    overflow: hidden;
+}
+
+
+.member-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+
+/* MEMBER PHOTO */
+
+.member-card-photo {
+    width: 100%;
+    height: 190px;
+    object-fit: cover;
+    border-radius: 14px;
+    display: block;
+    margin-bottom: 15px;
+}
+
+
+/* MEMBER INITIALS */
+
+.member-card-initials {
+    width: 100%;
+    height: 190px;
+    border-radius: 14px;
+    background: #f5f1e8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 45px;
+    font-weight: bold;
+    color: #b8860b;
+    margin-bottom: 15px;
+}
+
+
+/* MEMBER NAME */
+
+.member-card h3 {
+    color: #3b2f2f;
+    font-size: 19px;
+    margin-bottom: 8px;
+}
+
+
+/* MEMBER INFORMATION */
+
+.member-card-info {
+    color: #666;
+    font-size: 14px;
+    line-height: 1.7;
+    margin-bottom: 12px;
+}
+
+
+/* STATUS */
+
+.member-status {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    background: #eee;
+    margin-bottom: 15px;
+}
+
+
+/* BUTTON AREA */
+
+.member-card-actions {
+    display: flex;
+    gap: 8px;
+}
+
+
+.member-card-actions button {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 13px;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 900px) {
+
+    #membersList {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    #membersList {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .member-card {
+        padding: 15px;
+    }
+
+    .member-card-photo,
+    .member-card-initials {
+        height: 210px;
+    }
+
+}

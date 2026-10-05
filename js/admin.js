@@ -1043,19 +1043,31 @@ saveRelationshipButton.addEventListener(
 
         if (error) {
 
-            console.error(
-                "SAVE RELATIONSHIP ERROR:",
-                error
-            );
+    console.error(
+        "SAVE RELATIONSHIP ERROR:",
+        error
+    );
 
 
-            relationshipMessage.textContent =
-                "Unable to save relationship: " +
-                error.message;
+    if (
+        error.code === "23505"
+    ) {
 
-            return;
+        relationshipMessage.textContent =
+            "This relationship already exists.";
 
-        }
+    } else {
+
+        relationshipMessage.textContent =
+            "Unable to save relationship: " +
+            error.message;
+
+    }
+
+
+    return;
+
+}
 
 
         relationshipMessage.textContent =

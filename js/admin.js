@@ -309,7 +309,28 @@ function displayMembers(members) {
         membersList.appendChild(card);
 
     });
+    
+// ===============================
+// VIEW BUTTONS
+// ===============================
 
+document
+    .querySelectorAll(".admin-view-button")
+    .forEach(button => {
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                const id =
+                    button.dataset.id;
+
+                viewMember(id);
+
+            }
+        );
+
+    });
 
     // ===============================
     // EDIT BUTTONS
@@ -1215,3 +1236,173 @@ checkAdminAccess().then((isAdmin) => {
     });
 
 });
+// ===============================
+// VIEW MEMBER DETAILS
+// ===============================
+
+async function viewMember(memberId) {
+
+    const member =
+        allMembers.find(
+            item => item.id === memberId
+        );
+
+
+    if (!member) {
+
+        alert("Member information not found.");
+
+        return;
+    }
+
+
+    const status =
+        member.is_deceased
+            ? "Deceased"
+            : "Living";
+
+
+    const photo =
+        member.photo_url
+            ? `
+                <img
+                    src="${member.photo_url}"
+                    alt="${member.full_name}"
+                    class="admin-view-member-photo"
+                >
+            `
+            : `
+                <div class="admin-view-member-placeholder">
+                    ${getInitials(member.full_name)}
+                </div>
+            `;
+
+
+    const birthDate =
+        member.date_of_birth
+            ? member.date_of_birth
+            : "Not added";
+
+
+    const birthPlace =
+        member.place_of_birth
+            ? member.place_of_birth
+            : "Not added";
+
+
+    const biography =
+        member.biography
+            ? member.biography
+            : "No biography has been added yet.";
+
+
+    const modal =
+        document.createElement("div");
+
+    modal.className =
+        "admin-member-view-modal";
+
+
+    modal.innerHTML = `
+
+        <div class="admin-member-view-content">
+
+            <button
+                class="admin-member-view-close"
+                type="button"
+            >
+                ×
+            </button>
+
+
+            <div class="admin-member-view-photo">
+                ${photo}
+            </div>
+
+
+            <h2>
+                ${member.full_name}
+            </h2>
+
+
+            <span class="admin-member-view-status">
+                ${status}
+            </span>
+
+
+            <div class="admin-member-view-details">
+
+                <p>
+                    <strong>Gender:</strong>
+                    ${member.gender || "Not added"}
+                </p>
+
+                <p>
+                    <strong>Date of Birth:</strong>
+                    ${birthDate}
+                </p>
+
+                <p>
+                    <strong>Place of Birth:</strong>
+                    ${birthPlace}
+                </p>
+
+                ${
+                    member.is_deceased
+                    ? `
+                        <p>
+                            <strong>Date of Death:</strong>
+                            ${member.date_of_death || "Not added"}
+                        </p>
+                    `
+                    : ""
+                }
+
+                <div class="admin-member-biography">
+
+                    <strong>Biography</strong>
+
+                    <p>
+                        ${biography}
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    document.body.appendChild(modal);
+
+
+    // CLOSE BUTTON
+
+    modal
+        .querySelector(
+            ".admin-member-view-close"
+        )
+        .addEventListener(
+            "click",
+            () => modal.remove()
+        );
+
+
+    // CLOSE WHEN CLICKING OUTSIDE
+
+    modal.addEventListener(
+        "click",
+        function(event) {
+
+            if (event.target === modal) {
+
+                modal.remove();
+
+            }
+
+        }
+    );
+
+}

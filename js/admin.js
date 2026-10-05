@@ -1,5 +1,49 @@
 import { supabase } from "./supabase.js";
+// ===============================
+// ADMIN ACCESS PROTECTION
+// ===============================
 
+async function checkAdminAccess() {
+
+    const {
+        data: { user }
+    } = await supabase.auth.getUser();
+
+    // No logged-in user
+    if (!user) {
+
+        window.location.href =
+            "admin-login.html";
+
+        return false;
+    }
+
+
+    // Check whether user is an administrator
+    const { data: admin, error } =
+        await supabase
+            .from("admin_users")
+            .select("id")
+            .eq(
+                "auth_user_id",
+                user.id
+            )
+            .maybeSingle();
+
+
+    if (error || !admin) {
+
+        await supabase.auth.signOut();
+
+        window.location.href =
+            "admin-login.html";
+
+        return false;
+    }
+
+
+    return true;
+}
 
 // ===============================
 // GET HTML ELEMENTS
@@ -1151,10 +1195,18 @@ async function deleteRelationship(id) {
 // START RELATIONSHIP MANAGEMENT
 // =================================
 
-loadMembers().then(() => {
+checkAdminAccess().then((isAdmin) => {
 
-    loadRelationshipMembers();
+    if (!isAdmin) {
+        return;
+    }
 
-    loadRelationships();
+    loadMembers().then(() => {
+
+        loadRelationshipMembers();
+
+        loadRelationships();
+
+    });
 
 });

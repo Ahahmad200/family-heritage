@@ -82,6 +82,9 @@ const memberId =
 const fullName =
     document.getElementById("fullName");
 
+const memberPhoto =
+    document.getElementById("memberPhoto");
+
 const gender =
     document.getElementById("gender");
 

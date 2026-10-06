@@ -1887,6 +1887,30 @@ async function findFamilyRelationship(targetMemberId) {
             if (!nextMember) {
                 continue;
             }
+            let relationshipLabel = "";
+
+if (
+    relationship.relationship_type === "child"
+) {
+    relationshipLabel = "Parent";
+}
+
+else if (
+    relationship.relationship_type === "parent"
+) {
+    relationshipLabel = "Child";
+}
+
+else if (
+    relationship.relationship_type === "spouse"
+) {
+    relationshipLabel = "Spouse";
+}
+
+else {
+    relationshipLabel =
+        relationship.relationship_type;
+}
 
             const newPath = [
     ...current.path,

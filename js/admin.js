@@ -1889,12 +1889,14 @@ async function findFamilyRelationship(targetMemberId) {
             }
 
             const newPath = [
-                ...current.path,
-                {
-                    id: nextMember.id,
-                    name: nextMember.full_name
-                }
-            ];
+    ...current.path,
+    {
+        id: nextMember.id,
+        name: nextMember.full_name,
+        relationship:
+            relationship.relationship_type
+    }
+];
 
             queue.push({
                 id: nextId,

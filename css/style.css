@@ -1603,3 +1603,24 @@ footer {
 .member-family-link:hover {
     background: #f5f1e8;
 }
+/* ================================= */
+/* HOW AM I RELATED BUTTON */
+/* ================================= */
+
+.find-relationship-button {
+    display: block;
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 11px 15px;
+    border: none;
+    border-radius: 10px;
+    background: #3b2f2f;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.find-relationship-button:hover {
+    background: #8f6808;
+}

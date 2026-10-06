@@ -1708,10 +1708,9 @@ if (relationshipButton) {
             const selectedMemberId =
                 this.dataset.memberId;
 
-            alert(
-                "Relationship finder is ready for: " +
-                member.full_name
-            );
+            findFamilyRelationship(
+    selectedMemberId
+);
 
         }
     );

@@ -1978,7 +1978,7 @@ else {
                             🌳 Connected to:
                         </p>
 
-                        ${foundPath.map(
+${foundPath.map(
     person => `
         <div class="relationship-path-person">
             <span class="relationship-path-label">

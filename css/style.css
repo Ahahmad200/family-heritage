@@ -1582,3 +1582,24 @@ footer {
 
     font-size: 13px;
 }
+/* ================================= */
+/* CLICKABLE FAMILY MEMBERS */
+/* ================================= */
+
+.member-family-link {
+    display: block;
+    width: 100%;
+    padding: 7px 9px;
+    margin: 3px 0;
+    border: none;
+    background: #f8f5ed;
+    color: #8f6808;
+    text-align: left;
+    border-radius: 7px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.member-family-link:hover {
+    background: #f5f1e8;
+}

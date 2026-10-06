@@ -1979,12 +1979,18 @@ else {
                         </p>
 
                         ${foundPath.map(
-                            person => `
-                                <div>
-                                    🌿 ${person.name}
-                                </div>
-                            `
-                        ).join("")}
+    person => `
+        <div class="relationship-path-person">
+            <span class="relationship-path-label">
+                ${person.relationship}
+            </span>
+
+            <strong>
+                ${person.name}
+            </strong>
+        </div>
+    `
+).join("")}
                     `
                     : `
                         <p>

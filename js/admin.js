@@ -512,10 +512,6 @@ function editMember(id) {
         member.place_of_birth || "";
 
 
-    photoUrl.value =
-        member.photo_url || "";
-
-
     isDeceased.value =
         member.is_deceased
             ? "true"
@@ -606,10 +602,8 @@ memberForm.addEventListener(
 
         event.preventDefault();
 
-
         memberMessage.textContent =
             "Saving member...";
-
 
         const memberData = {
 
@@ -624,9 +618,6 @@ memberForm.addEventListener(
 
             place_of_birth:
                 placeOfBirth.value.trim() || null,
-
-            photo_url:
-                photoUrl.value.trim() || null,
 
             biography:
                 biography.value.trim() || null,
@@ -654,7 +645,9 @@ memberForm.addEventListener(
                     .from("members")
                     .insert([
                         memberData
-                    ]);
+                    ])
+                    .select("id")
+                    .single();
 
         }
 
@@ -665,22 +658,18 @@ memberForm.addEventListener(
 
         else {
 
-            result =
-                await supabase
-                    .from("members")
-                    .update(
-                        memberData
-                    )
-                    .eq(
-                        "id",
-                        memberId.value
-                    );
+            result = {
+                data: {
+                    id: memberId.value
+                },
+                error: null
+            };
 
         }
 
 
         // ===============================
-        // CHECK ERROR
+        // CHECK MEMBER SAVE ERROR
         // ===============================
 
         if (result.error) {
@@ -690,7 +679,6 @@ memberForm.addEventListener(
                 result.error
             );
 
-
             memberMessage.innerHTML =
                 `
                 Unable to save member.
@@ -699,6 +687,78 @@ memberForm.addEventListener(
                 `;
 
             return;
+
+        }
+
+
+        // ===============================
+        // GET MEMBER ID
+        // ===============================
+
+        const savedMemberId =
+            result.data.id;
+
+
+        // ===============================
+        // UPLOAD PHOTO
+        // ===============================
+
+        const selectedPhoto =
+            memberPhoto.files[0];
+
+
+        if (selectedPhoto) {
+
+            memberMessage.textContent =
+                "Uploading family photo...";
+
+            try {
+
+                const photoUrl =
+                    await uploadMemberPhoto(
+                        selectedPhoto,
+                        savedMemberId
+                    );
+
+
+                // Save photo URL to member record
+
+                const { error: photoError } =
+                    await supabase
+                        .from("members")
+                        .update({
+                            photo_url: photoUrl
+                        })
+                        .eq(
+                            "id",
+                            savedMemberId
+                        );
+
+
+                if (photoError) {
+
+                    throw photoError;
+
+                }
+
+            } catch (error) {
+
+                console.error(
+                    "PHOTO SAVE ERROR:",
+                    error
+                );
+
+                memberMessage.innerHTML =
+                    `
+                    Member saved, but photo upload failed.
+                    <br>
+                    ${error.message}
+                    `;
+
+                await loadMembers();
+
+                return;
+            }
 
         }
 

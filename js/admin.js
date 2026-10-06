@@ -1786,3 +1786,143 @@ if (memberPhoto) {
     );
 
 }
+async function findFamilyRelationship(targetMemberId) {
+
+    const currentMemberId = targetMemberId;
+
+    const allRelationships =
+        await supabase
+            .from("relationships")
+            .select(`
+                person_id,
+                related_person_id,
+                relationship_type
+            `);
+
+    if (allRelationships.error) {
+
+        console.error(
+            "RELATIONSHIP FINDER ERROR:",
+            allRelationships.error
+        );
+
+        alert(
+            "Unable to load family relationships."
+        );
+
+        return;
+    }
+
+    const relationships =
+        allRelationships.data || [];
+
+    const visited =
+        new Set();
+
+    const queue = [
+        {
+            id: currentMemberId,
+            path: []
+        }
+    ];
+
+    while (queue.length > 0) {
+
+        const current =
+            queue.shift();
+
+        if (visited.has(current.id)) {
+            continue;
+        }
+
+        visited.add(current.id);
+
+        if (current.path.length > 0) {
+
+            const lastPerson =
+                current.path[
+                    current.path.length - 1
+                ];
+
+            if (
+                lastPerson.id ===
+                currentMemberId
+            ) {
+                continue;
+            }
+        }
+
+        for (
+            const relationship
+            of relationships
+        ) {
+
+            let nextId = null;
+            let relationshipName = "";
+
+            if (
+                relationship.person_id ===
+                current.id
+            ) {
+
+                nextId =
+                    relationship.related_person_id;
+
+                relationshipName =
+                    relationship.relationship_type;
+
+            }
+
+            else if (
+                relationship.related_person_id ===
+                current.id
+            ) {
+
+                nextId =
+                    relationship.person_id;
+
+                relationshipName =
+                    relationship.relationship_type;
+
+            }
+
+            if (!nextId) {
+                continue;
+            }
+
+            if (visited.has(nextId)) {
+                continue;
+            }
+
+            const nextMember =
+                allMembers.find(
+                    member =>
+                        member.id === nextId
+                );
+
+            if (!nextMember) {
+                continue;
+            }
+
+            const newPath = [
+                ...current.path,
+                {
+                    id: nextMember.id,
+                    name: nextMember.full_name,
+                    relationship:
+                        relationshipName
+                }
+            ];
+
+            queue.push({
+                id: nextId,
+                path: newPath
+            });
+
+        }
+    }
+
+    alert(
+        "Family relationship path is being prepared."
+    );
+}

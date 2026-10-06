@@ -1356,7 +1356,30 @@ async function viewMember(memberId) {
             item => item.id === memberId
         );
 
+// ===============================
+// LOAD MEMBER RELATIONSHIPS
+// ===============================
 
+const { data: memberRelationships, error: relationshipError } =
+    await supabase
+        .from("relationships")
+        .select(`
+            person_id,
+            related_person_id,
+            relationship_type
+        `)
+        .or(
+            `person_id.eq.${memberId},related_person_id.eq.${memberId}`
+        );
+
+if (relationshipError) {
+
+    console.error(
+        "VIEW MEMBER RELATIONSHIP ERROR:",
+        relationshipError
+    );
+
+}
     if (!member) {
 
         alert("Member information not found.");

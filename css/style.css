@@ -1549,3 +1549,36 @@ footer {
     box-shadow:
         0 10px 40px rgba(0, 0, 0, 0.5);
 }
+/* ================================= */
+/* FAMILY RELATIONSHIP INFO */
+/* ================================= */
+
+.member-family-info {
+    background: white;
+
+    border-radius: 10px;
+
+    padding: 10px 12px;
+
+    margin-bottom: 12px;
+
+    border-left: 4px solid #b8860b;
+}
+
+.member-family-info strong {
+    display: block;
+
+    color: #3b2f2f;
+
+    font-size: 14px;
+
+    margin-bottom: 6px;
+}
+
+.member-family-info p {
+    margin: 4px 0;
+
+    color: #555;
+
+    font-size: 13px;
+}

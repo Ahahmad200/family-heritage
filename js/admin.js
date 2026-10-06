@@ -1696,6 +1696,27 @@ if (existingModal) {
     });
 
 });
+    const relationshipButton =
+    modal.querySelector(".find-relationship-button");
+
+if (relationshipButton) {
+
+    relationshipButton.addEventListener(
+        "click",
+        function() {
+
+            const selectedMemberId =
+                this.dataset.memberId;
+
+            alert(
+                "Relationship finder is ready for: " +
+                member.full_name
+            );
+
+        }
+    );
+
+}
 // Enlarge member photo when clicked
 
 const memberPhoto =

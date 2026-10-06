@@ -1918,9 +1918,14 @@ else {
         id: nextMember.id,
         name: nextMember.full_name,
         relationship:
-            relationship.relationship_type
+            relationshipLabel
     }
 ];
+
+console.log(
+    "RELATIONSHIP LABEL:",
+    relationshipLabel
+);
 
             queue.push({
                 id: nextId,

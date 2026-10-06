@@ -1674,7 +1674,20 @@ if (existingModal) {
 
 
     document.body.appendChild(modal);
-    
+    modal.querySelectorAll(".member-family-link").forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        const relatedMemberId =
+            button.dataset.memberId;
+
+        modal.remove();
+
+        viewMember(relatedMemberId);
+
+    });
+
+});
 // Enlarge member photo when clicked
 
 const memberPhoto =

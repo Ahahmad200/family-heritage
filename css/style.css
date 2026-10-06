@@ -1717,3 +1717,29 @@ footer {
         font-size: 20px;
     }
 }
+.relationship-path-person {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: white;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    border-radius: 10px;
+    border-left: 4px solid #b8860b;
+}
+
+.relationship-path-label {
+    min-width: 70px;
+    padding: 4px 8px;
+    border-radius: 20px;
+    background: #f5f1e8;
+    color: #8f6808;
+    font-size: 11px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.relationship-path-person strong {
+    color: #3b2f2f;
+    font-size: 14px;
+}

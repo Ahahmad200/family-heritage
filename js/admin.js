@@ -1955,7 +1955,15 @@ console.log(
     relationshipModal.innerHTML = `
         <div class="relationship-result-card">
 
-            <button
+         <label for="relationshipTargetSelect">
+    Choose a family member:
+</label>
+
+<select id="relationshipTargetSelect">
+    <option value="">
+        Select family member
+    </option>
+</select>   <button
                 type="button"
                 class="relationship-result-close"
             >

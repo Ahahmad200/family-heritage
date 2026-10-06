@@ -1570,9 +1570,13 @@ if (existingModal) {
                             <strong>Parents</strong>
 
                             ${parents.map(parent => `
-                                <p>
-                                    🌿 ${parent.full_name}
-                                </p>
+                                <button
+    type="button"
+    class="member-family-link"
+    data-member-id="${parent.id}"
+>
+    🌿 ${parent.full_name}
+</button>
                             `).join("")}
 
                         </div>
@@ -1589,9 +1593,14 @@ if (existingModal) {
                             <strong>Spouse</strong>
 
                             ${spouses.map(spouse => `
-                                <p>
-                                    ❤️ ${spouse.full_name}
-                                </p>
+                                <button
+    type="button"
+    class="member-family-link"
+    data-member-id="${spouse.id}"
+>
+    ❤️ ${spouse.full_name}
+</button>
+                                
                             `).join("")}
 
                         </div>
@@ -1608,9 +1617,13 @@ if (existingModal) {
                             <strong>Children</strong>
 
                             ${children.map(child => `
-                                <p>
-                                    👶 ${child.full_name}
-                                </p>
+                                <button
+    type="button"
+    class="member-family-link"
+    data-member-id="${child.id}"
+>
+    👶 ${child.full_name}
+</button>
                             `).join("")}
 
                         </div>

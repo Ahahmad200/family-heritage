@@ -549,7 +549,53 @@ function editMember(id) {
 
 }
 
+// ===============================
+// UPLOAD MEMBER PHOTO
+// ===============================
 
+async function uploadMemberPhoto(file, memberId) {
+
+    if (!file) {
+        return null;
+    }
+
+    const fileExtension =
+        file.name.split(".").pop();
+
+    const fileName =
+        memberId + "." + fileExtension;
+
+    const filePath =
+        fileName;
+
+    const { error: uploadError } =
+        await supabase.storage
+            .from("family-photos")
+            .upload(
+                filePath,
+                file,
+                {
+                    upsert: true
+                }
+            );
+
+    if (uploadError) {
+
+        console.error(
+            "PHOTO UPLOAD ERROR:",
+            uploadError
+        );
+
+        throw uploadError;
+    }
+
+    const { data } =
+        supabase.storage
+            .from("family-photos")
+            .getPublicUrl(filePath);
+
+    return data.publicUrl;
+}
 // ===============================
 // SAVE MEMBER
 // ===============================

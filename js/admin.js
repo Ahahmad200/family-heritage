@@ -1559,7 +1559,64 @@ if (existingModal) {
 
 
             <div class="admin-member-view-details">
+            
+                <!-- FAMILY RELATIONSHIPS -->
 
+                ${
+                    parents.length > 0
+                    ? `
+                        <div class="member-family-info">
+
+                            <strong>Parents</strong>
+
+                            ${parents.map(parent => `
+                                <p>
+                                    🌿 ${parent.full_name}
+                                </p>
+                            `).join("")}
+
+                        </div>
+                    `
+                    : ""
+                }
+
+
+                ${
+                    spouses.length > 0
+                    ? `
+                        <div class="member-family-info">
+
+                            <strong>Spouse</strong>
+
+                            ${spouses.map(spouse => `
+                                <p>
+                                    ❤️ ${spouse.full_name}
+                                </p>
+                            `).join("")}
+
+                        </div>
+                    `
+                    : ""
+                }
+
+
+                ${
+                    children.length > 0
+                    ? `
+                        <div class="member-family-info">
+
+                            <strong>Children</strong>
+
+                            ${children.map(child => `
+                                <p>
+                                    👶 ${child.full_name}
+                                </p>
+                            `).join("")}
+
+                        </div>
+                    `
+                    : ""
+                }
                 <p>
                     <strong>Gender:</strong>
                     ${member.gender || "Not added"}

@@ -1922,7 +1922,73 @@ async function findFamilyRelationship(targetMemberId) {
         }
     }
 
-    alert(
-        "Family relationship path is being prepared."
+    const relationshipModal =
+    document.createElement("div");
+
+relationshipModal.className =
+    "relationship-result-modal";
+
+relationshipModal.innerHTML = `
+    <div class="relationship-result-card">
+
+        <button
+            type="button"
+            class="relationship-result-close"
+        >
+            ×
+        </button>
+
+        <h2>
+            🔗 Family Relationship
+        </h2>
+
+        <p class="relationship-result-intro">
+            Family connection for:
+        </p>
+
+        <h3>
+            ${
+                allMembers.find(
+                    member =>
+                        member.id ===
+                        targetMemberId
+                )?.full_name ||
+                "Family Member"
+            }
+        </h3>
+
+        <div class="relationship-path">
+            <p>
+                🌳 Relationship path will appear here.
+            </p>
+        </div>
+
+    </div>
+`;
+
+document.body.appendChild(
+    relationshipModal
+);
+
+relationshipModal
+    .querySelector(
+        ".relationship-result-close"
+    )
+    .addEventListener(
+        "click",
+        () => relationshipModal.remove()
     );
-}
+
+relationshipModal.addEventListener(
+    "click",
+    function(event) {
+
+        if (
+            event.target ===
+            relationshipModal
+        ) {
+            relationshipModal.remove();
+        }
+
+    }
+);

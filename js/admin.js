@@ -1560,6 +1560,14 @@ if (existingModal) {
 
             <div class="admin-member-view-details">
             
+            <button
+    type="button"
+    class="find-relationship-button"
+    data-member-id="${member.id}"
+>
+    🔗 How am I related?
+</button>
+            
                 <!-- FAMILY RELATIONSHIPS -->
 
                 ${

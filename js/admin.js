@@ -1788,9 +1788,7 @@ if (memberPhoto) {
 }
 async function findFamilyRelationship(targetMemberId) {
 
-    const currentMemberId = targetMemberId;
-
-    const allRelationships =
+    const { data: relationships, error } =
         await supabase
             .from("relationships")
             .select(`
@@ -1799,11 +1797,11 @@ async function findFamilyRelationship(targetMemberId) {
                 relationship_type
             `);
 
-    if (allRelationships.error) {
+    if (error) {
 
         console.error(
             "RELATIONSHIP FINDER ERROR:",
-            allRelationships.error
+            error
         );
 
         alert(
@@ -1813,18 +1811,26 @@ async function findFamilyRelationship(targetMemberId) {
         return;
     }
 
-    const relationships =
-        allRelationships.data || [];
+    const targetMember =
+        allMembers.find(
+            member =>
+                member.id === targetMemberId
+        );
 
-    const visited =
-        new Set();
+    if (!targetMember) {
+        return;
+    }
 
     const queue = [
         {
-            id: currentMemberId,
+            id: targetMemberId,
             path: []
         }
     ];
+
+    const visited = new Set();
+
+    let foundPath = null;
 
     while (queue.length > 0) {
 
@@ -1837,28 +1843,12 @@ async function findFamilyRelationship(targetMemberId) {
 
         visited.add(current.id);
 
-        if (current.path.length > 0) {
-
-            const lastPerson =
-                current.path[
-                    current.path.length - 1
-                ];
-
-            if (
-                lastPerson.id ===
-                currentMemberId
-            ) {
-                continue;
-            }
-        }
-
         for (
             const relationship
-            of relationships
+            of relationships || []
         ) {
 
             let nextId = null;
-            let relationshipName = "";
 
             if (
                 relationship.person_id ===
@@ -1867,9 +1857,6 @@ async function findFamilyRelationship(targetMemberId) {
 
                 nextId =
                     relationship.related_person_id;
-
-                relationshipName =
-                    relationship.relationship_type;
 
             }
 
@@ -1880,9 +1867,6 @@ async function findFamilyRelationship(targetMemberId) {
 
                 nextId =
                     relationship.person_id;
-
-                relationshipName =
-                    relationship.relationship_type;
 
             }
 
@@ -1908,9 +1892,7 @@ async function findFamilyRelationship(targetMemberId) {
                 ...current.path,
                 {
                     id: nextMember.id,
-                    name: nextMember.full_name,
-                    relationship:
-                        relationshipName
+                    name: nextMember.full_name
                 }
             ];
 
@@ -1919,90 +1901,104 @@ async function findFamilyRelationship(targetMemberId) {
                 path: newPath
             });
 
+            if (newPath.length >= 1) {
+
+                foundPath =
+                    newPath;
+
+                break;
+            }
+        }
+
+        if (foundPath) {
+            break;
         }
     }
 
     const relationshipModal =
-    document.createElement("div");
+        document.createElement("div");
 
-relationshipModal.className =
-    "relationship-result-modal";
+    relationshipModal.className =
+        "relationship-result-modal";
 
-relationshipModal.innerHTML = `
-    <div class="relationship-result-card">
+    relationshipModal.innerHTML = `
+        <div class="relationship-result-card">
 
-        <button
-            type="button"
-            class="relationship-result-close"
-        >
-            ×
-        </button>
+            <button
+                type="button"
+                class="relationship-result-close"
+            >
+                ×
+            </button>
 
-        <h2>
-            🔗 Family Relationship
-        </h2>
+            <h2>
+                🔗 Family Relationship
+            </h2>
 
-        <p class="relationship-result-intro">
-            Family connection for:
-        </p>
+            <p class="relationship-result-intro">
+                Family connection for:
+            </p>
 
-        <h3>
-            ${
-                allMembers.find(
-                    member =>
-                        member.id ===
-                        targetMemberId
-                )?.full_name ||
-                "Family Member"
-            }
-        </h3>
+            <h3>
+                ${targetMember.full_name}
+            </h3>
 
-        <div class="relationship-path">
+            <div class="relationship-path">
 
-    ${
-        queue.length > 0
-            ? `
-                <p>
-                    🌳 Family connection found.
-                </p>
-            `
-            : `
-                <p>
-                    🌿 No connected relationship path
-                    could be found.
-                </p>
-            `
-    }
+                ${
+                    foundPath
+                    ? `
+                        <p>
+                            🌳 Connected to:
+                        </p>
 
-</div>
+                        ${foundPath.map(
+                            person => `
+                                <div>
+                                    🌿 ${person.name}
+                                </div>
+                            `
+                        ).join("")}
+                    `
+                    : `
+                        <p>
+                            🌿 No connected relationship
+                            path could be found.
+                        </p>
+                    `
+                }
 
-    </div>
-`;
+            </div>
 
-document.body.appendChild(
-    relationshipModal
-);
+        </div>
+    `;
 
-relationshipModal
-    .querySelector(
-        ".relationship-result-close"
-    )
-    .addEventListener(
-        "click",
-        () => relationshipModal.remove()
+    document.body.appendChild(
+        relationshipModal
     );
 
-relationshipModal.addEventListener(
-    "click",
-    function(event) {
+    relationshipModal
+        .querySelector(
+            ".relationship-result-close"
+        )
+        .addEventListener(
+            "click",
+            () => relationshipModal.remove()
+        );
 
-        if (
-            event.target ===
-            relationshipModal
-        ) {
-            relationshipModal.remove();
+    relationshipModal.addEventListener(
+        "click",
+        function(event) {
+
+            if (
+                event.target ===
+                relationshipModal
+            ) {
+
+                relationshipModal.remove();
+
+            }
+
         }
-
-    }
-);
-} 
+    );
+}

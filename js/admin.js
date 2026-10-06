@@ -1387,7 +1387,94 @@ if (relationshipError) {
         return;
     }
 
+// ===============================
+// ORGANIZE FAMILY RELATIONSHIPS
+// ===============================
 
+const parents = [];
+const children = [];
+const spouses = [];
+
+(memberRelationships || []).forEach(
+    relationship => {
+
+        const relatedMember =
+            allMembers.find(
+                item =>
+                    item.id ===
+                    (
+                        relationship.person_id === memberId
+                            ? relationship.related_person_id
+                            : relationship.person_id
+                    )
+            );
+
+        if (!relatedMember) {
+            return;
+        }
+
+
+        // Parent
+        if (
+            relationship.relationship_type === "child"
+        ) {
+
+            if (
+                relationship.person_id === memberId
+            ) {
+
+                parents.push(
+                    relatedMember
+                );
+
+            } else {
+
+                children.push(
+                    relatedMember
+                );
+
+            }
+
+        }
+
+
+        // Parent relationship
+        if (
+            relationship.relationship_type === "parent"
+        ) {
+
+            if (
+                relationship.person_id === memberId
+            ) {
+
+                children.push(
+                    relatedMember
+                );
+
+            } else {
+
+                parents.push(
+                    relatedMember
+                );
+
+            }
+
+        }
+
+
+        // Spouse
+        if (
+            relationship.relationship_type === "spouse"
+        ) {
+
+            spouses.push(
+                relatedMember
+            );
+
+        }
+
+    }
+);
     const status =
         member.is_deceased
             ? "Deceased"

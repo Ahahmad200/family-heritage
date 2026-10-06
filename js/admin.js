@@ -1958,10 +1958,23 @@ relationshipModal.innerHTML = `
         </h3>
 
         <div class="relationship-path">
-            <p>
-                🌳 Relationship path will appear here.
-            </p>
-        </div>
+
+    ${
+        queue.length > 0
+            ? `
+                <p>
+                    🌳 Family connection found.
+                </p>
+            `
+            : `
+                <p>
+                    🌿 No connected relationship path
+                    could be found.
+                </p>
+            `
+    }
+
+</div>
 
     </div>
 `;

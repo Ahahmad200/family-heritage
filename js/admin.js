@@ -1822,7 +1822,7 @@ async function findFamilyRelationship(sourceMemberId, targetMemberId) {
 
     const queue = [
         {
-            id: targetMemberId,
+            id: sourceMemberId,
             path: []
         }
     ];

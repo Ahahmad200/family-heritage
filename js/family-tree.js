@@ -4,24 +4,37 @@ const familyTree = document.getElementById("familyTree");
 
 window.familyMembers = [];
 
+
+// =========================================
+// LOAD FAMILY TREE
+// =========================================
+
 async function loadFamilyTree() {
 
     familyTree.innerHTML = `
-        <p class="loading-tree">Loading our family tree...</p>
+        <p class="loading-tree">
+            Loading our family tree...
+        </p>
     `;
 
-    // Get all family members
-    const { data: members, error: membersError } = await supabase
-    .from("members")
-    .select(`
-        id,
-        full_name,
-        is_deceased,
-        photo_url,
-        biography,
-        date_of_birth,
-        place_of_birth
-    `);
+
+    // -----------------------------------------
+    // LOAD MEMBERS
+    // -----------------------------------------
+
+    const { data: members, error: membersError } =
+        await supabase
+            .from("members")
+            .select(`
+                id,
+                full_name,
+                is_deceased,
+                photo_url,
+                biography,
+                date_of_birth,
+                place_of_birth
+            `);
+
 
     if (membersError) {
 
@@ -36,19 +49,25 @@ async function loadFamilyTree() {
         return;
     }
 
-    // Make members available to the popup
+
     window.familyMembers = members;
 
 
-    // Get all relationships
-    const { data: relationships, error: relationshipsError } =
-        await supabase
-            .from("relationships")
-            .select(`
-                person_id,
-                related_person_id,
-                relationship_type
-            `);
+    // -----------------------------------------
+    // LOAD RELATIONSHIPS
+    // -----------------------------------------
+
+    const {
+        data: relationships,
+        error: relationshipsError
+    } = await supabase
+        .from("relationships")
+        .select(`
+            person_id,
+            related_person_id,
+            relationship_type
+        `);
+
 
     if (relationshipsError) {
 
@@ -64,7 +83,10 @@ async function loadFamilyTree() {
     }
 
 
-    // Find Patriarch
+    // -----------------------------------------
+    // FIND FOUNDING COUPLE
+    // -----------------------------------------
+
     const patriarch = members.find(
         member =>
             member.full_name ===
@@ -72,7 +94,6 @@ async function loadFamilyTree() {
     );
 
 
-    // Find Matriarch
     const matriarch = members.find(
         member =>
             member.full_name ===
@@ -92,66 +113,33 @@ async function loadFamilyTree() {
     }
 
 
-    // Find children belonging to BOTH parents
+    // -----------------------------------------
+    // CLEAR TREE
+    // -----------------------------------------
 
-    const patriarchChildren = relationships
-        .filter(
-            relationship =>
-                relationship.related_person_id === patriarch.id &&
-                relationship.relationship_type === "child"
-        )
-        .map(
-            relationship =>
-                relationship.person_id
-        );
-
-
-    const matriarchChildren = relationships
-        .filter(
-            relationship =>
-                relationship.related_person_id === matriarch.id &&
-                relationship.relationship_type === "child"
-        )
-        .map(
-            relationship =>
-                relationship.person_id
-        );
-
-
-    const commonChildren = patriarchChildren.filter(
-        id => matriarchChildren.includes(id)
-    );
-
-
-    const children = members.filter(
-        member =>
-            commonChildren.includes(member.id)
-    );
-
-
-    children.sort((a, b) =>
-        a.full_name.localeCompare(b.full_name)
-    );
-
-
-    // Clear loading message
     familyTree.innerHTML = "";
 
 
-    const tree = document.createElement("div");
+    const tree =
+        document.createElement("div");
 
-    tree.className = "family-tree";
+    tree.className =
+        "family-tree";
 
 
-    // =========================================
-    // CENTRAL COUPLE
-    // =========================================
+    // -----------------------------------------
+    // FOUNDING COUPLE
+    // -----------------------------------------
 
-    const couple = document.createElement("div");
+    const couple =
+        document.createElement("div");
 
-    couple.className = "central-couple";
+    couple.className =
+        "central-couple";
+
 
     couple.innerHTML = `
+
         ${createMemberCard(
             patriarch,
             "Patriarch"
@@ -165,179 +153,92 @@ async function loadFamilyTree() {
             matriarch,
             "Matriarch"
         )}
+
     `;
+
 
     tree.appendChild(couple);
 
 
-    // =========================================
+    // -----------------------------------------
     // MAIN CONNECTOR
-    // =========================================
+    // -----------------------------------------
 
-    const mainLine = document.createElement("div");
+    const mainLine =
+        document.createElement("div");
 
-    mainLine.className = "main-connector";
+    mainLine.className =
+        "main-connector";
+
 
     tree.appendChild(mainLine);
 
 
-    // =========================================
-    // CHILDREN TITLE
-    // =========================================
+    // -----------------------------------------
+    // GENERATION 1
+    // -----------------------------------------
 
-    const childrenTitle = document.createElement("h3");
-
-    childrenTitle.className = "generation-title";
-
-    childrenTitle.textContent =
-        `Their Children (${children.length})`;
-
-    tree.appendChild(childrenTitle);
-
-
-    // =========================================
-    // CHILDREN GRID
-    // =========================================
-
-    const childrenContainer = document.createElement("div");
-
-    childrenContainer.className = "children-grid";
-
-
-    children.forEach(child => {
-
-        const childWrapper =
-            document.createElement("div");
-
-        childWrapper.className =
-            "child-wrapper";
+    const firstGeneration =
+        getChildren(
+            patriarch.id,
+            relationships,
+            members
+        ).filter(
+            child =>
+                getChildren(
+                    matriarch.id,
+                    relationships,
+                    members
+                ).some(
+                    motherChild =>
+                        motherChild.id === child.id
+                )
+        );
 
 
-        // Child card
-        childWrapper.innerHTML =
-            createMemberCard(
+    const title =
+        document.createElement("h3");
+
+    title.className =
+        "generation-title";
+
+    title.textContent =
+        `Their Children (${firstGeneration.length})`;
+
+
+    tree.appendChild(title);
+
+
+    // -----------------------------------------
+    // BUILD ALL GENERATIONS
+    // -----------------------------------------
+
+    const generationContainer =
+        document.createElement("div");
+
+    generationContainer.className =
+        "recursive-family-tree";
+
+
+    firstGeneration.forEach(child => {
+
+        const branch =
+            createGenerationBranch(
                 child,
-                "Child of Alh Aliyu & Haj Aisha"
+                relationships,
+                members,
+                1
             );
 
-
-        // Find this child's children
-
-        const grandchildren =
-            relationships
-                .filter(
-                    relationship =>
-                        relationship.related_person_id === child.id &&
-                        relationship.relationship_type === "child"
-                )
-                .map(
-                    relationship =>
-                        members.find(
-                            member =>
-                                member.id === relationship.person_id
-                        )
-                )
-                .filter(Boolean);
-
-
-        // Add expandable section
-
-        if (grandchildren.length > 0) {
-
-            const expandButton =
-                document.createElement("button");
-
-            expandButton.className =
-                "expand-family-button";
-
-            expandButton.textContent =
-                `Show ${grandchildren.length} children ▼`;
-
-
-            const grandchildrenContainer =
-                document.createElement("div");
-
-            grandchildrenContainer.className =
-                "grandchildren-container";
-
-
-            grandchildrenContainer.style.display =
-                "none";
-
-
-            grandchildren.forEach(grandchild => {
-
-                const card =
-                    document.createElement("div");
-
-                card.innerHTML =
-                    createMemberCard(
-                        grandchild,
-                        `Child of ${child.full_name}`
-                    );
-
-                grandchildrenContainer.appendChild(card);
-
-            });
-
-
-            expandButton.addEventListener(
-                "click",
-                (event) => {
-
-                    // Prevent the button click
-                    // from affecting the member card
-                    event.stopPropagation();
-
-
-                    const isHidden =
-                        grandchildrenContainer.style.display ===
-                        "none";
-
-
-                    if (isHidden) {
-
-                        grandchildrenContainer.style.display =
-                            "grid";
-
-                        expandButton.textContent =
-                            `Hide ${grandchildren.length} children ▲`;
-
-                    } else {
-
-                        grandchildrenContainer.style.display =
-                            "none";
-
-                        expandButton.textContent =
-                            `Show ${grandchildren.length} children ▼`;
-
-                    }
-
-                }
-            );
-
-
-            childWrapper.appendChild(
-                expandButton
-            );
-
-
-            childWrapper.appendChild(
-                grandchildrenContainer
-            );
-
-        }
-
-
-        childrenContainer.appendChild(
-            childWrapper
+        generationContainer.appendChild(
+            branch
         );
 
     });
 
 
     tree.appendChild(
-        childrenContainer
+        generationContainer
     );
 
 
@@ -347,26 +248,216 @@ async function loadFamilyTree() {
 
 
 // =========================================
+// GET CHILDREN
+// =========================================
+
+function getChildren(
+    parentId,
+    relationships,
+    members
+) {
+
+    return relationships
+        .filter(
+            relationship =>
+                relationship.related_person_id === parentId &&
+                relationship.relationship_type === "child"
+        )
+        .map(
+            relationship =>
+                members.find(
+                    member =>
+                        member.id === relationship.person_id
+                )
+        )
+        .filter(Boolean);
+
+}
+
+
+// =========================================
+// CREATE GENERATION BRANCH
+// =========================================
+
+function createGenerationBranch(
+    member,
+    relationships,
+    members,
+    generation
+) {
+
+    const wrapper =
+        document.createElement("div");
+
+    wrapper.className =
+        "generation-branch";
+
+
+    // -----------------------------------------
+    // MEMBER CARD
+    // -----------------------------------------
+
+    wrapper.innerHTML =
+        createMemberCard(
+            member,
+            getGenerationLabel(generation)
+        );
+
+
+    // -----------------------------------------
+    // FIND CHILDREN
+    // -----------------------------------------
+
+    const children =
+        getChildren(
+            member.id,
+            relationships,
+            members
+        );
+
+
+    if (children.length === 0) {
+
+        return wrapper;
+
+    }
+
+
+    // -----------------------------------------
+    // GENERATION CONNECTOR
+    // -----------------------------------------
+
+    const connector =
+        document.createElement("div");
+
+    connector.className =
+        "generation-connector";
+
+
+    wrapper.appendChild(
+        connector
+    );
+
+
+    // -----------------------------------------
+    // CHILDREN TITLE
+    // -----------------------------------------
+
+    const childrenTitle =
+        document.createElement("div");
+
+    childrenTitle.className =
+        "generation-subtitle";
+
+
+    childrenTitle.textContent =
+        `Generation ${generation + 1}`;
+
+
+    wrapper.appendChild(
+        childrenTitle
+    );
+
+
+    // -----------------------------------------
+    // CHILDREN CONTAINER
+    // -----------------------------------------
+
+    const childrenContainer =
+        document.createElement("div");
+
+    childrenContainer.className =
+        "generation-children";
+
+
+    children.forEach(child => {
+
+        const childBranch =
+            createGenerationBranch(
+                child,
+                relationships,
+                members,
+                generation + 1
+            );
+
+
+        childrenContainer.appendChild(
+            childBranch
+        );
+
+    });
+
+
+    wrapper.appendChild(
+        childrenContainer
+    );
+
+
+    return wrapper;
+
+}
+
+
+// =========================================
+// GENERATION LABEL
+// =========================================
+
+function getGenerationLabel(generation) {
+
+    if (generation === 1) {
+
+        return "Child of Alh Aliyu & Haj Aisha";
+
+    }
+
+    if (generation === 2) {
+
+        return "Grandchild";
+
+    }
+
+    if (generation === 3) {
+
+        return "Great-grandchild";
+
+    }
+
+    if (generation === 4) {
+
+        return "4th Generation Descendant";
+
+    }
+
+    return `${generation + 1}th Generation Descendant`;
+
+}
+
+
+// =========================================
 // MEMBER CARD
 // =========================================
 
-function createMemberCard(member, relationship) {
+function createMemberCard(
+    member,
+    relationship
+) {
 
     const status =
         member.is_deceased
             ? "Deceased"
             : "Living";
-    const branch =
-    getFamilyBranch(member);
+
 
     const photo =
         member.photo_url
+
             ? `
                 <img
                     src="${member.photo_url}"
                     alt="${member.full_name}"
                 >
             `
+
             : `
                 <div class="member-photo-placeholder">
                     ${getInitials(member.full_name)}
@@ -375,6 +466,7 @@ function createMemberCard(member, relationship) {
 
 
     return `
+
         <div
             class="
                 member-card
@@ -398,10 +490,8 @@ function createMemberCard(member, relationship) {
                 <p class="member-relationship">
                     ${relationship}
                 </p>
-                
-<p class="member-branch">
-    ${branch}
-</p>
+
+
                 <p class="member-status">
                     ${status}
                 </p>
@@ -409,7 +499,9 @@ function createMemberCard(member, relationship) {
             </div>
 
         </div>
+
     `;
+
 }
 
 
@@ -436,6 +528,7 @@ function getInitials(name) {
         words[0].charAt(0) +
         words[words.length - 1].charAt(0)
     ).toUpperCase();
+
 }
 
 
@@ -453,8 +546,6 @@ const closeMemberModal =
     document.getElementById("closeMemberModal");
 
 
-// Open member popup
-
 function openMemberModal(member) {
 
     const status =
@@ -471,12 +562,14 @@ function openMemberModal(member) {
 
     const photo =
         member.photo_url
+
             ? `
                 <img
                     src="${member.photo_url}"
                     alt="${member.full_name}"
                 >
             `
+
             : `
                 <div class="modal-member-placeholder">
                     ${getInitials(member.full_name)}
@@ -505,21 +598,36 @@ function openMemberModal(member) {
         <p class="modal-member-status ${statusClass}">
             ${status}
         </p>
+
+
         <div class="modal-member-details">
 
-    ${
-        member.date_of_birth
-            ? `<p>🎂 <strong>Date of Birth:</strong> ${member.date_of_birth}</p>`
-            : ""
-    }
+            ${
+                member.date_of_birth
+                    ? `
+                        <p>
+                            🎂
+                            <strong>Date of Birth:</strong>
+                            ${member.date_of_birth}
+                        </p>
+                    `
+                    : ""
+            }
 
-    ${
-        member.place_of_birth
-            ? `<p>📍 <strong>Place of Birth:</strong> ${member.place_of_birth}</p>`
-            : ""
-    }
 
-</div>
+            ${
+                member.place_of_birth
+                    ? `
+                        <p>
+                            📍
+                            <strong>Place of Birth:</strong>
+                            ${member.place_of_birth}
+                        </p>
+                    `
+                    : ""
+            }
+
+        </div>
 
 
         <div class="modal-member-biography">
@@ -537,28 +645,29 @@ function openMemberModal(member) {
     `;
 
 
-    memberModal.style.display = "flex";
+    memberModal.style.display =
+        "flex";
+
 }
 
 
-// Close popup
+// =========================================
+// CLOSE MEMBER MODAL
+// =========================================
 
 function closeMemberModalWindow() {
 
-    memberModal.style.display = "none";
+    memberModal.style.display =
+        "none";
 
 }
 
-
-// Close button
 
 closeMemberModal.addEventListener(
     "click",
     closeMemberModalWindow
 );
 
-
-// Close when clicking outside
 
 memberModal.addEventListener(
     "click",
@@ -574,17 +683,24 @@ memberModal.addEventListener(
 );
 
 
-// Make every member card clickable
+// =========================================
+// CLICK MEMBER CARD
+// =========================================
 
 document.addEventListener(
     "click",
     function(event) {
 
         const card =
-            event.target.closest(".member-card");
+            event.target.closest(
+                ".member-card"
+            );
+
 
         if (!card) {
+
             return;
+
         }
 
 
@@ -612,40 +728,5 @@ document.addEventListener(
 // =========================================
 // START
 // =========================================
-// =========================================
-// FAMILY BRANCH IDENTIFICATION
-// =========================================
 
-function getFamilyBranch(member) {
-
-    const mainChildren = [
-        "Haj Safiya Aliyu",
-        "Alh Mukhtar Aliyu",
-        "Alh Ahmad Tijjani Aliyu",
-        "Ummu-Khair Aliyu",
-        "Maimunatu Aliyu",
-        "Haj Ummu-Aimana Aliyu",
-        "Usman Aliyu",
-        "Zahrau Aliyu",
-        "Ibrahim Aliyu",
-        "Naziru Aliyu"
-    ];
-
-    const mainChildNames =
-        mainChildren.map(
-            name => name.toLowerCase()
-        );
-
-    if (
-        mainChildNames.includes(
-            member.full_name.toLowerCase()
-        )
-    ) {
-
-        return "🌿 Main Family Branch";
-
-    }
-
-    return "🌱 Family Branch";
-}
 loadFamilyTree();

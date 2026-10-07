@@ -2026,7 +2026,29 @@ ${foundPath.map(
 
         </div>
     `;
+const relationshipTargetSelect =
+    relationshipModal.querySelector(
+        "#relationshipTargetSelect"
+    );
 
+allMembers.forEach(member => {
+
+    if (member.id === targetMemberId) {
+        return;
+    }
+
+    const option =
+        document.createElement("option");
+
+    option.value = member.id;
+    option.textContent =
+        member.full_name;
+
+    relationshipTargetSelect.appendChild(
+        option
+    );
+
+});
     document.body.appendChild(
         relationshipModal
     );

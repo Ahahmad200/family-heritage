@@ -2075,7 +2075,9 @@ calculateRelationshipButton.addEventListener(
         }
 
         findFamilyRelationship(
-            selectedMemberId
+    targetMemberId,
+    selectedMemberId
+);
         );
 
     }

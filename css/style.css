@@ -2308,3 +2308,94 @@ footer {
     }
 
 }
+/* =========================================
+   FAMILY TREE — FAMILY BRANCH LEGEND
+   ========================================= */
+
+.family-branch-legend {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 25px auto 35px;
+    padding: 15px 20px;
+
+    max-width: 700px;
+
+    background: #fffdf8;
+    border: 1px solid #eadfc9;
+    border-radius: 18px;
+
+    box-shadow:
+        0 6px 20px rgba(59, 47, 47, 0.08);
+}
+
+.family-branch-legend-title {
+    width: 100%;
+    text-align: center;
+
+    font-size: 15px;
+    font-weight: bold;
+
+    color: #3b2f2f;
+
+    margin-bottom: 5px;
+}
+
+.family-branch-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+
+    padding: 7px 12px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.family-branch-main {
+    background: #f5ead0;
+    color: #7a5a0a;
+}
+
+.family-branch-previous {
+    background: #eeeae4;
+    color: #66605a;
+}
+
+.family-branch-dot {
+    width: 11px;
+    height: 11px;
+
+    border-radius: 50%;
+
+    display: inline-block;
+}
+
+.family-branch-main .family-branch-dot {
+    background: #b8860b;
+}
+
+.family-branch-previous .family-branch-dot {
+    background: #888;
+}
+
+
+/* Mobile */
+
+@media (max-width: 600px) {
+
+    .family-branch-legend {
+        margin: 20px 10px 25px;
+        padding: 13px 10px;
+    }
+
+    .family-branch-item {
+        font-size: 11px;
+        padding: 6px 10px;
+    }
+
+}

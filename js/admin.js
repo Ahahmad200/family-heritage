@@ -1956,6 +1956,25 @@ console.log(
         relationshipModal.innerHTML = `
     <div class="relationship-result-card">
 
+        <button
+            type="button"
+            class="relationship-result-close"
+        >
+            ×
+        </button>
+
+        <h2>
+            🔗 Family Relationship
+        </h2>
+
+        <p class="relationship-result-intro">
+            Family connection for:
+        </p>
+
+        <h3>
+            ${targetMember.full_name}
+        </h3>
+
         <label for="relationshipTargetSelect">
             Choose a family member:
         </label>
@@ -1974,60 +1993,41 @@ console.log(
             🔗 Find Relationship
         </button>
 
-        <button
-            type="button"
-            class="relationship-result-close"
-        >
-            ×
-        </button>
+        <div class="relationship-path">
 
-            <h2>
-                🔗 Family Relationship
-            </h2>
+            ${
+                foundPath
+                ? `
+                    <p>
+                        🌳 Connected to:
+                    </p>
 
-            <p class="relationship-result-intro">
-                Family connection for:
-            </p>
+                    ${foundPath.map(
+                        person => `
+                            <div class="relationship-path-person">
+                                <span class="relationship-path-label">
+                                    ${person.relationship}
+                                </span>
 
-            <h3>
-                ${targetMember.full_name}
-            </h3>
-
-            <div class="relationship-path">
-
-                ${
-                    foundPath
-                    ? `
-                        <p>
-                            🌳 Connected to:
-                        </p>
-
-${foundPath.map(
-    person => `
-        <div class="relationship-path-person">
-            <span class="relationship-path-label">
-                ${person.relationship}
-            </span>
-
-            <strong>
-                ${person.name}
-            </strong>
-        </div>
-    `
-).join("")}
-                    `
-                    : `
-                        <p>
-                            🌿 No connected relationship
-                            path could be found.
-                        </p>
-                    `
-                }
-
-            </div>
+                                <strong>
+                                    ${person.name}
+                                </strong>
+                            </div>
+                        `
+                    ).join("")}
+                `
+                : `
+                    <p>
+                        🌿 No connected relationship
+                        path could be found.
+                    </p>
+                `
+            }
 
         </div>
-    `;
+
+    </div>
+`;
 const relationshipTargetSelect =
     relationshipModal.querySelector(
         "#relationshipTargetSelect"

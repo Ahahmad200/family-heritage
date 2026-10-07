@@ -276,7 +276,7 @@ function getChildren(
 
 
 // =========================================
-// CREATE GENERATION BRANCH
+// CREATE COLLAPSIBLE GENERATION BRANCH
 // =========================================
 
 function createGenerationBranch(
@@ -316,6 +316,8 @@ function createGenerationBranch(
         );
 
 
+    // No children = nothing more to display
+
     if (children.length === 0) {
 
         return wrapper;
@@ -324,39 +326,36 @@ function createGenerationBranch(
 
 
     // -----------------------------------------
-    // GENERATION CONNECTOR
+    // DESCENDANTS CONTAINER
     // -----------------------------------------
 
-    const connector =
+    const descendants =
         document.createElement("div");
 
-    connector.className =
-        "generation-connector";
-
-
-    wrapper.appendChild(
-        connector
-    );
+    descendants.className =
+        "collapsible-descendants";
 
 
     // -----------------------------------------
-    // CHILDREN TITLE
+    // SHOW/HIDE BUTTON
     // -----------------------------------------
 
-    const childrenTitle =
-        document.createElement("div");
+    const toggleButton =
+        document.createElement("button");
 
-    childrenTitle.className =
-        "generation-subtitle";
+    toggleButton.type =
+        "button";
+
+    toggleButton.className =
+        "show-descendants-button";
 
 
-    childrenTitle.textContent =
-        `Generation ${generation + 1}`;
-
-
-    wrapper.appendChild(
-        childrenTitle
-    );
+    toggleButton.innerHTML =
+        `
+            ✨ Show ${children.length}
+            descendant${children.length === 1 ? "" : "s"}
+            ▼
+        `;
 
 
     // -----------------------------------------
@@ -369,6 +368,10 @@ function createGenerationBranch(
     childrenContainer.className =
         "generation-children";
 
+
+    // -----------------------------------------
+    // CREATE CHILD BRANCHES
+    // -----------------------------------------
 
     children.forEach(child => {
 
@@ -388,15 +391,82 @@ function createGenerationBranch(
     });
 
 
-    wrapper.appendChild(
+    descendants.appendChild(
         childrenContainer
+    );
+
+
+    // -----------------------------------------
+    // HIDDEN BY DEFAULT
+    // -----------------------------------------
+
+    descendants.style.display =
+        "none";
+
+
+    // -----------------------------------------
+    // BUTTON CLICK
+    // -----------------------------------------
+
+    toggleButton.addEventListener(
+        "click",
+        function(event) {
+
+            event.stopPropagation();
+
+
+            const hidden =
+                descendants.style.display ===
+                "none";
+
+
+            if (hidden) {
+
+                descendants.style.display =
+                    "block";
+
+
+                toggleButton.innerHTML =
+                    `
+                        ✨ Hide descendants ▲
+                    `;
+
+            } else {
+
+                descendants.style.display =
+                    "none";
+
+
+                toggleButton.innerHTML =
+                    `
+                        ✨ Show ${children.length}
+                        descendant${children.length === 1 ? "" : "s"}
+                        ▼
+                    `;
+
+            }
+
+        }
+    );
+
+
+    // -----------------------------------------
+    // ADD TO BRANCH
+    // -----------------------------------------
+
+    wrapper.appendChild(
+        toggleButton
+    );
+
+
+    wrapper.appendChild(
+        descendants
     );
 
 
     return wrapper;
 
 }
-
 
 // =========================================
 // GENERATION LABEL

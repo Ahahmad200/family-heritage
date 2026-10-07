@@ -2053,7 +2053,33 @@ allMembers.forEach(member => {
     document.body.appendChild(
         relationshipModal
     );
+const calculateRelationshipButton =
+    relationshipModal.querySelector(
+        "#calculateRelationshipButton"
+    );
 
+calculateRelationshipButton.addEventListener(
+    "click",
+    function() {
+
+        const selectedMemberId =
+            relationshipTargetSelect.value;
+
+        if (!selectedMemberId) {
+
+            alert(
+                "Please select a family member."
+            );
+
+            return;
+        }
+
+        findFamilyRelationship(
+            selectedMemberId
+        );
+
+    }
+);
     relationshipModal
         .querySelector(
             ".relationship-result-close"

@@ -1954,7 +1954,16 @@ console.log(
 
     relationshipModal.innerHTML = `
         <div class="relationship-result-card">
+        
+<label for="relationshipTargetSelect">
+    Choose a family member:
+</label>
 
+<select id="relationshipTargetSelect">
+    <option value="">
+        Select family member
+    </option>
+</select>
          <label for="relationshipTargetSelect">
     Choose a family member:
 </label>

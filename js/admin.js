@@ -1931,13 +1931,10 @@ console.log(
                 path: newPath
             });
 
-            if (newPath.length >= 1) {
-
-                foundPath =
-                    newPath;
-
-                break;
-            }
+            if (nextId === targetMemberId) {
+    foundPath = newPath;
+    break;
+}
         }
 
         if (foundPath) {

@@ -356,7 +356,8 @@ function createMemberCard(member, relationship) {
         member.is_deceased
             ? "Deceased"
             : "Living";
-
+    const branch =
+    getFamilyBranch(member);
 
     const photo =
         member.photo_url

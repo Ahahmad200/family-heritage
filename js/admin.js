@@ -1964,6 +1964,13 @@ console.log(
         Select family member
     </option>
 </select>
+<button
+    type="button"
+    id="calculateRelationshipButton"
+    class="find-relationship-button"
+>
+    🔗 Find Relationship
+</button>
          <label for="relationshipTargetSelect">
     Choose a family member:
 </label>

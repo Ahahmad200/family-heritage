@@ -1810,11 +1810,17 @@ async function findFamilyRelationship(sourceMemberId, targetMemberId) {
         return;
     }
 
-    const targetMember =
-        allMembers.find(
-            member =>
-                member.id === targetMemberId
-        );
+    const sourceMember =
+    allMembers.find(
+        member =>
+            member.id === sourceMemberId
+    );
+
+const targetMember =
+    allMembers.find(
+        member =>
+            member.id === targetMemberId
+    );
 
     if (!targetMember) {
         return;

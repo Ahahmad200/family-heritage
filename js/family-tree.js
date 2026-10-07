@@ -397,7 +397,10 @@ function createMemberCard(member, relationship) {
                 <p class="member-relationship">
                     ${relationship}
                 </p>
-
+                
+<p class="member-branch">
+    🌿 Main Family Branch
+</p>
 
                 <p class="member-status">
                     ${status}

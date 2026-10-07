@@ -1786,8 +1786,7 @@ if (memberPhoto) {
     );
 
 }
-async function findFamilyRelationship(targetMemberId) {
-
+async function findFamilyRelationship(sourceMemberId, targetMemberId) {
     const { data: relationships, error } =
         await supabase
             .from("relationships")

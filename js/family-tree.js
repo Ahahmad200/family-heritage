@@ -400,9 +400,8 @@ function createMemberCard(member, relationship) {
                 </p>
                 
 <p class="member-branch">
-    🌿 Main Family Branch
+    ${branch}
 </p>
-
                 <p class="member-status">
                     ${status}
                 </p>
@@ -613,5 +612,40 @@ document.addEventListener(
 // =========================================
 // START
 // =========================================
+// =========================================
+// FAMILY BRANCH IDENTIFICATION
+// =========================================
 
+function getFamilyBranch(member) {
+
+    const mainChildren = [
+        "Haj Safiya Aliyu",
+        "Alh Mukhtar Aliyu",
+        "Alh Ahmad Tijjani Aliyu",
+        "Ummu-Khair Aliyu",
+        "Maimunatu Aliyu",
+        "Haj Ummu-Aimana Aliyu",
+        "Usman Aliyu",
+        "Zahrau Aliyu",
+        "Ibrahim Aliyu",
+        "Naziru Aliyu"
+    ];
+
+    const mainChildNames =
+        mainChildren.map(
+            name => name.toLowerCase()
+        );
+
+    if (
+        mainChildNames.includes(
+            member.full_name.toLowerCase()
+        )
+    ) {
+
+        return "🌿 Main Family Branch";
+
+    }
+
+    return "🌱 Family Branch";
+}
 loadFamilyTree();

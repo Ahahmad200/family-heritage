@@ -1,4 +1,5 @@
 import { supabase } from "./supabase.js";
+
 // ===============================
 // ADMIN ACCESS PROTECTION
 // ===============================
@@ -9,7 +10,6 @@ async function checkAdminAccess() {
         data: { user }
     } = await supabase.auth.getUser();
 
-    // No logged-in user
     if (!user) {
 
         window.location.href =
@@ -18,18 +18,12 @@ async function checkAdminAccess() {
         return false;
     }
 
-
-    // Check whether user is an administrator
     const { data: admin, error } =
         await supabase
             .from("admin_users")
             .select("id")
-            .eq(
-                "auth_user_id",
-                user.id
-            )
+            .eq("auth_user_id", user.id)
             .maybeSingle();
-
 
     if (error || !admin) {
 
@@ -41,9 +35,9 @@ async function checkAdminAccess() {
         return false;
     }
 
-
     return true;
 }
+
 
 // ===============================
 // GET HTML ELEMENTS
@@ -94,9 +88,6 @@ const dateOfBirth =
 const placeOfBirth =
     document.getElementById("placeOfBirth");
 
-const photoUrl =
-    document.getElementById("photoUrl");
-
 const isDeceased =
     document.getElementById("isDeceased");
 
@@ -114,6 +105,29 @@ const livingMembers =
 
 const deceasedMembers =
     document.getElementById("deceasedMembers");
+
+
+// ===============================
+// RELATIONSHIP HTML ELEMENTS
+// ===============================
+
+const relationshipPerson =
+    document.getElementById("relationshipPerson");
+
+const relationshipType =
+    document.getElementById("relationshipType");
+
+const relatedPerson =
+    document.getElementById("relatedPerson");
+
+const saveRelationshipButton =
+    document.getElementById("saveRelationshipButton");
+
+const relationshipMessage =
+    document.getElementById("relationshipMessage");
+
+const relationshipsList =
+    document.getElementById("relationshipsList");
 
 
 // ===============================
@@ -135,24 +149,28 @@ async function loadMembers() {
         </p>
     `;
 
-    const { data, error } = await supabase
-        .from("members")
-        .select(`
-            id,
-            full_name,
-            gender,
-            date_of_birth,
-            place_of_birth,
-            photo_url,
-            biography,
-            is_deceased,
-            date_of_death
-        `)
-        .order("full_name");
+    const { data, error } =
+        await supabase
+            .from("members")
+            .select(`
+                id,
+                full_name,
+                gender,
+                date_of_birth,
+                place_of_birth,
+                photo_url,
+                biography,
+                is_deceased,
+                date_of_death
+            `)
+            .order("full_name");
 
     if (error) {
 
-        console.error("LOAD MEMBERS ERROR:", error);
+        console.error(
+            "LOAD MEMBERS ERROR:",
+            error
+        );
 
         membersList.innerHTML = `
             <p class="admin-error">
@@ -184,7 +202,8 @@ function updateStatistics() {
 
     const deceased =
         allMembers.filter(
-            member => member.is_deceased === true
+            member =>
+                member.is_deceased === true
         ).length;
 
     const living =
@@ -198,6 +217,29 @@ function updateStatistics() {
 
     deceasedMembers.textContent =
         deceased;
+}
+
+
+// ===============================
+// GET INITIALS
+// ===============================
+
+function getInitials(name) {
+
+    const words =
+        name.trim().split(" ");
+
+    if (words.length === 1) {
+
+        return words[0]
+            .charAt(0)
+            .toUpperCase();
+    }
+
+    return (
+        words[0].charAt(0) +
+        words[words.length - 1].charAt(0)
+    ).toUpperCase();
 }
 
 
@@ -220,7 +262,6 @@ function displayMembers(members) {
 
     membersList.innerHTML = "";
 
-
     members.forEach(member => {
 
         const card =
@@ -229,12 +270,10 @@ function displayMembers(members) {
         card.className =
             "admin-member-row";
 
-
         const status =
             member.is_deceased
                 ? "Deceased"
                 : "Living";
-
 
         const photo =
             member.photo_url
@@ -250,15 +289,11 @@ function displayMembers(members) {
                     </div>
                 `;
 
-
         card.innerHTML = `
 
             <div class="admin-member-photo">
-
                 ${photo}
-
             </div>
-
 
             <div class="admin-member-info">
 
@@ -281,59 +316,57 @@ function displayMembers(members) {
 
             </div>
 
-
             <div class="admin-member-actions">
 
-    <button
-        class="admin-view-button"
-        data-id="${member.id}"
-    >
-        View
-    </button>
+                <button
+                    class="admin-view-button"
+                    data-id="${member.id}"
+                >
+                    View
+                </button>
 
-    <button
-        class="admin-edit-button"
-        data-id="${member.id}"
-    >
-        Edit
-    </button>
+                <button
+                    class="admin-edit-button"
+                    data-id="${member.id}"
+                >
+                    Edit
+                </button>
 
-    <button
-        class="admin-delete-button"
-        data-id="${member.id}"
-    >
-        Delete
-    </button>
+                <button
+                    class="admin-delete-button"
+                    data-id="${member.id}"
+                >
+                    Delete
+                </button>
 
-</div>
+            </div>
         `;
 
-
         membersList.appendChild(card);
-
     });
-    
-// ===============================
-// VIEW BUTTONS
-// ===============================
 
-document
-    .querySelectorAll(".admin-view-button")
-    .forEach(button => {
 
-        button.addEventListener(
-            "click",
-            () => {
+    // ===============================
+    // VIEW BUTTONS
+    // ===============================
 
-                const id =
-                    button.dataset.id;
+    document
+        .querySelectorAll(".admin-view-button")
+        .forEach(button => {
 
-                viewMember(id);
+            button.addEventListener(
+                "click",
+                () => {
 
-            }
-        );
+                    viewMember(
+                        button.dataset.id
+                    );
 
-    });
+                }
+            );
+
+        });
+
 
     // ===============================
     // EDIT BUTTONS
@@ -347,10 +380,9 @@ document
                 "click",
                 () => {
 
-                    const id =
-                        button.dataset.id;
-
-                    editMember(id);
+                    editMember(
+                        button.dataset.id
+                    );
 
                 }
             );
@@ -370,42 +402,14 @@ document
                 "click",
                 () => {
 
-                    const id =
-                        button.dataset.id;
-
-                    deleteMember(id);
+                    deleteMember(
+                        button.dataset.id
+                    );
 
                 }
             );
 
         });
-
-}
-
-
-// ===============================
-// GET INITIALS
-// ===============================
-
-function getInitials(name) {
-
-    const words =
-        name.trim().split(" ");
-
-
-    if (words.length === 1) {
-
-        return words[0]
-            .charAt(0)
-            .toUpperCase();
-
-    }
-
-
-    return (
-        words[0].charAt(0) +
-        words[words.length - 1].charAt(0)
-    ).toUpperCase();
 
 }
 
@@ -441,19 +445,17 @@ function openMemberForm() {
 
     memberFormContainer.style.display =
         "block";
-
 }
 
 
 // ===============================
-// CLOSE FORM
+// CLOSE MEMBER FORM
 // ===============================
 
 function closeForm() {
 
     memberFormContainer.style.display =
         "none";
-
 }
 
 
@@ -477,79 +479,65 @@ function editMember(id) {
 
     const member =
         allMembers.find(
-            item => item.id === id
+            item =>
+                item.id === id
         );
 
-
     if (!member) {
-
         return;
-
     }
-
 
     memberFormTitle.textContent =
         "Edit Family Member";
 
-
     memberId.value =
         member.id;
-
 
     fullName.value =
         member.full_name || "";
 
-
     gender.value =
         member.gender || "";
-
 
     dateOfBirth.value =
         member.date_of_birth || "";
 
-
     placeOfBirth.value =
         member.place_of_birth || "";
-
 
     isDeceased.value =
         member.is_deceased
             ? "true"
             : "false";
 
-
     dateOfDeath.value =
         member.date_of_death || "";
-
 
     biography.value =
         member.biography || "";
 
-
     memberMessage.textContent = "";
-
 
     memberFormContainer.style.display =
         "block";
 
-
     window.scrollTo({
-
         top:
             memberFormContainer.offsetTop,
-
         behavior:
             "smooth"
-
     });
-
 }
+
 
 // ===============================
 // UPLOAD MEMBER PHOTO
 // ===============================
 
-async function uploadMemberPhoto(file, memberId) {
+async function uploadMemberPhoto(
+    file,
+    id
+) {
 
     if (!file) {
         return null;
@@ -559,16 +547,13 @@ async function uploadMemberPhoto(file, memberId) {
         file.name.split(".").pop();
 
     const fileName =
-        memberId + "." + fileExtension;
-
-    const filePath =
-        fileName;
+        id + "." + fileExtension;
 
     const { error: uploadError } =
         await supabase.storage
             .from("family-photos")
             .upload(
-                filePath,
+                fileName,
                 file,
                 {
                     upsert: true
@@ -588,10 +573,12 @@ async function uploadMemberPhoto(file, memberId) {
     const { data } =
         supabase.storage
             .from("family-photos")
-            .getPublicUrl(filePath);
+            .getPublicUrl(fileName);
 
     return data.publicUrl;
 }
+
+
 // ===============================
 // SAVE MEMBER
 // ===============================
@@ -627,7 +614,6 @@ memberForm.addEventListener(
 
             date_of_death:
                 dateOfDeath.value || null
-
         };
 
 
@@ -635,7 +621,7 @@ memberForm.addEventListener(
 
 
         // ===============================
-        // ADD NEW MEMBER
+        // ADD MEMBER
         // ===============================
 
         if (!memberId.value) {
@@ -653,24 +639,24 @@ memberForm.addEventListener(
 
 
         // ===============================
-        // UPDATE EXISTING MEMBER
+        // UPDATE MEMBER
         // ===============================
 
         else {
 
-            result = {
-                data: {
-                    id: memberId.value
-                },
-                error: null
-            };
+            result =
+                await supabase
+                    .from("members")
+                    .update(memberData)
+                    .eq(
+                        "id",
+                        memberId.value
+                    )
+                    .select("id")
+                    .single();
 
         }
 
-
-        // ===============================
-        // CHECK MEMBER SAVE ERROR
-        // ===============================
 
         if (result.error) {
 
@@ -679,33 +665,26 @@ memberForm.addEventListener(
                 result.error
             );
 
-            memberMessage.innerHTML =
-                `
+            memberMessage.innerHTML = `
                 Unable to save member.
                 <br>
                 ${result.error.message}
-                `;
+            `;
 
             return;
-
         }
 
-
-        // ===============================
-        // GET MEMBER ID
-        // ===============================
 
         const savedMemberId =
             result.data.id;
 
 
         // ===============================
-        // UPLOAD PHOTO
+        // PHOTO
         // ===============================
 
         const selectedPhoto =
             memberPhoto.files[0];
-
 
         if (selectedPhoto) {
 
@@ -720,25 +699,20 @@ memberForm.addEventListener(
                         savedMemberId
                     );
 
-
-                // Save photo URL to member record
-
                 const { error: photoError } =
                     await supabase
                         .from("members")
                         .update({
-                            photo_url: photoUrl
+                            photo_url:
+                                photoUrl
                         })
                         .eq(
                             "id",
                             savedMemberId
                         );
 
-
                 if (photoError) {
-
                     throw photoError;
-
                 }
 
             } catch (error) {
@@ -748,31 +722,23 @@ memberForm.addEventListener(
                     error
                 );
 
-                memberMessage.innerHTML =
-                    `
+                memberMessage.innerHTML = `
                     Member saved, but photo upload failed.
                     <br>
                     ${error.message}
-                    `;
+                `;
 
                 await loadMembers();
 
                 return;
             }
-
         }
 
-
-        // ===============================
-        // SUCCESS
-        // ===============================
 
         memberMessage.textContent =
             "Member saved successfully!";
 
-
         await loadMembers();
-
 
         setTimeout(
             closeForm,
@@ -791,36 +757,31 @@ async function deleteMember(id) {
 
     const member =
         allMembers.find(
-            item => item.id === id
+            item =>
+                item.id === id
         );
 
-
     if (!member) {
-
         return;
-
     }
-
 
     const confirmed =
         confirm(
             `Are you sure you want to delete ${member.full_name}?`
         );
 
-
     if (!confirmed) {
-
         return;
-
     }
-
 
     const { error } =
         await supabase
             .from("members")
             .delete()
-            .eq("id", id);
-
+            .eq(
+                "id",
+                id
+            );
 
     if (error) {
 
@@ -829,24 +790,19 @@ async function deleteMember(id) {
             error
         );
 
-
         alert(
             "Unable to delete member.\n\n" +
             error.message
         );
 
         return;
-
     }
-
 
     alert(
         "Member deleted successfully."
     );
 
-
     await loadMembers();
-
 }
 
 
@@ -863,7 +819,6 @@ memberSearch.addEventListener(
                 .toLowerCase()
                 .trim();
 
-
         const filtered =
             allMembers.filter(
                 member =>
@@ -872,43 +827,14 @@ memberSearch.addEventListener(
                         .includes(search)
             );
 
-
         displayMembers(filtered);
 
     }
 );
 
 
-// ===============================
-// START ADMIN PAGE
-// ===============================
-
-loadMembers();
 // =================================
-// RELATIONSHIP MANAGEMENT
-// =================================
-
-const relationshipPerson =
-    document.getElementById("relationshipPerson");
-
-const relationshipType =
-    document.getElementById("relationshipType");
-
-const relatedPerson =
-    document.getElementById("relatedPerson");
-
-const saveRelationshipButton =
-    document.getElementById("saveRelationshipButton");
-
-const relationshipMessage =
-    document.getElementById("relationshipMessage");
-
-const relationshipsList =
-    document.getElementById("relationshipsList");
-
-
-// =================================
-// LOAD MEMBERS INTO DROPDOWNS
+// LOAD RELATIONSHIP DROPDOWNS
 // =================================
 
 function loadRelationshipMembers() {
@@ -924,7 +850,6 @@ function loadRelationshipMembers() {
             Select related person
         </option>
     `;
-
 
     allMembers.forEach(member => {
 
@@ -956,7 +881,6 @@ function loadRelationshipMembers() {
         );
 
     });
-
 }
 
 
@@ -972,7 +896,6 @@ async function loadRelationships() {
         </p>
     `;
 
-
     const { data, error } =
         await supabase
             .from("relationships")
@@ -983,14 +906,12 @@ async function loadRelationships() {
                 relationship_type
             `);
 
-
     if (error) {
 
         console.error(
             "LOAD RELATIONSHIPS ERROR:",
             error
         );
-
 
         relationshipsList.innerHTML = `
             <p class="admin-error">
@@ -1001,9 +922,7 @@ async function loadRelationships() {
         `;
 
         return;
-
     }
-
 
     if (!data || data.length === 0) {
 
@@ -1014,12 +933,9 @@ async function loadRelationships() {
         `;
 
         return;
-
     }
 
-
     relationshipsList.innerHTML = "";
-
 
     data.forEach(relationship => {
 
@@ -1030,7 +946,6 @@ async function loadRelationships() {
                     relationship.person_id
             );
 
-
         const relatedPersonData =
             allMembers.find(
                 member =>
@@ -1038,13 +953,9 @@ async function loadRelationships() {
                     relationship.related_person_id
             );
 
-
         if (!person || !relatedPersonData) {
-
             return;
-
         }
-
 
         const row =
             document.createElement("div");
@@ -1052,43 +963,32 @@ async function loadRelationships() {
         row.className =
             "relationship-row";
 
-
         let relationshipText =
             relationship.relationship_type;
-
 
         if (
             relationship.relationship_type ===
             "child"
         ) {
-
             relationshipText =
                 "Child of";
-
         }
-
 
         if (
             relationship.relationship_type ===
             "parent"
         ) {
-
             relationshipText =
                 "Parent of";
-
         }
-
 
         if (
             relationship.relationship_type ===
             "spouse"
         ) {
-
             relationshipText =
                 "Spouse of";
-
         }
-
 
         row.innerHTML = `
 
@@ -1108,7 +1008,6 @@ async function loadRelationships() {
 
             </div>
 
-
             <button
                 class="admin-delete-button delete-relationship-button"
                 data-id="${relationship.id}"
@@ -1118,17 +1017,12 @@ async function loadRelationships() {
 
         `;
 
-
         relationshipsList.appendChild(
             row
         );
 
     });
 
-
-    // =================================
-    // DELETE RELATIONSHIP BUTTONS
-    // =================================
 
     document
         .querySelectorAll(
@@ -1148,7 +1042,6 @@ async function loadRelationships() {
             );
 
         });
-
 }
 
 
@@ -1169,7 +1062,6 @@ saveRelationshipButton.addEventListener(
         const relatedPersonId =
             relatedPerson.value;
 
-
         if (
             !personId ||
             !type ||
@@ -1180,9 +1072,7 @@ saveRelationshipButton.addEventListener(
                 "Please select all relationship fields.";
 
             return;
-
         }
-
 
         if (
             personId === relatedPersonId
@@ -1192,19 +1082,15 @@ saveRelationshipButton.addEventListener(
                 "A person cannot be related to themselves.";
 
             return;
-
         }
-
 
         relationshipMessage.textContent =
             "Saving relationship...";
-
 
         const { error } =
             await supabase
                 .from("relationships")
                 .insert([
-
                     {
                         person_id:
                             personId,
@@ -1214,44 +1100,35 @@ saveRelationshipButton.addEventListener(
 
                         relationship_type:
                             type
-
                     }
-
                 ]);
-
 
         if (error) {
 
-    console.error(
-        "SAVE RELATIONSHIP ERROR:",
-        error
-    );
+            console.error(
+                "SAVE RELATIONSHIP ERROR:",
+                error
+            );
 
+            if (
+                error.code === "23505"
+            ) {
 
-    if (
-        error.code === "23505"
-    ) {
+                relationshipMessage.textContent =
+                    "This relationship already exists.";
 
-        relationshipMessage.textContent =
-            "This relationship already exists.";
+            } else {
 
-    } else {
+                relationshipMessage.textContent =
+                    "Unable to save relationship: " +
+                    error.message;
+            }
 
-        relationshipMessage.textContent =
-            "Unable to save relationship: " +
-            error.message;
-
-    }
-
-
-    return;
-
-}
-
+            return;
+        }
 
         relationshipMessage.textContent =
             "Relationship saved successfully!";
-
 
         relationshipPerson.value =
             "";
@@ -1262,9 +1139,7 @@ saveRelationshipButton.addEventListener(
         relatedPerson.value =
             "";
 
-
         await loadRelationships();
-
     }
 );
 
@@ -1280,13 +1155,9 @@ async function deleteRelationship(id) {
             "Are you sure you want to delete this relationship?"
         );
 
-
     if (!confirmed) {
-
         return;
-
     }
-
 
     const { error } =
         await supabase
@@ -1297,7 +1168,6 @@ async function deleteRelationship(id) {
                 id
             );
 
-
     if (error) {
 
         console.error(
@@ -1305,46 +1175,22 @@ async function deleteRelationship(id) {
             error
         );
 
-
         alert(
             "Unable to delete relationship.\n\n" +
             error.message
         );
 
         return;
-
     }
-
 
     alert(
         "Relationship deleted successfully."
     );
 
-
     await loadRelationships();
-
 }
 
 
-// =================================
-// START RELATIONSHIP MANAGEMENT
-// =================================
-
-checkAdminAccess().then((isAdmin) => {
-
-    if (!isAdmin) {
-        return;
-    }
-
-    loadMembers().then(() => {
-
-        loadRelationshipMembers();
-
-        loadRelationships();
-
-    });
-
-});
 // ===============================
 // VIEW MEMBER DETAILS
 // ===============================
@@ -1353,15 +1199,24 @@ async function viewMember(memberId) {
 
     const member =
         allMembers.find(
-            item => item.id === memberId
+            item =>
+                item.id === memberId
         );
 
-// ===============================
-// LOAD MEMBER RELATIONSHIPS
-// ===============================
+    if (!member) {
 
-const { data: memberRelationships, error: relationshipError } =
-    await supabase
+        alert(
+            "Member information not found."
+        );
+
+        return;
+    }
+
+
+    const {
+        data: memberRelationships,
+        error: relationshipError
+    } = await supabase
         .from("relationships")
         .select(`
             person_id,
@@ -1372,109 +1227,105 @@ const { data: memberRelationships, error: relationshipError } =
             `person_id.eq.${memberId},related_person_id.eq.${memberId}`
         );
 
-if (relationshipError) {
 
-    console.error(
-        "VIEW MEMBER RELATIONSHIP ERROR:",
-        relationshipError
+    if (relationshipError) {
+
+        console.error(
+            "VIEW MEMBER RELATIONSHIP ERROR:",
+            relationshipError
+        );
+
+    }
+
+
+    const parents = [];
+    const children = [];
+    const spouses = [];
+
+
+    (memberRelationships || []).forEach(
+        relationship => {
+
+            const relatedMember =
+                allMembers.find(
+                    item =>
+                        item.id ===
+                        (
+                            relationship.person_id ===
+                            memberId
+                                ? relationship.related_person_id
+                                : relationship.person_id
+                        )
+                );
+
+            if (!relatedMember) {
+                return;
+            }
+
+
+            if (
+                relationship.relationship_type ===
+                "child"
+            ) {
+
+                if (
+                    relationship.person_id ===
+                    memberId
+                ) {
+
+                    parents.push(
+                        relatedMember
+                    );
+
+                } else {
+
+                    children.push(
+                        relatedMember
+                    );
+
+                }
+            }
+
+
+            if (
+                relationship.relationship_type ===
+                "parent"
+            ) {
+
+                if (
+                    relationship.person_id ===
+                    memberId
+                ) {
+
+                    children.push(
+                        relatedMember
+                    );
+
+                } else {
+
+                    parents.push(
+                        relatedMember
+                    );
+
+                }
+            }
+
+
+            if (
+                relationship.relationship_type ===
+                "spouse"
+            ) {
+
+                spouses.push(
+                    relatedMember
+                );
+
+            }
+
+        }
     );
 
-}
-    if (!member) {
 
-        alert("Member information not found.");
-
-        return;
-    }
-
-// ===============================
-// ORGANIZE FAMILY RELATIONSHIPS
-// ===============================
-
-const parents = [];
-const children = [];
-const spouses = [];
-
-(memberRelationships || []).forEach(
-    relationship => {
-
-        const relatedMember =
-            allMembers.find(
-                item =>
-                    item.id ===
-                    (
-                        relationship.person_id === memberId
-                            ? relationship.related_person_id
-                            : relationship.person_id
-                    )
-            );
-
-        if (!relatedMember) {
-            return;
-        }
-
-
-        // Parent
-        if (
-            relationship.relationship_type === "child"
-        ) {
-
-            if (
-                relationship.person_id === memberId
-            ) {
-
-                parents.push(
-                    relatedMember
-                );
-
-            } else {
-
-                children.push(
-                    relatedMember
-                );
-
-            }
-
-        }
-
-
-        // Parent relationship
-        if (
-            relationship.relationship_type === "parent"
-        ) {
-
-            if (
-                relationship.person_id === memberId
-            ) {
-
-                children.push(
-                    relatedMember
-                );
-
-            } else {
-
-                parents.push(
-                    relatedMember
-                );
-
-            }
-
-        }
-
-
-        // Spouse
-        if (
-            relationship.relationship_type === "spouse"
-        ) {
-
-            spouses.push(
-                relatedMember
-            );
-
-        }
-
-    }
-);
     const status =
         member.is_deceased
             ? "Deceased"
@@ -1498,32 +1349,30 @@ const spouses = [];
 
 
     const birthDate =
-        member.date_of_birth
-            ? member.date_of_birth
-            : "Not added";
+        member.date_of_birth ||
+        "Not added";
 
 
     const birthPlace =
-        member.place_of_birth
-            ? member.place_of_birth
-            : "Not added";
+        member.place_of_birth ||
+        "Not added";
 
 
     const biography =
-        member.biography
-            ? member.biography
-            : "No biography has been added yet.";
+        member.biography ||
+        "No biography has been added yet.";
 
-// Remove any existing member popup
 
-const existingModal =
-    document.querySelector(
-        ".admin-member-view-modal"
-    );
+    const existingModal =
+        document.querySelector(
+            ".admin-member-view-modal"
+        );
 
-if (existingModal) {
-    existingModal.remove();
-}
+    if (existingModal) {
+        existingModal.remove();
+    }
+
+
     const modal =
         document.createElement("div");
 
@@ -1542,49 +1391,45 @@ if (existingModal) {
                 ×
             </button>
 
-
             <div class="admin-member-view-photo">
                 ${photo}
             </div>
-
 
             <h2>
                 ${member.full_name}
             </h2>
 
-
             <span class="admin-member-view-status">
                 ${status}
             </span>
 
-
             <div class="admin-member-view-details">
-            
-            <button
-    type="button"
-    class="find-relationship-button"
-    data-member-id="${member.id}"
->
-    🔗 How am I related?
-</button>
-            
-                <!-- FAMILY RELATIONSHIPS -->
+
+                <button
+                    type="button"
+                    class="find-relationship-button"
+                >
+                    🔗 How am I related?
+                </button>
+
 
                 ${
                     parents.length > 0
                     ? `
                         <div class="member-family-info">
 
-                            <strong>Parents</strong>
+                            <strong>
+                                Parents
+                            </strong>
 
                             ${parents.map(parent => `
                                 <button
-    type="button"
-    class="member-family-link"
-    data-member-id="${parent.id}"
->
-    🌿 ${parent.full_name}
-</button>
+                                    type="button"
+                                    class="member-family-link"
+                                    data-member-id="${parent.id}"
+                                >
+                                    🌿 ${parent.full_name}
+                                </button>
                             `).join("")}
 
                         </div>
@@ -1598,17 +1443,18 @@ if (existingModal) {
                     ? `
                         <div class="member-family-info">
 
-                            <strong>Spouse</strong>
+                            <strong>
+                                Spouse
+                            </strong>
 
                             ${spouses.map(spouse => `
                                 <button
-    type="button"
-    class="member-family-link"
-    data-member-id="${spouse.id}"
->
-    ❤️ ${spouse.full_name}
-</button>
-                                
+                                    type="button"
+                                    class="member-family-link"
+                                    data-member-id="${spouse.id}"
+                                >
+                                    ❤️ ${spouse.full_name}
+                                </button>
                             `).join("")}
 
                         </div>
@@ -1622,51 +1468,69 @@ if (existingModal) {
                     ? `
                         <div class="member-family-info">
 
-                            <strong>Children</strong>
+                            <strong>
+                                Children
+                            </strong>
 
                             ${children.map(child => `
                                 <button
-    type="button"
-    class="member-family-link"
-    data-member-id="${child.id}"
->
-    👶 ${child.full_name}
-</button>
+                                    type="button"
+                                    class="member-family-link"
+                                    data-member-id="${child.id}"
+                                >
+                                    👶 ${child.full_name}
+                                </button>
                             `).join("")}
 
                         </div>
                     `
                     : ""
                 }
+
+
                 <p>
-                    <strong>Gender:</strong>
+                    <strong>
+                        Gender:
+                    </strong>
                     ${member.gender || "Not added"}
                 </p>
 
+
                 <p>
-                    <strong>Date of Birth:</strong>
+                    <strong>
+                        Date of Birth:
+                    </strong>
                     ${birthDate}
                 </p>
 
+
                 <p>
-                    <strong>Place of Birth:</strong>
+                    <strong>
+                        Place of Birth:
+                    </strong>
                     ${birthPlace}
                 </p>
+
 
                 ${
                     member.is_deceased
                     ? `
                         <p>
-                            <strong>Date of Death:</strong>
+                            <strong>
+                                Date of Death:
+                            </strong>
                             ${member.date_of_death || "Not added"}
                         </p>
                     `
                     : ""
                 }
 
+
                 <div class="admin-member-biography">
 
-                    <strong>Biography</strong>
+                    <strong>
+                        Biography
+                    </strong>
 
                     <p>
                         ${biography}
@@ -1677,88 +1541,120 @@ if (existingModal) {
             </div>
 
         </div>
-
     `;
 
 
-    document.body.appendChild(modal);
-    modal.querySelectorAll(".member-family-link").forEach(button => {
+    document.body.appendChild(
+        modal
+    );
 
-    button.addEventListener("click", () => {
 
-        const relatedMemberId =
-            button.dataset.memberId;
+    // ===============================
+    // FAMILY MEMBER LINKS
+    // ===============================
 
-        modal.remove();
+    modal
+        .querySelectorAll(
+            ".member-family-link"
+        )
+        .forEach(button => {
 
-        viewMember(relatedMemberId);
+            button.addEventListener(
+                "click",
+                () => {
 
-    });
+                    const relatedMemberId =
+                        button.dataset.memberId;
 
-});
+                    modal.remove();
+
+                    viewMember(
+                        relatedMemberId
+                    );
+
+                }
+            );
+
+        });
+
+
+    // ===============================
+    // HOW AM I RELATED
+    // ===============================
+
     const relationshipButton =
-    modal.querySelector(".find-relationship-button");
-
-if (relationshipButton) {
+        modal.querySelector(
+            ".find-relationship-button"
+        );
 
     relationshipButton.addEventListener(
         "click",
-        function() {
+        () => {
 
-            const selectedMemberId =
-                this.dataset.memberId;
+            modal.remove();
 
             findFamilyRelationship(
-    selectedMemberId
-);
-
-        }
-    );
-
-}
-// Enlarge member photo when clicked
-
-const memberPhoto =
-    modal.querySelector(".admin-view-member-photo");
-
-if (memberPhoto) {
-
-    memberPhoto.style.cursor = "pointer";
-
-    memberPhoto.addEventListener(
-        "click",
-        function() {
-
-            const photoModal =
-                document.createElement("div");
-
-            photoModal.className =
-                "admin-photo-fullscreen";
-
-            photoModal.innerHTML = `
-                <img
-                    src="${member.photo_url}"
-                    alt="${member.full_name}"
-                >
-            `;
-
-            document.body.appendChild(
-                photoModal
-            );
-
-            photoModal.addEventListener(
-                "click",
-                function() {
-                    photoModal.remove();
-                }
+                member.id
             );
 
         }
     );
 
-                }
 
-    // CLOSE BUTTON
+    // ===============================
+    // FULLSCREEN PHOTO
+    // ===============================
+
+    const memberPhotoElement =
+        modal.querySelector(
+            ".admin-view-member-photo"
+        );
+
+    if (
+        memberPhotoElement &&
+        member.photo_url
+    ) {
+
+        memberPhotoElement.style.cursor =
+            "pointer";
+
+        memberPhotoElement.addEventListener(
+            "click",
+            function() {
+
+                const photoModal =
+                    document.createElement("div");
+
+                photoModal.className =
+                    "admin-photo-fullscreen";
+
+                photoModal.innerHTML = `
+                    <img
+                        src="${member.photo_url}"
+                        alt="${member.full_name}"
+                    >
+                `;
+
+                document.body.appendChild(
+                    photoModal
+                );
+
+                photoModal.addEventListener(
+                    "click",
+                    () => {
+                        photoModal.remove();
+                    }
+                );
+
+            }
+        );
+
+    }
+
+
+    // ===============================
+    // CLOSE MEMBER MODAL
+    // ===============================
 
     modal
         .querySelector(
@@ -1770,13 +1666,13 @@ if (memberPhoto) {
         );
 
 
-    // CLOSE WHEN CLICKING OUTSIDE
-
     modal.addEventListener(
         "click",
         function(event) {
 
-            if (event.target === modal) {
+            if (
+                event.target === modal
+            ) {
 
                 modal.remove();
 
@@ -1784,17 +1680,47 @@ if (memberPhoto) {
 
         }
     );
-
 }
-async function findFamilyRelationship(sourceMemberId, targetMemberId) {
-    const { data: relationships, error } =
-        await supabase
-            .from("relationships")
-            .select(`
-                person_id,
-                related_person_id,
-                relationship_type
-            `);
+
+
+// ===============================
+// HOW AM I RELATED
+// ===============================
+
+async function findFamilyRelationship(
+    sourceMemberId,
+    targetMemberId = null
+) {
+
+    const sourceMember =
+        allMembers.find(
+            member =>
+                String(member.id) ===
+                String(sourceMemberId)
+        );
+
+
+    if (!sourceMember) {
+
+        alert(
+            "Starting family member not found."
+        );
+
+        return;
+    }
+
+
+    const {
+        data: relationships,
+        error
+    } = await supabase
+        .from("relationships")
+        .select(`
+            person_id,
+            related_person_id,
+            relationship_type
+        `);
+
 
     if (error) {
 
@@ -1810,162 +1736,200 @@ async function findFamilyRelationship(sourceMemberId, targetMemberId) {
         return;
     }
 
-    const sourceMember =
-    allMembers.find(
-        member =>
-            String(member.id) === String(sourceMemberId)
-    );
-
-const targetMember =
-    allMembers.find(
-        member =>
-            String(member.id) === String(targetMemberId)
-    );
-
-if (!sourceMember || !targetMember) {
-
-    console.error(
-        "Relationship member not found:",
-        {
-            sourceMemberId,
-            targetMemberId,
-            sourceMember,
-            targetMember
-        }
-    );
-
-    alert(
-        "Unable to find one or both family members."
-    );
-
-    return;
-}
-
-    if (!targetMember) {
-        return;
-    }
-
-    const queue = [
-        {
-            id: sourceMemberId,
-            path: []
-        }
-    ];
-
-    const visited = new Set();
 
     let foundPath = null;
 
-    while (queue.length > 0) {
 
-        const current =
-            queue.shift();
+    // ===============================
+    // FIND PATH ONLY IF TARGET EXISTS
+    // ===============================
 
-        if (visited.has(current.id)) {
-            continue;
+    if (targetMemberId) {
+
+        const targetMember =
+            allMembers.find(
+                member =>
+                    String(member.id) ===
+                    String(targetMemberId)
+            );
+
+
+        if (!targetMember) {
+
+            alert(
+                "Selected family member was not found."
+            );
+
+            return;
         }
 
-        visited.add(current.id);
 
-        for (
-            const relationship
-            of relationships || []
+        const queue = [
+            {
+                id: sourceMemberId,
+                path: []
+            }
+        ];
+
+
+        const visited =
+            new Set();
+
+
+        while (
+            queue.length > 0
         ) {
 
-            let nextId = null;
+            const current =
+                queue.shift();
+
 
             if (
-                relationship.person_id ===
+                visited.has(
+                    current.id
+                )
+            ) {
+                continue;
+            }
+
+
+            visited.add(
                 current.id
+            );
+
+
+            for (
+                const relationship
+                of relationships || []
             ) {
 
-                nextId =
-                    relationship.related_person_id;
+                let nextId = null;
+                let relationshipLabel = "";
+
+
+                // ===============================
+                // CHILD RELATIONSHIP
+                // ===============================
+
+                if (
+                    relationship.person_id ===
+                    current.id
+                ) {
+
+                    nextId =
+                        relationship.related_person_id;
+
+                    relationshipLabel =
+                        relationship.relationship_type ===
+                        "child"
+                            ? "Parent"
+                            : "Child";
+                }
+
+
+                else if (
+                    relationship.related_person_id ===
+                    current.id
+                ) {
+
+                    nextId =
+                        relationship.person_id;
+
+                    relationshipLabel =
+                        relationship.relationship_type ===
+                        "child"
+                            ? "Child"
+                            : "Parent";
+                }
+
+
+                // ===============================
+                // SPOUSE
+                // ===============================
+
+                if (
+                    relationship.relationship_type ===
+                    "spouse"
+                ) {
+
+                    relationshipLabel =
+                        "Spouse";
+                }
+
+
+                if (!nextId) {
+                    continue;
+                }
+
+
+                if (
+                    visited.has(nextId)
+                ) {
+                    continue;
+                }
+
+
+                const nextMember =
+                    allMembers.find(
+                        member =>
+                            String(member.id) ===
+                            String(nextId)
+                    );
+
+
+                if (!nextMember) {
+                    continue;
+                }
+
+
+                const newPath = [
+                    ...current.path,
+                    {
+                        id:
+                            nextMember.id,
+
+                        name:
+                            nextMember.full_name,
+
+                        relationship:
+                            relationshipLabel
+                    }
+                ];
+
+
+                queue.push({
+                    id:
+                        nextId,
+
+                    path:
+                        newPath
+                });
+
+
+                if (
+                    String(nextId) ===
+                    String(targetMemberId)
+                ) {
+
+                    foundPath =
+                        newPath;
+
+                    break;
+                }
 
             }
 
-            else if (
-                relationship.related_person_id ===
-                current.id
-            ) {
 
-                nextId =
-                    relationship.person_id;
-
+            if (foundPath) {
+                break;
             }
-
-            if (!nextId) {
-                continue;
-            }
-
-            if (visited.has(nextId)) {
-                continue;
-            }
-
-            const nextMember =
-                allMembers.find(
-                    member =>
-                        member.id === nextId
-                );
-
-            if (!nextMember) {
-                continue;
-            }
-            let relationshipLabel = "";
-
-if (
-    relationship.relationship_type === "child"
-) {
-    relationshipLabel = "Parent";
-}
-
-else if (
-    relationship.relationship_type === "parent"
-) {
-    relationshipLabel = "Child";
-}
-
-else if (
-    relationship.relationship_type === "spouse"
-) {
-    relationshipLabel = "Spouse";
-}
-
-else {
-    relationshipLabel =
-        relationship.relationship_type;
-}
-
-            const newPath = [
-    ...current.path,
-    {
-        id: nextMember.id,
-        name: nextMember.full_name,
-        relationship:
-            relationshipLabel
-    }
-];
-
-console.log(
-    "RELATIONSHIP LABEL:",
-    relationshipLabel
-);
-
-            queue.push({
-                id: nextId,
-                path: newPath
-            });
-
-            if (nextId === targetMemberId) {
-    foundPath = newPath;
-    break;
-}
         }
-
-        if (foundPath) {
-            break;
-        }
     }
+
+
+    // ===============================
+    // CREATE RELATIONSHIP POPUP
+    // ===============================
 
     const relationshipModal =
         document.createElement("div");
@@ -1973,157 +1937,269 @@ console.log(
     relationshipModal.className =
         "relationship-result-modal";
 
+
     relationshipModal.innerHTML = `
-    <div class="relationship-result-card">
 
-        <button
-            type="button"
-            class="relationship-result-close"
-        >
-            ×
-        </button>
+        <div class="relationship-result-card">
 
-        <h2>
-            🔗 Family Relationship
-        </h2>
+            <button
+                type="button"
+                class="relationship-result-close"
+            >
+                ×
+            </button>
 
-        <p class="relationship-result-intro">
-            Family connection for:
-        </p>
 
-        <h3>
-            ${targetMember.full_name}
-        </h3>
+            <h2>
+                🔗 Family Relationship
+            </h2>
 
-        <label for="relationshipTargetSelect">
-            Choose a family member:
-        </label>
 
-        <select id="relationshipTargetSelect">
-            <option value="">
-                Select family member
-            </option>
-        </select>
+            <p class="relationship-result-intro">
+                Find the connection between:
+            </p>
 
-        <button
-            type="button"
-            id="calculateRelationshipButton"
-            class="find-relationship-button"
-        >
-            🔗 Find Relationship
-        </button>
 
-        <div class="relationship-path">
+            <h3>
+                ${sourceMember.full_name}
+            </h3>
+
+
+            <label
+                for="relationshipTargetSelect"
+            >
+                Choose a family member:
+            </label>
+
+
+            <select
+                id="relationshipTargetSelect"
+            >
+
+                <option value="">
+                    Select family member
+                </option>
+
+            </select>
+
+
+            <button
+                type="button"
+                id="calculateRelationshipButton"
+                class="find-relationship-button"
+            >
+                🔗 Find Relationship
+            </button>
+
 
             ${
-                foundPath
+                targetMemberId
                 ? `
-                    <p>
-                        🌳 Connected to:
-                    </p>
+                    <div class="relationship-path">
 
-                    ${foundPath.map(
-                        person => `
-                            <div class="relationship-path-person">
-                                <span class="relationship-path-label">
-                                    ${person.relationship}
-                                </span>
+                        ${
+                            foundPath
+                            ? `
+                                <p>
+                                    🌳 Family connection:
+                                </p>
 
-                                <strong>
-                                    ${person.name}
-                                </strong>
-                            </div>
-                        `
-                    ).join("")}
+                                <div class="relationship-path-person">
+                                    <span class="relationship-path-label">
+                                        Start
+                                    </span>
+
+                                    <strong>
+                                        ${sourceMember.full_name}
+                                    </strong>
+                                </div>
+
+                                ${foundPath.map(
+                                    person => `
+                                        <div class="relationship-path-person">
+                                            <span class="relationship-path-label">
+                                                ${person.relationship}
+                                            </span>
+
+                                            <strong>
+                                                ${person.name}
+                                            </strong>
+                                        </div>
+                                    `
+                                ).join("")}
+                            `
+                            : `
+                                <p>
+                                    🌿 No connected relationship
+                                    path could be found.
+                                </p>
+                            `
+                        }
+
+                    </div>
                 `
-                : `
-                    <p>
-                        🌿 No connected relationship
-                        path could be found.
-                    </p>
-                `
+                : ""
             }
 
         </div>
+    `;
 
-    </div>
-`;
-const relationshipTargetSelect =
-    relationshipModal.querySelector(
-        "#relationshipTargetSelect"
+
+    // ===============================
+    // FILL MEMBER DROPDOWN
+    // ===============================
+
+    const relationshipTargetSelect =
+        relationshipModal.querySelector(
+            "#relationshipTargetSelect"
+        );
+
+
+    allMembers.forEach(
+        member => {
+
+            if (
+                String(member.id) ===
+                String(sourceMemberId)
+            ) {
+                return;
+            }
+
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+
+            option.value =
+                member.id;
+
+
+            option.textContent =
+                member.full_name;
+
+
+            relationshipTargetSelect.appendChild(
+                option
+            );
+
+        }
     );
 
-allMembers.forEach(member => {
 
-    if (member.id === targetMemberId) {
-        return;
+    // ===============================
+    // SELECT CURRENT TARGET
+    // ===============================
+
+    if (targetMemberId) {
+
+        relationshipTargetSelect.value =
+            targetMemberId;
+
     }
 
-    const option =
-        document.createElement("option");
 
-    option.value = member.id;
-    option.textContent =
-        member.full_name;
-
-    relationshipTargetSelect.appendChild(
-        option
-    );
-
-});
     document.body.appendChild(
         relationshipModal
     );
-const calculateRelationshipButton =
-    relationshipModal.querySelector(
-        "#calculateRelationshipButton"
-    );
 
-calculateRelationshipButton.addEventListener(
-    "click",
-    function() {
 
-        const selectedMemberId =
-            relationshipTargetSelect.value;
+    // ===============================
+    // CALCULATE BUTTON
+    // ===============================
 
-        if (!selectedMemberId) {
-
-            alert(
-                "Please select a family member."
-            );
-
-            return;
-        }
-
-        findFamilyRelationship(
-            targetMemberId,
-            selectedMemberId
+    const calculateRelationshipButton =
+        relationshipModal.querySelector(
+            "#calculateRelationshipButton"
         );
 
-    }
-);
 
-relationshipModal
-    .querySelector(
-        ".relationship-result-close"
-    )
-    .addEventListener(
+    calculateRelationshipButton.addEventListener(
         "click",
-        () => relationshipModal.remove()
-    );
+        function() {
 
-relationshipModal.addEventListener(
-    "click",
-    function(event) {
+            const selectedMemberId =
+                relationshipTargetSelect.value;
 
-        if (
-            event.target ===
-            relationshipModal
-        ) {
+
+            if (!selectedMemberId) {
+
+                alert(
+                    "Please select a family member."
+                );
+
+                return;
+            }
+
 
             relationshipModal.remove();
 
+
+            findFamilyRelationship(
+                sourceMemberId,
+                selectedMemberId
+            );
+
         }
+    );
+
+
+    // ===============================
+    // CLOSE BUTTON
+    // ===============================
+
+    relationshipModal
+        .querySelector(
+            ".relationship-result-close"
+        )
+        .addEventListener(
+            "click",
+            () => relationshipModal.remove()
+        );
+
+
+    // ===============================
+    // CLOSE OUTSIDE
+    // ===============================
+
+    relationshipModal.addEventListener(
+        "click",
+        function(event) {
+
+            if (
+                event.target ===
+                relationshipModal
+            ) {
+
+                relationshipModal.remove();
+
+            }
+
+        }
+    );
+}
+
+
+// =================================
+// START ADMIN PAGE
+// =================================
+
+checkAdminAccess().then(
+    async isAdmin => {
+
+        if (!isAdmin) {
+            return;
+        }
+
+
+        await loadMembers();
+
+
+        loadRelationshipMembers();
+
+
+        loadRelationships();
 
     }
 );

@@ -2417,3 +2417,238 @@ footer {
     font-size: 10px;
     font-weight: bold;
 }
+/* =========================================
+   RECURSIVE MULTI-GENERATION FAMILY TREE
+   ========================================= */
+
+.recursive-family-tree {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+
+/* =========================================
+   GENERATION BRANCH
+   ========================================= */
+
+.generation-branch {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    margin-bottom: 35px;
+}
+
+
+/* =========================================
+   GENERATION CONNECTOR
+   ========================================= */
+
+.generation-connector {
+    width: 3px;
+    height: 40px;
+
+    margin: 5px auto 10px;
+
+    background:
+        linear-gradient(
+            to bottom,
+            #e7c98b,
+            #b8860b
+        );
+
+    border-radius: 5px;
+}
+
+
+/* =========================================
+   GENERATION LABEL
+   ========================================= */
+
+.generation-subtitle {
+    display: inline-block;
+
+    margin: 5px auto 20px;
+
+    padding: 7px 18px;
+
+    background: #3b2f2f;
+    color: white;
+
+    border-radius: 20px;
+
+    font-size: 13px;
+    font-weight: bold;
+
+    box-shadow:
+        0 5px 15px rgba(59, 47, 47, 0.12);
+}
+
+
+/* =========================================
+   CHILDREN OF EACH GENERATION
+   ========================================= */
+
+.generation-children {
+    position: relative;
+
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fit, minmax(210px, 1fr));
+
+    gap: 35px 22px;
+
+    max-width: 1250px;
+
+    margin: 0 auto;
+}
+
+
+/* =========================================
+   CHILD CONNECTION
+   ========================================= */
+
+.generation-children
+.generation-branch {
+    position: relative;
+
+    padding-top: 25px;
+}
+
+
+/* Vertical connector entering each child */
+
+.generation-children
+.generation-branch::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 50%;
+
+    width: 2px;
+    height: 25px;
+
+    background: #e7c98b;
+
+    transform:
+        translateX(-50%);
+}
+
+
+/* =========================================
+   RECURSIVE MEMBER CARD
+   ========================================= */
+
+.recursive-family-tree
+.member-card {
+
+    width: 100%;
+    max-width: 270px;
+
+    margin: 0 auto;
+}
+
+
+/* =========================================
+   DEEP GENERATIONS
+   ========================================= */
+
+.generation-children
+.generation-children {
+
+    margin-top: 10px;
+}
+
+
+/* Slightly smaller cards for deeper levels */
+
+.generation-children
+.generation-children
+.member-card {
+
+    max-width: 230px;
+}
+
+
+/* =========================================
+   MOBILE FAMILY TREE
+   ========================================= */
+
+@media (max-width: 700px) {
+
+    .recursive-family-tree {
+        padding: 0 8px;
+    }
+
+
+    .generation-children {
+
+        grid-template-columns: 1fr;
+
+        gap: 25px;
+
+        max-width: 360px;
+    }
+
+
+    .generation-children
+    .generation-branch {
+
+        padding-top: 22px;
+    }
+
+
+    .generation-children
+    .generation-branch::before {
+
+        height: 22px;
+    }
+
+
+    .generation-subtitle {
+
+        font-size: 12px;
+
+        padding: 6px 15px;
+    }
+
+
+    .recursive-family-tree
+    .member-card {
+
+        max-width: 330px;
+    }
+
+}
+
+
+/* =========================================
+   VERY SMALL PHONES
+   ========================================= */
+
+@media (max-width: 380px) {
+
+    .generation-subtitle {
+
+        font-size: 11px;
+
+    }
+
+
+    .recursive-family-tree
+    .member-card {
+
+        max-width: 300px;
+
+    }
+
+}

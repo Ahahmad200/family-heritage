@@ -1953,7 +1953,6 @@ console.log(
         "relationship-result-modal";
 
     relationshipModal.innerHTML = `
-        relationshipModal.innerHTML = `
     <div class="relationship-result-card">
 
         <button

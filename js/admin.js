@@ -1953,29 +1953,33 @@ console.log(
         "relationship-result-modal";
 
     relationshipModal.innerHTML = `
-        <div class="relationship-result-card">
+        relationshipModal.innerHTML = `
+    <div class="relationship-result-card">
+
         <label for="relationshipTargetSelect">
-    Choose a family member:
-</label>
+            Choose a family member:
+        </label>
 
-<select id="relationshipTargetSelect">
-    <option value="">
-        Select family member
-    </option>
-</select>
+        <select id="relationshipTargetSelect">
+            <option value="">
+                Select family member
+            </option>
+        </select>
 
-<button
-    type="button"
-    id="calculateRelationshipButton"
-    class="find-relationship-button"
->
-    🔗 Find Relationship
-</button>
-                type="button"
-                class="relationship-result-close"
-            >
-                ×
-            </button>
+        <button
+            type="button"
+            id="calculateRelationshipButton"
+            class="find-relationship-button"
+        >
+            🔗 Find Relationship
+        </button>
+
+        <button
+            type="button"
+            class="relationship-result-close"
+        >
+            ×
+        </button>
 
             <h2>
                 🔗 Family Relationship

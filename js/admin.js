@@ -1813,14 +1813,33 @@ async function findFamilyRelationship(sourceMemberId, targetMemberId) {
     const sourceMember =
     allMembers.find(
         member =>
-            member.id === sourceMemberId
+            String(member.id) === String(sourceMemberId)
     );
 
 const targetMember =
     allMembers.find(
         member =>
-            member.id === targetMemberId
+            String(member.id) === String(targetMemberId)
     );
+
+if (!sourceMember || !targetMember) {
+
+    console.error(
+        "Relationship member not found:",
+        {
+            sourceMemberId,
+            targetMemberId,
+            sourceMember,
+            targetMember
+        }
+    );
+
+    alert(
+        "Unable to find one or both family members."
+    );
+
+    return;
+}
 
     if (!targetMember) {
         return;
@@ -2077,35 +2096,34 @@ calculateRelationshipButton.addEventListener(
         }
 
         findFamilyRelationship(
-    targetMemberId,
-    selectedMemberId
-);
+            targetMemberId,
+            selectedMemberId
         );
 
     }
 );
-    relationshipModal
-        .querySelector(
-            ".relationship-result-close"
-        )
-        .addEventListener(
-            "click",
-            () => relationshipModal.remove()
-        );
 
-    relationshipModal.addEventListener(
+relationshipModal
+    .querySelector(
+        ".relationship-result-close"
+    )
+    .addEventListener(
         "click",
-        function(event) {
+        () => relationshipModal.remove()
+    );
 
-            if (
-                event.target ===
-                relationshipModal
-            ) {
+relationshipModal.addEventListener(
+    "click",
+    function(event) {
 
-                relationshipModal.remove();
+        if (
+            event.target ===
+            relationshipModal
+        ) {
 
-            }
+            relationshipModal.remove();
 
         }
-    );
-}
+
+    }
+);

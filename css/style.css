@@ -2652,3 +2652,145 @@ footer {
     }
 
 }
+/* =========================================
+   COLLAPSIBLE FAMILY DESCENDANTS
+   ========================================= */
+
+.collapsible-descendants {
+    width: 100%;
+    margin-top: 18px;
+    padding-top: 18px;
+
+    border-top: 2px dashed #e7c98b;
+}
+
+
+/* =========================================
+   SHOW DESCENDANTS BUTTON
+   ========================================= */
+
+.show-descendants-button {
+    display: block;
+
+    margin: 15px auto 5px;
+
+    padding: 10px 20px;
+
+    border: 2px solid #b8860b;
+    border-radius: 30px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #3b2f2f,
+            #5a4545
+        );
+
+    color: white;
+
+    font-size: 12px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 6px 16px rgba(59, 47, 47, 0.15);
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        background 0.25s ease;
+}
+
+
+.show-descendants-button:hover {
+
+    transform: translateY(-3px);
+
+    background:
+        linear-gradient(
+            135deg,
+            #8f6808,
+            #b8860b
+        );
+
+    box-shadow:
+        0 10px 22px rgba(59, 47, 47, 0.20);
+}
+
+
+.show-descendants-button:active {
+
+    transform:
+        scale(0.96);
+
+}
+
+
+/* =========================================
+   DESCENDANT AREA
+   ========================================= */
+
+.collapsible-descendants
+.generation-children {
+
+    animation:
+        familyReveal 0.45s ease;
+
+}
+
+
+/* =========================================
+   BEAUTIFUL REVEAL
+   ========================================= */
+
+@keyframes familyReveal {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(-18px)
+            scale(0.97);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+
+    }
+
+}
+
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 600px) {
+
+    .show-descendants-button {
+
+        font-size: 11px;
+
+        padding:
+            9px 16px;
+
+    }
+
+
+    .collapsible-descendants {
+
+        margin-top: 14px;
+
+        padding-top: 14px;
+
+    }
+
+}

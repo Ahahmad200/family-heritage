@@ -1132,67 +1132,209 @@ if (calculateRelationshipButton) {
                 );
 
 
-            relationshipResult.innerHTML = `
+            const directRelationship =
+    getDirectRelationship(
+        startId,
+        targetId
+    );
 
-                <div class="relationship-path-card">
+const extendedRelationship =
+    getExtendedRelationship(
+        startId,
+        targetId
+    );
 
-                    <h3>
-                        🌳 Family Connection
-                    </h3>
+const relationshipName =
+    directRelationship ||
+    extendedRelationship ||
+    "family relative";
 
-                    <p class="relationship-path-intro">
-                        The recorded family path is:
-                    </p>
+const startMember =
+    window.familyMembers.find(
+        member =>
+            member.id === startId
+    );
+
+const targetMember =
+    window.familyMembers.find(
+        member =>
+            member.id === targetId
+    );
+
+let relationshipSentence = "";
+
+if (relationshipName === "parent") {
+
+    relationshipSentence = `
+        <strong>
+            ${startMember.full_name}
+        </strong>
+        is the
+        <strong>child</strong>
+        of
+        <strong>
+            ${targetMember.full_name}
+        </strong>.
+    `;
+
+} else if (relationshipName === "child") {
+
+    relationshipSentence = `
+        <strong>
+            ${startMember.full_name}
+        </strong>
+        is the
+        <strong>parent</strong>
+        of
+        <strong>
+            ${targetMember.full_name}
+        </strong>.
+    `;
+
+} else if (
+    relationshipName === "grandparent"
+) {
+
+    relationshipSentence = `
+        <strong>
+            ${startMember.full_name}
+        </strong>
+        is the
+        <strong>grandchild</strong>
+        of
+        <strong>
+            ${targetMember.full_name}
+        </strong>.
+    `;
+
+} else if (
+    relationshipName === "grandchild"
+) {
+
+    relationshipSentence = `
+        <strong>
+            ${startMember.full_name}
+        </strong>
+        is the
+        <strong>grandparent</strong>
+        of
+        <strong>
+            ${targetMember.full_name}
+        </strong>.
+    `;
+
+} else if (
+    relationshipName === "brother or sister"
+) {
+
+    relationshipSentence = `
+        <strong>
+            ${startMember.full_name}
+        </strong>
+        and
+        <strong>
+            ${targetMember.full_name}
+        </strong>
+        are
+        <strong>siblings</strong>.
+    `;
+
+} else if (
+    relationshipName === "spouse"
+) {
+
+    relationshipSentence = `
+        <strong>
+            ${startMember.full_name}
+        </strong>
+        is the
+        <strong>spouse</strong>
+        of
+        <strong>
+            ${targetMember.full_name}
+        </strong>.
+    `;
+
+} else {
+
+    relationshipSentence = `
+        <strong>
+            ${startMember.full_name}
+        </strong>
+        is the
+        <strong>
+            ${relationshipName}
+        </strong>
+        of
+        <strong>
+            ${targetMember.full_name}
+        </strong>.
+    `;
+}
 
 
-                    <div class="relationship-path">
+relationshipResult.innerHTML = `
+    <div class="relationship-path-card">
 
-                        ${pathMembers.map(
-                            (member, index) => `
+        <h3>
+            🌳 Family Relationship
+        </h3>
 
-                                <div
-                                    class="
-                                        relationship-path-member
-                                    "
-                                >
+        <div class="relationship-description">
+            ${relationshipSentence}
+        </div>
 
-                                    <div
-                                        class="
-                                            relationship-path-number
-                                        "
-                                    >
-                                        ${index + 1}
-                                    </div>
+        <p class="relationship-path-intro">
+            🌿 The recorded family path is:
+        </p>
 
-                                    <strong>
-                                        ${member.full_name}
-                                    </strong>
+        <div class="relationship-path">
 
-                                </div>
+            ${pathMembers.map(
+                (member, index) => `
 
-                                ${
-                                    index <
-                                    pathMembers.length - 1
-                                        ? `
-                                            <div
-                                                class="
-                                                    relationship-path-line
-                                                "
-                                            >
-                                                ↓
-                                            </div>
-                                        `
-                                        : ""
-                                }
+                    <div
+                        class="
+                            relationship-path-member
+                        "
+                    >
 
-                            `
-                        ).join("")}
+                        <div
+                            class="
+                                relationship-path-number
+                            "
+                        >
+                            ${index + 1}
+                        </div>
+
+                        <strong>
+                            ${member.full_name}
+                        </strong>
 
                     </div>
 
-                </div>
+                    ${
+                        index <
+                        pathMembers.length - 1
+                            ? `
+                                <div
+                                    class="
+                                        relationship-path-line
+                                    "
+                                >
+                                    ↓
+                                </div>
+                            `
+                            : ""
+                    }
 
-            `;
+                `
+            ).join("")}
+
+        </div>
+
+    </div>
+`;
 
         }
     );

@@ -3353,3 +3353,163 @@ footer {
     }
 
 }
+/* =========================================
+   HOW AM I RELATED — RESULT
+========================================= */
+
+.relationship-message {
+    padding: 16px 18px;
+    border-radius: 16px;
+    background: #fffdf8;
+    border: 1px solid #eadfc9;
+    color: #5a4545;
+    font-size: 13px;
+    line-height: 1.6;
+    box-shadow:
+        0 6px 18px rgba(59, 47, 47, 0.07);
+}
+
+.relationship-message.success {
+    background: linear-gradient(
+        145deg,
+        #fffdf8,
+        #f8f0df
+    );
+    border-color: rgba(184, 134, 11, 0.30);
+}
+
+.relationship-path-card {
+    padding: 25px 20px;
+    background: linear-gradient(
+        145deg,
+        #fffdf8,
+        #f7eedc
+    );
+    border: 1px solid rgba(184, 134, 11, 0.22);
+    border-radius: 22px;
+    box-shadow:
+        0 10px 28px rgba(59, 47, 47, 0.09);
+    animation: relationshipAppear 0.5s ease-out;
+}
+
+.relationship-path-card h3 {
+    margin: 0 0 8px;
+    color: #3b2f2f;
+    font-size: 19px;
+}
+
+.relationship-path-intro {
+    margin: 0 0 20px;
+    color: #77706a;
+    font-size: 12px;
+}
+
+.relationship-path {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+}
+
+.relationship-path-member {
+    width: min(100%, 500px);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    background: white;
+    border: 1px solid #eadfc9;
+    border-radius: 16px;
+    color: #3b2f2f;
+    box-shadow:
+        0 5px 14px rgba(59, 47, 47, 0.06);
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.relationship-path-member:hover {
+    transform: translateY(-3px);
+    box-shadow:
+        0 8px 20px rgba(59, 47, 47, 0.11);
+}
+
+.relationship-path-number {
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #3b2f2f;
+    color: white;
+    border: 2px solid #e7c98b;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.relationship-path-member strong {
+    font-size: 13px;
+}
+
+.relationship-path-line {
+    color: #b8860b;
+    font-size: 22px;
+    font-weight: bold;
+    line-height: 1;
+    animation: relationshipArrow 1s ease-in-out infinite alternate;
+}
+
+@keyframes relationshipAppear {
+    from {
+        opacity: 0;
+        transform: translateY(15px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes relationshipArrow {
+    from {
+        transform: translateY(-2px);
+    }
+
+    to {
+        transform: translateY(3px);
+    }
+}
+
+@media (max-width: 600px) {
+
+    .relationship-path-card {
+        padding: 20px 13px;
+        border-radius: 18px;
+    }
+
+    .relationship-path-card h3 {
+        font-size: 17px;
+    }
+
+    .relationship-path-member {
+        padding: 11px 12px;
+        border-radius: 14px;
+    }
+
+    .relationship-path-member strong {
+        font-size: 12px;
+    }
+
+    .relationship-path-number {
+        width: 27px;
+        height: 27px;
+        font-size: 11px;
+    }
+
+    .relationship-path-line {
+        font-size: 19px;
+    }
+                              }

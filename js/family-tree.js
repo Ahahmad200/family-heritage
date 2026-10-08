@@ -1675,59 +1675,61 @@ function getExtendedRelationship(
         );
 
 
-    // -----------------------------
-    // UNCLE / AUNT
-    // -----------------------------
+// -----------------------------
+// UNCLE / AUNT
+// -----------------------------
+
+if (
+    getUnclesAndAunts(startId)
+        .includes(targetId)
+) {
 
     if (
-        getUnclesAndAunts(startId)
-            .includes(targetId)
+        targetMember &&
+        targetMember.gender &&
+        targetMember.gender.toLowerCase() === "male"
     ) {
-
-        if (
-            targetMember &&
-            targetMember.gender === "male"
-        ) {
-            return "uncle";
-        }
-
-        if (
-            targetMember &&
-            targetMember.gender === "female"
-        ) {
-            return "aunt";
-        }
-
-        return "uncle or aunt";
+        return "uncle";
     }
-
-
-    // -----------------------------
-    // NEPHEW / NIECE
-    // -----------------------------
 
     if (
-        getNiecesAndNephews(startId)
-            .includes(targetId)
+        targetMember &&
+        targetMember.gender &&
+        targetMember.gender.toLowerCase() === "female"
     ) {
-
-        if (
-            targetMember &&
-            targetMember.gender === "male"
-        ) {
-            return "nephew";
-        }
-
-        if (
-            targetMember &&
-            targetMember.gender === "female"
-        ) {
-            return "niece";
-        }
-
-        return "nephew or niece";
+        return "aunt";
     }
 
+    return "uncle or aunt";
+}
+
+// -----------------------------
+// NEPHEW / NIECE
+// -----------------------------
+
+if (
+    getNiecesAndNephews(startId)
+        .includes(targetId)
+) {
+
+    if (
+        targetMember &&
+        targetMember.gender &&
+        targetMember.gender.toLowerCase() === "male"
+    ) {
+        return "nephew";
+    }
+
+    if (
+        targetMember &&
+        targetMember.gender &&
+        targetMember.gender.toLowerCase() === "female"
+    ) {
+        return "niece";
+    }
+
+    return "nephew or niece";
+}
 
     // -----------------------------
     // COUSIN

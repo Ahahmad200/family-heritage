@@ -396,12 +396,20 @@ function createGenerationBranch(
     );
 
 
-    // -----------------------------------------
-    // HIDDEN BY DEFAULT
-    // -----------------------------------------
+    // FIRST TWO GENERATIONS VISIBLE
+// DEEPER GENERATIONS HIDDEN
+
+if (generation <= 1) {
+
+    descendants.style.display =
+        "block";
+
+} else {
 
     descendants.style.display =
         "none";
+
+}
 
 
     // -----------------------------------------

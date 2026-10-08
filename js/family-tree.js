@@ -1362,6 +1362,107 @@ function getDirectRelationship(
     return null;
 }
 // =========================================
+// EXTENDED FAMILY RELATIONSHIPS
+// =========================================
+
+function getUnclesAndAunts(memberId) {
+
+    const parents =
+        getParents(memberId);
+
+    const relatives = new Set();
+
+    parents.forEach(parentId => {
+
+        getSiblings(parentId)
+            .forEach(siblingId => {
+
+                relatives.add(siblingId);
+
+            });
+
+    });
+
+    return [...relatives];
+}
+
+
+function getNiecesAndNephews(memberId) {
+
+    const siblings =
+        getSiblings(memberId);
+
+    const relatives = new Set();
+
+    siblings.forEach(siblingId => {
+
+        getChildrenOf(siblingId)
+            .forEach(childId => {
+
+                relatives.add(childId);
+
+            });
+
+    });
+
+    return [...relatives];
+}
+
+
+function getCousins(memberId) {
+
+    const unclesAndAunts =
+        getUnclesAndAunts(memberId);
+
+    const cousins = new Set();
+
+    unclesAndAunts.forEach(relativeId => {
+
+        getChildrenOf(relativeId)
+            .forEach(childId => {
+
+                cousins.add(childId);
+
+            });
+
+    });
+
+    return [...cousins];
+}
+
+
+function getExtendedRelationship(
+    startId,
+    targetId
+) {
+
+    if (
+        getUnclesAndAunts(startId)
+            .includes(targetId)
+    ) {
+        return "uncle or aunt";
+    }
+
+
+    if (
+        getNiecesAndNephews(startId)
+            .includes(targetId)
+    ) {
+        return "nephew or niece";
+    }
+
+
+    if (
+        getCousins(startId)
+            .includes(targetId)
+    ) {
+        return "cousin";
+    }
+
+
+    return null;
+}
+// =========================================
 // START
 // =========================================
 

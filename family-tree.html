@@ -114,7 +114,74 @@
     </p>
 
 </div>
+<!-- =========================================
+     HOW AM I RELATED?
+     ========================================= -->
 
+<div class="relationship-explorer">
+
+    <div class="relationship-explorer-icon">
+        🔗
+    </div>
+
+    <h2>
+        How Am I Related?
+    </h2>
+
+    <p class="relationship-explorer-intro">
+        Discover the family connection between two members.
+    </p>
+
+    <div class="relationship-form">
+
+        <div class="relationship-field">
+
+            <label for="relationshipPerson">
+                👤 Select a family member
+            </label>
+
+            <select id="relationshipPerson">
+                <option value="">
+                    Select family member
+                </option>
+            </select>
+
+        </div>
+
+
+        <div class="relationship-field">
+
+            <label for="relatedPerson">
+                🌳 Find their connection to
+            </label>
+
+            <select id="relatedPerson">
+                <option value="">
+                    Select family member
+                </option>
+            </select>
+
+        </div>
+
+
+        <button
+            type="button"
+            id="calculateRelationshipButton"
+            class="find-relationship-button"
+        >
+            🔗 Find Relationship
+        </button>
+
+    </div>
+
+
+    <div
+        id="relationshipResult"
+        class="relationship-result"
+    >
+    </div>
+
+</div>
             <div id="familyTree">
 
                 <p>Loading family tree...</p>

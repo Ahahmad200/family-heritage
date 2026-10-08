@@ -396,18 +396,35 @@ function createGenerationBranch(
     );
 
 
-    // FIRST TWO GENERATIONS VISIBLE
-// DEEPER GENERATIONS HIDDEN
+    // =========================================
+// INITIAL GENERATION VISIBILITY
+// =========================================
 
-if (generation <= 1) {
+const showImmediately =
+    generation === 1;
+
+
+if (showImmediately) {
 
     descendants.style.display =
         "block";
+
+    toggleButton.innerHTML =
+        `
+            ✨ Hide descendants ▲
+        `;
 
 } else {
 
     descendants.style.display =
         "none";
+
+    toggleButton.innerHTML =
+        `
+            ✨ Show ${children.length}
+            descendant${children.length === 1 ? "" : "s"}
+            ▼
+        `;
 
 }
 

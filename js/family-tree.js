@@ -374,11 +374,10 @@ function createGenerationBranch(
 
 
     toggleButton.innerHTML =
-        `
-            ✨ Show ${children.length}
-            descendant${children.length === 1 ? "" : "s"}
-            ▼
-        `;
+    `
+        ✨ Explore ${member.full_name}'s Branch
+        ▼
+    `;
 
 
     // =========================================
@@ -462,11 +461,10 @@ function createGenerationBranch(
 
 
                 toggleButton.innerHTML =
-                    `
-                        ✨ Show ${children.length}
-                        descendant${children.length === 1 ? "" : "s"}
-                        ▼
-                    `;
+    `
+        ✨ Explore ${member.full_name}'s Branch
+        ▼
+    `;
 
             }
 

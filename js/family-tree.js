@@ -18,22 +18,24 @@ async function loadFamilyTree() {
     `;
 
 
-    // -----------------------------------------
+    // =========================================
     // LOAD MEMBERS
-    // -----------------------------------------
+    // =========================================
 
-    const { data: members, error: membersError } =
-        await supabase
-            .from("members")
-            .select(`
-                id,
-                full_name,
-                is_deceased,
-                photo_url,
-                biography,
-                date_of_birth,
-                place_of_birth
-            `);
+    const {
+        data: members,
+        error: membersError
+    } = await supabase
+        .from("members")
+        .select(`
+            id,
+            full_name,
+            is_deceased,
+            photo_url,
+            biography,
+            date_of_birth,
+            place_of_birth
+        `);
 
 
     if (membersError) {
@@ -53,9 +55,9 @@ async function loadFamilyTree() {
     window.familyMembers = members;
 
 
-    // -----------------------------------------
+    // =========================================
     // LOAD RELATIONSHIPS
-    // -----------------------------------------
+    // =========================================
 
     const {
         data: relationships,
@@ -83,9 +85,9 @@ async function loadFamilyTree() {
     }
 
 
-    // -----------------------------------------
+    // =========================================
     // FIND FOUNDING COUPLE
-    // -----------------------------------------
+    // =========================================
 
     const patriarch = members.find(
         member =>
@@ -113,9 +115,9 @@ async function loadFamilyTree() {
     }
 
 
-    // -----------------------------------------
+    // =========================================
     // CLEAR TREE
-    // -----------------------------------------
+    // =========================================
 
     familyTree.innerHTML = "";
 
@@ -127,9 +129,9 @@ async function loadFamilyTree() {
         "family-tree";
 
 
-    // -----------------------------------------
+    // =========================================
     // FOUNDING COUPLE
-    // -----------------------------------------
+    // =========================================
 
     const couple =
         document.createElement("div");
@@ -160,9 +162,9 @@ async function loadFamilyTree() {
     tree.appendChild(couple);
 
 
-    // -----------------------------------------
+    // =========================================
     // MAIN CONNECTOR
-    // -----------------------------------------
+    // =========================================
 
     const mainLine =
         document.createElement("div");
@@ -174,27 +176,42 @@ async function loadFamilyTree() {
     tree.appendChild(mainLine);
 
 
-    // -----------------------------------------
-    // GENERATION 1
-    // -----------------------------------------
+    // =========================================
+    // GET THE 10 CHILDREN
+    // =========================================
 
-    const firstGeneration =
+    const fatherChildren =
         getChildren(
             patriarch.id,
             relationships,
             members
-        ).filter(
+        );
+
+
+    const motherChildren =
+        getChildren(
+            matriarch.id,
+            relationships,
+            members
+        );
+
+
+    // Only children belonging to BOTH parents
+    // are shown as the central couple's children.
+
+    const firstGeneration =
+        fatherChildren.filter(
             child =>
-                getChildren(
-                    matriarch.id,
-                    relationships,
-                    members
-                ).some(
+                motherChildren.some(
                     motherChild =>
                         motherChild.id === child.id
                 )
         );
 
+
+    // =========================================
+    // GENERATION TITLE
+    // =========================================
 
     const title =
         document.createElement("h3");
@@ -209,9 +226,9 @@ async function loadFamilyTree() {
     tree.appendChild(title);
 
 
-    // -----------------------------------------
-    // BUILD ALL GENERATIONS
-    // -----------------------------------------
+    // =========================================
+    // FIRST GENERATION CONTAINER
+    // =========================================
 
     const generationContainer =
         document.createElement("div");
@@ -219,6 +236,10 @@ async function loadFamilyTree() {
     generationContainer.className =
         "recursive-family-tree";
 
+
+    // =========================================
+    // CREATE ONLY THE 10 CHILDREN VISIBLY
+    // =========================================
 
     firstGeneration.forEach(child => {
 
@@ -276,7 +297,7 @@ function getChildren(
 
 
 // =========================================
-// CREATE COLLAPSIBLE GENERATION BRANCH
+// CREATE GENERATION BRANCH
 // =========================================
 
 function createGenerationBranch(
@@ -293,9 +314,9 @@ function createGenerationBranch(
         "generation-branch";
 
 
-    // -----------------------------------------
+    // =========================================
     // MEMBER CARD
-    // -----------------------------------------
+    // =========================================
 
     wrapper.innerHTML =
         createMemberCard(
@@ -304,9 +325,9 @@ function createGenerationBranch(
         );
 
 
-    // -----------------------------------------
+    // =========================================
     // FIND CHILDREN
-    // -----------------------------------------
+    // =========================================
 
     const children =
         getChildren(
@@ -316,7 +337,9 @@ function createGenerationBranch(
         );
 
 
-    // No children = nothing more to display
+    // =========================================
+    // NO CHILDREN
+    // =========================================
 
     if (children.length === 0) {
 
@@ -325,9 +348,9 @@ function createGenerationBranch(
     }
 
 
-    // -----------------------------------------
+    // =========================================
     // DESCENDANTS CONTAINER
-    // -----------------------------------------
+    // =========================================
 
     const descendants =
         document.createElement("div");
@@ -336,9 +359,9 @@ function createGenerationBranch(
         "collapsible-descendants";
 
 
-    // -----------------------------------------
-    // SHOW/HIDE BUTTON
-    // -----------------------------------------
+    // =========================================
+    // SHOW / HIDE BUTTON
+    // =========================================
 
     const toggleButton =
         document.createElement("button");
@@ -358,9 +381,9 @@ function createGenerationBranch(
         `;
 
 
-    // -----------------------------------------
+    // =========================================
     // CHILDREN CONTAINER
-    // -----------------------------------------
+    // =========================================
 
     const childrenContainer =
         document.createElement("div");
@@ -369,9 +392,9 @@ function createGenerationBranch(
         "generation-children";
 
 
-    // -----------------------------------------
-    // CREATE CHILD BRANCHES
-    // -----------------------------------------
+    // =========================================
+    // CREATE DESCENDANTS
+    // =========================================
 
     children.forEach(child => {
 
@@ -397,41 +420,17 @@ function createGenerationBranch(
 
 
     // =========================================
-// INITIAL GENERATION VISIBILITY
-// =========================================
-
-const showImmediately =
-    generation === 1;
-
-
-if (showImmediately) {
-
-    descendants.style.display =
-        "block";
-
-    toggleButton.innerHTML =
-        `
-            ✨ Hide descendants ▲
-        `;
-
-} else {
+    // IMPORTANT:
+    // HIDE ALL DESCENDANTS INITIALLY
+    // =========================================
 
     descendants.style.display =
         "none";
 
-    toggleButton.innerHTML =
-        `
-            ✨ Show ${children.length}
-            descendant${children.length === 1 ? "" : "s"}
-            ▼
-        `;
 
-}
-
-
-    // -----------------------------------------
+    // =========================================
     // BUTTON CLICK
-    // -----------------------------------------
+    // =========================================
 
     toggleButton.addEventListener(
         "click",
@@ -440,12 +439,12 @@ if (showImmediately) {
             event.stopPropagation();
 
 
-            const hidden =
+            const isHidden =
                 descendants.style.display ===
                 "none";
 
 
-            if (hidden) {
+            if (isHidden) {
 
                 descendants.style.display =
                     "block";
@@ -475,14 +474,18 @@ if (showImmediately) {
     );
 
 
-    // -----------------------------------------
-    // ADD TO BRANCH
-    // -----------------------------------------
+    // =========================================
+    // ADD BUTTON
+    // =========================================
 
     wrapper.appendChild(
         toggleButton
     );
 
+
+    // =========================================
+    // ADD HIDDEN DESCENDANTS
+    // =========================================
 
     wrapper.appendChild(
         descendants
@@ -492,6 +495,7 @@ if (showImmediately) {
     return wrapper;
 
 }
+
 
 // =========================================
 // GENERATION LABEL
@@ -505,11 +509,13 @@ function getGenerationLabel(generation) {
 
     }
 
+
     if (generation === 2) {
 
         return "Grandchild";
 
     }
+
 
     if (generation === 3) {
 
@@ -517,11 +523,13 @@ function getGenerationLabel(generation) {
 
     }
 
+
     if (generation === 4) {
 
         return "4th Generation Descendant";
 
     }
+
 
     return `${generation + 1}th Generation Descendant`;
 
@@ -571,7 +579,9 @@ function createMemberCard(
         >
 
             <div class="member-photo">
+
                 ${photo}
+
             </div>
 
 
@@ -681,7 +691,9 @@ function openMemberModal(member) {
     modalMemberContent.innerHTML = `
 
         <div class="modal-member-photo">
+
             ${photo}
+
         </div>
 
 

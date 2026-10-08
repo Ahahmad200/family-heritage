@@ -2794,3 +2794,124 @@ footer {
     }
 
 }
+/* =========================================
+   BEAUTIFUL FIRST-GENERATION FAMILY TREE
+   ========================================= */
+
+.recursive-family-tree {
+    position: relative;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px 10px 40px;
+}
+
+/* Horizontal family line above the 10 children */
+.recursive-family-tree::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 8%;
+    right: 8%;
+    height: 3px;
+    background: linear-gradient(
+        to right,
+        transparent,
+        #b8860b,
+        #e7c98b,
+        #b8860b,
+        transparent
+    );
+    border-radius: 10px;
+}
+
+/* First-generation children */
+.recursive-family-tree > .generation-branch {
+    position: relative;
+}
+
+/* Vertical connector from main family line */
+.recursive-family-tree > .generation-branch::before {
+    content: "";
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    width: 3px;
+    height: 20px;
+    background: #b8860b;
+    transform: translateX(-50%);
+    border-radius: 5px;
+}
+
+/* Keep the 10 children beautifully arranged */
+.recursive-family-tree {
+    display: grid;
+    grid-template-columns: repeat(
+        auto-fit,
+        minmax(210px, 1fr)
+    );
+    gap: 45px 25px;
+}
+
+/* Make first-generation cards elegant */
+.recursive-family-tree > .generation-branch > .member-card {
+    position: relative;
+    z-index: 2;
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+/* Gentle hover effect */
+.recursive-family-tree > .generation-branch > .member-card:hover {
+    transform: translateY(-6px);
+}
+
+/* Keep descendant controls below the card */
+.recursive-family-tree
+> .generation-branch
+> .show-descendants-button {
+    position: relative;
+    z-index: 3;
+}
+
+
+/* =========================================
+   MOBILE FAMILY TREE
+   ========================================= */
+
+@media (max-width: 700px) {
+
+    .recursive-family-tree {
+        grid-template-columns: 1fr;
+        gap: 35px;
+        padding: 20px 10px 30px;
+    }
+
+    .recursive-family-tree::before {
+        left: 50%;
+        right: auto;
+        width: 3px;
+        height: 100%;
+        background: linear-gradient(
+            to bottom,
+            transparent,
+            #b8860b,
+            #e7c98b,
+            #b8860b,
+            transparent
+        );
+        transform: translateX(-50%);
+    }
+
+    .recursive-family-tree
+    > .generation-branch::before {
+        display: none;
+    }
+
+    .recursive-family-tree
+    > .generation-branch {
+        z-index: 2;
+    }
+
+}

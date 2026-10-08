@@ -3513,3 +3513,257 @@ footer {
         font-size: 19px;
     }
                               }
+/* =========================================
+   FAMILY ANNALS
+   ========================================= */
+
+.family-annals-section {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px 20px 70px;
+}
+
+
+/* =========================================
+   INTRODUCTION
+   ========================================= */
+
+.annals-introduction {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto 55px;
+}
+
+.annals-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    height: 70px;
+    margin-bottom: 18px;
+    background: linear-gradient(
+        145deg,
+        #3b2f2f,
+        #5a4545
+    );
+    border: 3px solid #e7c98b;
+    border-radius: 50%;
+    font-size: 30px;
+    box-shadow:
+        0 8px 22px rgba(59, 47, 47, 0.18);
+}
+
+.annals-introduction h2 {
+    margin: 0 0 12px;
+    color: #3b2f2f;
+    font-size: 30px;
+}
+
+.annals-introduction p {
+    margin: 0;
+    color: #77706a;
+    font-size: 15px;
+    line-height: 1.8;
+}
+
+
+/* =========================================
+   TIMELINE
+   ========================================= */
+
+.family-annals-timeline {
+    position: relative;
+    max-width: 850px;
+    margin: 0 auto;
+    padding: 20px 0;
+}
+
+
+/* Central timeline line */
+
+.family-annals-timeline::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 32px;
+    width: 2px;
+    background: linear-gradient(
+        to bottom,
+        #e7c98b,
+        #b8860b,
+        #e7c98b
+    );
+}
+
+
+/* =========================================
+   EVENT
+   ========================================= */
+
+.annals-event {
+    position: relative;
+    display: flex;
+    gap: 22px;
+    margin-bottom: 35px;
+}
+
+
+/* =========================================
+   NUMBER MARKER
+   ========================================= */
+
+.annals-marker {
+    position: relative;
+    z-index: 2;
+    width: 64px;
+    min-width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #3b2f2f;
+    border: 4px solid #f3dfb0;
+    border-radius: 50%;
+    box-shadow:
+        0 6px 18px rgba(59, 47, 47, 0.15);
+}
+
+.annals-marker span {
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+
+/* =========================================
+   EVENT CARD
+   ========================================= */
+
+.annals-event-card {
+    flex: 1;
+    padding: 25px;
+    background: linear-gradient(
+        145deg,
+        #fffdf8,
+        #f8f0df
+    );
+    border: 1px solid rgba(
+        184,
+        134,
+        11,
+        0.22
+    );
+    border-radius: 22px;
+    box-shadow:
+        0 8px 25px rgba(
+            59,
+            47,
+            47,
+            0.08
+        );
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.annals-event-card:hover {
+    transform: translateY(-4px);
+    box-shadow:
+        0 14px 32px rgba(
+            59,
+            47,
+            47,
+            0.13
+        );
+}
+
+
+/* =========================================
+   YEAR
+   ========================================= */
+
+.annals-event-year {
+    display: inline-block;
+    margin-bottom: 12px;
+    padding: 6px 12px;
+    background: #3b2f2f;
+    color: #f3dfb0;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+
+/* =========================================
+   EVENT CONTENT
+   ========================================= */
+
+.annals-event-content {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.annals-event-details {
+    flex: 1;
+}
+
+
+/* =========================================
+   EVENT TYPE
+   ========================================= */
+
+.annals-event-type {
+    display: inline-block;
+    margin-bottom: 7px;
+    color: #b8860b;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+
+/* =========================================
+   EVENT TITLE
+   ========================================= */
+
+.annals-event-details h3 {
+    margin: 0 0 12px;
+    color: #3b2f2f;
+    font-size: 21px;
+}
+
+
+/* =========================================
+   DATE
+   ========================================= */
+
+.annals-event-date {
+    margin-bottom: 8px;
+    color: #77706a;
+    font-size: 12px;
+}
+
+
+/* =========================================
+   PERSON
+   ========================================= */
+
+.annals-event-person {
+    margin-bottom: 13px;
+    color: #5a4545;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+
+/* =========================================
+   DESCRIPTION
+   ========================================= */
+
+.annals-event-details p {
+    margin: 0;
+    color: #655e58;
+    font-size:

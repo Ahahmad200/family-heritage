@@ -1199,6 +1199,169 @@ if (calculateRelationshipButton) {
 
 }
 // =========================================
+// FAMILY RELATIONSHIP INTELLIGENCE
+// =========================================
+
+function getParents(memberId) {
+
+    return (window.familyRelationships || [])
+        .filter(relationship =>
+            relationship.person_id === memberId &&
+            relationship.relationship_type === "child"
+        )
+        .map(relationship =>
+            relationship.related_person_id
+        );
+}
+
+
+function getChildrenOf(memberId) {
+
+    return (window.familyRelationships || [])
+        .filter(relationship =>
+            relationship.related_person_id === memberId &&
+            relationship.relationship_type === "child"
+        )
+        .map(relationship =>
+            relationship.person_id
+        );
+}
+
+
+function getSpouses(memberId) {
+
+    return (window.familyRelationships || [])
+        .filter(relationship =>
+            relationship.relationship_type === "spouse" &&
+            (
+                relationship.person_id === memberId ||
+                relationship.related_person_id === memberId
+            )
+        )
+        .map(relationship =>
+            relationship.person_id === memberId
+                ? relationship.related_person_id
+                : relationship.person_id
+        );
+}
+
+
+function getSiblings(memberId) {
+
+    const parents =
+        getParents(memberId);
+
+    const siblings = new Set();
+
+    parents.forEach(parentId => {
+
+        getChildrenOf(parentId)
+            .forEach(childId => {
+
+                if (childId !== memberId) {
+                    siblings.add(childId);
+                }
+
+            });
+
+    });
+
+    return [...siblings];
+}
+
+
+function getMemberName(memberId) {
+
+    const member =
+        window.familyMembers.find(
+            person =>
+                person.id === memberId
+        );
+
+    return member
+        ? member.full_name
+        : "Unknown family member";
+}
+
+
+function getDirectRelationship(
+    startId,
+    targetId
+) {
+
+    // Same person
+    if (startId === targetId) {
+        return "the same person";
+    }
+
+
+    // Spouse
+    if (
+        getSpouses(startId)
+            .includes(targetId)
+    ) {
+        return "spouse";
+    }
+
+
+    // Parent
+    if (
+        getParents(startId)
+            .includes(targetId)
+    ) {
+        return "parent";
+    }
+
+
+    // Child
+    if (
+        getChildrenOf(startId)
+            .includes(targetId)
+    ) {
+        return "child";
+    }
+
+
+    // Sibling
+    if (
+        getSiblings(startId)
+            .includes(targetId)
+    ) {
+        return "brother or sister";
+    }
+
+
+    // Grandparent
+    const grandparents =
+        getParents(startId)
+            .flatMap(parentId =>
+                getParents(parentId)
+            );
+
+    if (
+        grandparents.includes(targetId)
+    ) {
+        return "grandparent";
+    }
+
+
+    // Grandchild
+    const grandchildren =
+        getChildrenOf(startId)
+            .flatMap(childId =>
+                getChildrenOf(childId)
+            );
+
+    if (
+        grandchildren.includes(targetId)
+    ) {
+        return "grandchild";
+    }
+
+
+    return null;
+}
+// =========================================
 // START
 // =========================================
 

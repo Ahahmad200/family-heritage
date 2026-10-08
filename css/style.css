@@ -3008,3 +3008,74 @@ footer {
     }
 
 }
+/* =========================================
+   SMOOTH DESCENDANT REVEAL
+   ========================================= */
+
+.collapsible-descendants {
+    overflow: hidden;
+    transform-origin: top center;
+}
+
+/* When descendants are displayed */
+
+.collapsible-descendants[style*="display: block"] {
+    animation: descendantsReveal 0.5s ease-out;
+}
+
+@keyframes descendantsReveal {
+
+    0% {
+        opacity: 0;
+        transform: translateY(-15px);
+    }
+
+    60% {
+        opacity: 0.75;
+        transform: translateY(4px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+
+/* =========================================
+   DESCENDANT BRANCHES
+   ========================================= */
+
+.collapsible-descendants
+.generation-branch {
+    animation: branchAppear 0.45s ease-out;
+}
+
+@keyframes branchAppear {
+
+    from {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+}
+
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 700px) {
+
+    .collapsible-descendants {
+        margin-top: 12px;
+        padding-top: 12px;
+    }
+
+}

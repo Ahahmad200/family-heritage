@@ -3079,3 +3079,107 @@ footer {
     }
 
 }
+/* =========================================
+   GENERATION GUIDE
+   ========================================= */
+
+.generation-guide {
+    width: calc(100% - 30px);
+    max-width: 1050px;
+    margin: 25px auto 35px;
+    padding: 22px 20px;
+    background: linear-gradient(
+        145deg,
+        #fffdf8,
+        #f8f0df
+    );
+    border: 1px solid rgba(184, 134, 11, 0.20);
+    border-radius: 22px;
+    box-shadow:
+        0 8px 25px rgba(59, 47, 47, 0.07);
+    text-align: center;
+}
+
+.generation-guide-title {
+    font-size: 17px;
+    font-weight: bold;
+    color: #3b2f2f;
+    margin-bottom: 18px;
+}
+
+.generation-guide-steps {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.generation-guide-step {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 14px;
+    background: white;
+    border: 1px solid #eadfc9;
+    border-radius: 30px;
+    color: #5a4545;
+    font-size: 12px;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(59, 47, 47, 0.05);
+}
+
+.generation-guide-icon {
+    font-size: 16px;
+}
+
+.generation-guide-arrow {
+    color: #b8860b;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.generation-guide-note {
+    margin: 17px 0 0;
+    color: #77706a;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+
+/* =========================================
+   MOBILE GENERATION GUIDE
+   ========================================= */
+
+@media (max-width: 700px) {
+
+    .generation-guide {
+        width: calc(100% - 20px);
+        padding: 18px 12px;
+        margin: 20px auto 28px;
+    }
+
+    .generation-guide-title {
+        font-size: 15px;
+    }
+
+    .generation-guide-steps {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .generation-guide-arrow {
+        transform: rotate(90deg);
+        font-size: 16px;
+    }
+
+    .generation-guide-step {
+        font-size: 11px;
+        padding: 8px 13px;
+    }
+
+    .generation-guide-note {
+        font-size: 11px;
+    }
+
+}

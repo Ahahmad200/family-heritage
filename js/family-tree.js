@@ -53,7 +53,7 @@ async function loadFamilyTree() {
 
 
     window.familyMembers = members;
-
+loadRelationshipMembers();
 
     // =========================================
     // LOAD RELATIONSHIPS
@@ -829,7 +829,77 @@ document.addEventListener(
     }
 );
 
+// =========================================
+// HOW AM I RELATED - LOAD MEMBERS
+// =========================================
 
+const relationshipPerson =
+    document.getElementById("relationshipPerson");
+
+const relatedPerson =
+    document.getElementById("relatedPerson");
+
+
+function loadRelationshipMembers() {
+
+    if (!relationshipPerson || !relatedPerson) {
+        return;
+    }
+
+
+    relationshipPerson.innerHTML = `
+        <option value="">
+            Select family member
+        </option>
+    `;
+
+
+    relatedPerson.innerHTML = `
+        <option value="">
+            Select family member
+        </option>
+    `;
+
+
+    window.familyMembers
+        .slice()
+        .sort((a, b) =>
+            a.full_name.localeCompare(
+                b.full_name
+            )
+        )
+        .forEach(member => {
+
+            const option1 =
+                document.createElement("option");
+
+            option1.value =
+                member.id;
+
+            option1.textContent =
+                member.full_name;
+
+            relationshipPerson.appendChild(
+                option1
+            );
+
+
+            const option2 =
+                document.createElement("option");
+
+            option2.value =
+                member.id;
+
+            option2.textContent =
+                member.full_name;
+
+            relatedPerson.appendChild(
+                option2
+            );
+
+        });
+
+}
 // =========================================
 // START
 // =========================================

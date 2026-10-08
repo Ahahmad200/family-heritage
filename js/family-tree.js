@@ -28,14 +28,15 @@ async function loadFamilyTree() {
     } = await supabase
         .from("members")
         .select(`
-            id,
-            full_name,
-            is_deceased,
-            photo_url,
-            biography,
-            date_of_birth,
-            place_of_birth
-        `);
+    id,
+    full_name,
+    gender,
+    is_deceased,
+    photo_url,
+    biography,
+    date_of_birth,
+    place_of_birth
+`);
 
 
     if (membersError) {
@@ -1688,11 +1689,11 @@ function getExtendedRelationship(
 
     for (const parentId of targetParents) {
 
-        const parent'sSiblings =
+        const parentSiblings =
             getSiblings(parentId);
 
         if (
-            parent'sSiblings.includes(
+            parentSiblings.includes(
                 startId
             )
         ) {
@@ -1727,11 +1728,11 @@ function getExtendedRelationship(
 
     for (const parentId of startParents) {
 
-        const parent'sSiblings =
+        const parentSiblings =
             getSiblings(parentId);
 
         if (
-            parent'sSiblings.includes(
+            parentSiblings.includes(
                 targetId
             )
         ) {

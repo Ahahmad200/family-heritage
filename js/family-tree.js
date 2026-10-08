@@ -1255,13 +1255,93 @@ if (relationshipName === "parent") {
         </strong>.
     `;
 
-} else {
+} else if (
+    relationshipName === "uncle"
+) {
 
     relationshipSentence = `
         <strong>
             ${startMember.full_name}
         </strong>
         is the
+        <strong>uncle</strong>
+        of
+        <strong>
+            ${targetMember.full_name}
+        </strong>.
+    `;
+
+} else if (
+    relationshipName === "aunt"
+) {
+
+    relationshipSentence = `
+        <strong>
+            ${startMember.full_name}
+        </strong>
+        is the
+        <strong>aunt</strong>
+        of
+        <strong>
+            ${targetMember.full_name}
+        </strong>.
+    `;
+
+} else if (
+    relationshipName === "nephew"
+) {
+
+    relationshipSentence = `
+        <strong>
+            ${startMember.full_name}
+        </strong>
+        is the
+        <strong>nephew</strong>
+        of
+        <strong>
+            ${targetMember.full_name}
+        </strong>.
+    `;
+
+} else if (
+    relationshipName === "niece"
+) {
+
+    relationshipSentence = `
+        <strong>
+            ${startMember.full_name}
+        </strong>
+        is the
+        <strong>niece</strong>
+        of
+        <strong>
+            ${targetMember.full_name}
+        </strong>.
+    `;
+
+} else if (
+    relationshipName === "cousin"
+) {
+
+    relationshipSentence = `
+        <strong>
+            ${startMember.full_name}
+        </strong>
+        and
+        <strong>
+            ${targetMember.full_name}
+        </strong>
+        are
+        <strong>cousins</strong>.
+    `;
+
+} else {
+
+    relationshipSentence = `
+        <strong>
+            ${startMember.full_name}
+        </strong>
+        is a
         <strong>
             ${relationshipName}
         </strong>
@@ -1573,26 +1653,85 @@ function getCousins(memberId) {
 }
 
 
+// =========================================
+// SMART EXTENDED FAMILY RELATIONSHIPS
+// =========================================
+
 function getExtendedRelationship(
     startId,
     targetId
 ) {
 
+    const startMember =
+        window.familyMembers.find(
+            member =>
+                member.id === startId
+        );
+
+    const targetMember =
+        window.familyMembers.find(
+            member =>
+                member.id === targetId
+        );
+
+
+    // -----------------------------
+    // UNCLE / AUNT
+    // -----------------------------
+
     if (
         getUnclesAndAunts(startId)
             .includes(targetId)
     ) {
+
+        if (
+            targetMember &&
+            targetMember.gender === "male"
+        ) {
+            return "uncle";
+        }
+
+        if (
+            targetMember &&
+            targetMember.gender === "female"
+        ) {
+            return "aunt";
+        }
+
         return "uncle or aunt";
     }
 
+
+    // -----------------------------
+    // NEPHEW / NIECE
+    // -----------------------------
 
     if (
         getNiecesAndNephews(startId)
             .includes(targetId)
     ) {
+
+        if (
+            targetMember &&
+            targetMember.gender === "male"
+        ) {
+            return "nephew";
+        }
+
+        if (
+            targetMember &&
+            targetMember.gender === "female"
+        ) {
+            return "niece";
+        }
+
         return "nephew or niece";
     }
 
+
+    // -----------------------------
+    // COUSIN
+    // -----------------------------
 
     if (
         getCousins(startId)

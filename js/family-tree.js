@@ -83,7 +83,7 @@ loadRelationshipMembers();
 
         return;
     }
-
+window.familyRelationships = relationships;
 
     // =========================================
     // FIND FOUNDING COUPLE
@@ -898,6 +898,304 @@ function loadRelationshipMembers() {
             );
 
         });
+
+}
+// =========================================
+// HOW AM I RELATED - FIND RELATIONSHIP
+// =========================================
+
+const calculateRelationshipButton =
+    document.getElementById(
+        "calculateRelationshipButton"
+    );
+
+const relationshipResult =
+    document.getElementById(
+        "relationshipResult"
+    );
+
+
+if (calculateRelationshipButton) {
+
+    calculateRelationshipButton.addEventListener(
+        "click",
+        function() {
+
+            const startId =
+                relationshipPerson.value;
+
+            const targetId =
+                relatedPerson.value;
+
+
+            // -------------------------------
+            // VALIDATION
+            // -------------------------------
+
+            if (!startId || !targetId) {
+
+                relationshipResult.innerHTML = `
+                    <div class="relationship-message">
+                        ⚠️ Please select both family members.
+                    </div>
+                `;
+
+                return;
+            }
+
+
+            if (startId === targetId) {
+
+                const member =
+                    window.familyMembers.find(
+                        person =>
+                            person.id === startId
+                    );
+
+
+                relationshipResult.innerHTML = `
+                    <div class="relationship-message success">
+                        🌳 You selected the same person.
+                        <strong>${member.full_name}</strong>
+                        is connected to themselves.
+                    </div>
+                `;
+
+                return;
+            }
+
+
+            // -------------------------------
+            // BUILD FAMILY CONNECTIONS
+            // -------------------------------
+
+            const connections = {};
+
+
+            window.familyMembers.forEach(
+                member => {
+
+                    connections[member.id] = [];
+
+                }
+            );
+
+
+            // -------------------------------
+            // ADD RELATIONSHIPS
+            // -------------------------------
+
+            window.familyRelationships.forEach(
+                relationship => {
+
+                    const person =
+                        relationship.person_id;
+
+                    const related =
+                        relationship.related_person_id;
+
+
+                    if (
+                        relationship.relationship_type ===
+                        "child"
+                    ) {
+
+                        // Child → Parent
+
+                        connections[person].push(
+                            related
+                        );
+
+
+                        // Parent → Child
+
+                        connections[related].push(
+                            person
+                        );
+
+                    }
+
+
+                    if (
+                        relationship.relationship_type ===
+                        "spouse"
+                    ) {
+
+                        connections[person].push(
+                            related
+                        );
+
+                        connections[related].push(
+                            person
+                        );
+
+                    }
+
+                }
+            );
+
+
+            // -------------------------------
+            // FIND PATH USING BFS
+            // -------------------------------
+
+            const queue = [
+                [startId]
+            ];
+
+            const visited =
+                new Set([startId]);
+
+
+            let foundPath = null;
+
+
+            while (queue.length > 0) {
+
+                const path =
+                    queue.shift();
+
+                const current =
+                    path[path.length - 1];
+
+
+                if (current === targetId) {
+
+                    foundPath = path;
+
+                    break;
+
+                }
+
+
+                const neighbours =
+                    connections[current] || [];
+
+
+                for (
+                    const neighbour
+                    of neighbours
+                ) {
+
+                    if (
+                        !visited.has(
+                            neighbour
+                        )
+                    ) {
+
+                        visited.add(
+                            neighbour
+                        );
+
+
+                        queue.push([
+                            ...path,
+                            neighbour
+                        ]);
+
+                    }
+
+                }
+
+            }
+
+
+            // -------------------------------
+            // NO CONNECTION
+            // -------------------------------
+
+            if (!foundPath) {
+
+                relationshipResult.innerHTML = `
+                    <div class="relationship-message">
+                        🌿 No recorded connection
+                        was found between these
+                        two family members.
+                    </div>
+                `;
+
+                return;
+            }
+
+
+            // -------------------------------
+            // CREATE PATH DISPLAY
+            // -------------------------------
+
+            const pathMembers =
+                foundPath.map(
+                    id =>
+                        window.familyMembers.find(
+                            member =>
+                                member.id === id
+                        )
+                );
+
+
+            relationshipResult.innerHTML = `
+
+                <div class="relationship-path-card">
+
+                    <h3>
+                        🌳 Family Connection
+                    </h3>
+
+                    <p class="relationship-path-intro">
+                        The recorded family path is:
+                    </p>
+
+
+                    <div class="relationship-path">
+
+                        ${pathMembers.map(
+                            (member, index) => `
+
+                                <div
+                                    class="
+                                        relationship-path-member
+                                    "
+                                >
+
+                                    <div
+                                        class="
+                                            relationship-path-number
+                                        "
+                                    >
+                                        ${index + 1}
+                                    </div>
+
+                                    <strong>
+                                        ${member.full_name}
+                                    </strong>
+
+                                </div>
+
+                                ${
+                                    index <
+                                    pathMembers.length - 1
+                                        ? `
+                                            <div
+                                                class="
+                                                    relationship-path-line
+                                                "
+                                            >
+                                                ↓
+                                            </div>
+                                        `
+                                        : ""
+                                }
+
+                            `
+                        ).join("")}
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }
+    );
 
 }
 // =========================================

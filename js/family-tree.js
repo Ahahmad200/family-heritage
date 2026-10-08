@@ -1654,7 +1654,7 @@ function getCousins(memberId) {
 
 
 // =========================================
-// SMART EXTENDED FAMILY RELATIONSHIPS
+// PATH-BASED EXTENDED RELATIONSHIP
 // =========================================
 
 function getExtendedRelationship(
@@ -1674,72 +1674,120 @@ function getExtendedRelationship(
                 member.id === targetId
         );
 
-
-// -----------------------------
-// UNCLE / AUNT
-// -----------------------------
-
-if (
-    getUnclesAndAunts(startId)
-        .includes(targetId)
-) {
-
-    if (
-        targetMember &&
-        targetMember.gender &&
-        targetMember.gender.toLowerCase() === "male"
-    ) {
-        return "uncle";
+    if (!startMember || !targetMember) {
+        return null;
     }
 
-    if (
-        targetMember &&
-        targetMember.gender &&
-        targetMember.gender.toLowerCase() === "female"
-    ) {
-        return "aunt";
+
+    // -------------------------------------
+    // UNCLE / AUNT
+    // -------------------------------------
+
+    const startParents =
+        getParents(startId);
+
+    for (const parentId of startParents) {
+
+        const parent'sSiblings =
+            getSiblings(parentId);
+
+        if (
+            parent'sSiblings.includes(
+                targetId
+            )
+        ) {
+
+            if (
+                targetMember.gender &&
+                targetMember.gender.toLowerCase() ===
+                "male"
+            ) {
+                return "uncle";
+            }
+
+            if (
+                targetMember.gender &&
+                targetMember.gender.toLowerCase() ===
+                "female"
+            ) {
+                return "aunt";
+            }
+
+            return "uncle or aunt";
+        }
     }
 
-    return "uncle or aunt";
-}
 
-// -----------------------------
+    // -------------------------------------
 // NEPHEW / NIECE
-// -----------------------------
+// -------------------------------------
 
-if (
-    getNiecesAndNephews(startId)
-        .includes(targetId)
-) {
+const targetParents =
+    getParents(targetId);
 
-    if (
-        targetMember &&
-        targetMember.gender &&
-        targetMember.gender.toLowerCase() === "male"
-    ) {
-        return "nephew";
-    }
+for (const parentId of targetParents) {
+
+    const parent'sSiblings =
+        getSiblings(parentId);
 
     if (
-        targetMember &&
-        targetMember.gender &&
-        targetMember.gender.toLowerCase() === "female"
+        parent'sSiblings.includes(
+            startId
+        )
     ) {
-        return "niece";
-    }
 
-    return "nephew or niece";
+        if (
+            startMember.gender &&
+            startMember.gender.toLowerCase() ===
+            "male"
+        ) {
+            return "uncle";
+        }
+
+        if (
+            startMember.gender &&
+            startMember.gender.toLowerCase() ===
+            "female"
+        ) {
+            return "aunt";
+        }
+
+        return "uncle or aunt";
+    }
 }
 
-    // -----------------------------
-    // COUSIN
-    // -----------------------------
 
-    if (
-        getCousins(startId)
-            .includes(targetId)
+    // -------------------------------------
+    // COUSIN
+    // -------------------------------------
+
+    const startParentsForCousin =
+        getParents(startId);
+
+    const targetParentsForCousin =
+        getParents(targetId);
+
+    for (
+        const startParentId
+        of startParentsForCousin
     ) {
-        return "cousin";
+
+        const startUnclesAunts =
+            getSiblings(startParentId);
+
+        for (
+            const targetParentId
+            of targetParentsForCousin
+        ) {
+
+            if (
+                startUnclesAunts.includes(
+                    targetParentId
+                )
+            ) {
+                return "cousin";
+            }
+        }
     }
 
 

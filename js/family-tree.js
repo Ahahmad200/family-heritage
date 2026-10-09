@@ -755,7 +755,16 @@ function openMemberModal(member) {
         "flex";
 
 }
+// Allow other pages to open a family member's profile.
+window.openFamilyMemberProfile = function(memberId) {
+    const member = window.familyMembers?.find(
+        person => person.id === memberId
+    );
 
+    if (member && memberModal && modalMemberContent) {
+        openMemberModal(member);
+    }
+};
 
 // =========================================
 // CLOSE MEMBER MODAL

@@ -569,15 +569,31 @@
                         ></textarea>
 
 
-                        <label for="annalPhoto">
-                            Event Photo URL (Optional)
-                        </label>
+                        <label for="annalPhotoFile">
+    Historical Event Photo
+</label>
 
-                        <input
-                            type="url"
-                            id="annalPhoto"
-                            placeholder="https://example.com/photo.jpg"
-                        >
+<input
+    type="file"
+    id="annalPhotoFile"
+    accept="image/jpeg,image/png,image/webp"
+>
+
+<div id="annalPhotoPreviewContainer" style="display: none;">
+    <p>Photo preview:</p>
+    <img
+        id="annalPhotoPreview"
+        src=""
+        alt="Historical event photo preview"
+        style="width: 100%; max-width: 300px; border-radius: 12px;"
+    >
+    <button
+        type="button"
+        id="removeAnnalPhoto"
+    >
+        Remove Photo
+    </button>
+</div>
 
 
                         <label class="annal-highlight-label">

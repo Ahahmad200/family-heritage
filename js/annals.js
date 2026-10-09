@@ -244,71 +244,83 @@ familyAnnals.addEventListener("click", async function(event) {
         // Show the member's details in a simple popup.
         const existingPopup = document.getElementById("annalsMemberPopup");
 
-        if (existingPopup) existingPopup.remove();
+if (existingPopup) {
+    existingPopup.remove();
+}
 
-        const popup = document.createElement("div");
-        popup.id = "annalsMemberPopup";
-        // Force the popup to cover the entire screen.
+const popup = document.createElement("dialog");
+popup.id = "annalsMemberPopup";
+
 popup.style.cssText = `
-    position: fixed;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    height: 100dvh;
-    z-index: 2147483647;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 18px;
-    box-sizing: border-box;
+    position: fixed !important;
+    inset: 0 !important;
+    margin: auto !important;
+    width: min(500px, calc(100% - 30px));
+    max-width: 500px;
+    max-height: 85vh;
     overflow-y: auto;
-    background: rgba(35, 25, 18, 0.80);
+    padding: 24px;
+    border: none;
+    border-radius: 18px;
+    box-sizing: border-box;
+    background: #fffaf0;
+    color: #382719;
+    z-index: 2147483647;
 `;
-        popup.innerHTML = `
-            <div class="annals-member-popup-card">
-                <button
-                    type="button"
-                    class="annals-member-popup-close"
-                    aria-label="Close profile"
-                >×</button>
 
-                ${
-                    member.photo_url
-                        ? `<img
-                            class="annals-member-popup-photo"
-                            src="${escapeHTML(member.photo_url)}"
-                            alt="${escapeHTML(member.full_name)}"
-                        >`
-                        : ""
-                }
+popup.innerHTML = `
+    <div class="annals-member-popup-card">
+        <button
+            type="button"
+            class="annals-member-popup-close"
+            aria-label="Close profile"
+            style="float:right;font-size:28px;border:none;background:none;cursor:pointer;"
+        >×</button>
 
-                <h2>${escapeHTML(member.full_name)}</h2>
+        ${member.photo_url ? `
+            <img
+                class="annals-member-popup-photo"
+                src="${escapeHTML(member.photo_url)}"
+                alt="${escapeHTML(member.full_name)}"
+                style="display:block;max-width:100%;max-height:250px;object-fit:contain;margin:15px auto;border-radius:12px;"
+            >
+        ` : ""}
 
-                <p>
-                    ${member.is_deceased ? "Deceased" : "Living"}
-                </p>
+        <h2>${escapeHTML(member.full_name)}</h2>
 
-                ${
-                    member.date_of_birth
-                        ? `<p>🎂 Date of birth: ${escapeHTML(member.date_of_birth)}</p>`
-                        : ""
-                }
+        <p>${member.is_deceased ? "Deceased" : "Living"}</p>
 
-                ${
-                    member.place_of_birth
-                        ? `<p>📍 Place of birth: ${escapeHTML(member.place_of_birth)}</p>`
-                        : ""
-                }
+        ${member.date_of_birth ? `
+            <p>🎂 Date of birth: ${escapeHTML(member.date_of_birth)}</p>
+        ` : ""}
 
-                <h3>Biography</h3>
+        ${member.place_of_birth ? `
+            <p>📍 Place of birth: ${escapeHTML(member.place_of_birth)}</p>
+        ` : ""}
 
-                <p>
-                    ${escapeHTML(member.biography || "Biography will be added soon.")}
-                </p>
-            </div>
-        `;
+        <h3>Biography</h3>
 
-        document.body.appendChild(popup);
+        <p>${escapeHTML(member.biography || "Biography will be added soon.")}</p>
+    </div>
+`;
+
+popup.addEventListener("click", function(closeEvent) {
+    if (
+        closeEvent.target === popup ||
+        closeEvent.target.closest(".annals-member-popup-close")
+    ) {
+        popup.close();
+        popup.remove();
+    }
+});
+
+popup.addEventListener("cancel", function() {
+    popup.remove();
+});
+
+document.body.appendChild(popup);
+
+popup.showModal();
 
         popup.addEventListener("click", function(closeEvent) {
             if (

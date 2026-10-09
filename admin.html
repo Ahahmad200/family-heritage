@@ -412,6 +412,230 @@
     </div>
 
 </div>
+                        <!-- ================================= -->
+            <!-- FAMILY ANNALS MANAGEMENT -->
+            <!-- ================================= -->
+
+            <div class="admin-panel annals-admin-panel">
+
+                <div class="admin-panel-header">
+
+                    <div>
+
+                        <h2>📜 Family Annals</h2>
+
+                        <p>
+                            Record and preserve important
+                            events in our family history.
+                        </p>
+
+                    </div>
+
+                    <button
+                        type="button"
+                        id="addAnnalButton"
+                        class="admin-primary-button"
+                    >
+                        + Add Historical Event
+                    </button>
+
+                </div>
+
+
+                <!-- ANNALS FORM -->
+
+                <div
+                    id="annalFormContainer"
+                    class="admin-form-container"
+                    style="display: none;"
+                >
+
+                    <div class="admin-form-header">
+
+                        <h2 id="annalFormTitle">
+                            Add Historical Event
+                        </h2>
+
+                        <button
+                            type="button"
+                            id="closeAnnalForm"
+                            class="admin-close-button"
+                        >
+                            ×
+                        </button>
+
+                    </div>
+
+
+                    <form id="annalForm">
+
+                        <input
+                            type="hidden"
+                            id="annalId"
+                        >
+
+
+                        <label for="annalTitle">
+                            Event Title
+                        </label>
+
+                        <input
+                            type="text"
+                            id="annalTitle"
+                            placeholder="e.g. Birth of a family member"
+                            required
+                        >
+
+
+                        <label for="annalDate">
+                            Event Date
+                        </label>
+
+                        <input
+                            type="date"
+                            id="annalDate"
+                        >
+
+
+                        <label for="annalType">
+                            Event Type
+                        </label>
+
+                        <select
+                            id="annalType"
+                            required
+                        >
+
+                            <option value="">
+                                Select event type
+                            </option>
+
+                            <option value="Birth">
+                                Birth
+                            </option>
+
+                            <option value="Marriage">
+                                Marriage
+                            </option>
+
+                            <option value="Death">
+                                Death
+                            </option>
+
+                            <option value="Achievement">
+                                Achievement
+                            </option>
+
+                            <option value="Education">
+                                Education
+                            </option>
+
+                            <option value="Family Gathering">
+                                Family Gathering
+                            </option>
+
+                            <option value="Historical Event">
+                                Historical Event
+                            </option>
+
+                            <option value="Other">
+                                Other
+                            </option>
+
+                        </select>
+
+
+                        <label for="annalPerson">
+                            Related Family Member
+                        </label>
+
+                        <select id="annalPerson">
+
+                            <option value="">
+                                No specific member
+                            </option>
+
+                        </select>
+
+
+                        <label for="annalDescription">
+                            Historical Description
+                        </label>
+
+                        <textarea
+                            id="annalDescription"
+                            rows="6"
+                            placeholder="Describe the event and its significance to the family..."
+                        ></textarea>
+
+
+                        <label for="annalPhoto">
+                            Event Photo URL (Optional)
+                        </label>
+
+                        <input
+                            type="url"
+                            id="annalPhoto"
+                            placeholder="https://example.com/photo.jpg"
+                        >
+
+
+                        <label class="annal-highlight-label">
+
+                            <input
+                                type="checkbox"
+                                id="annalHighlighted"
+                            >
+
+                            ⭐ Highlight this important event
+
+                        </label>
+
+
+                        <div class="admin-form-buttons">
+
+                            <button
+                                type="submit"
+                                class="admin-primary-button"
+                            >
+                                Save Historical Event
+                            </button>
+
+                            <button
+                                type="button"
+                                id="cancelAnnalForm"
+                                class="admin-secondary-button"
+                            >
+                                Cancel
+                            </button>
+
+                        </div>
+
+
+                        <p id="annalMessage"></p>
+
+                    </form>
+
+                </div>
+
+
+                <!-- EXISTING ANNALS -->
+
+                <div class="annals-admin-list-section">
+
+                    <h3>Recorded Historical Events</h3>
+
+                    <div id="adminAnnalsList">
+
+                        <p class="admin-loading">
+                            Loading historical events...
+                        </p>
+
+                    </div>
+
+                </div>
+
+                            </div>
 
         </section>
 

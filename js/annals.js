@@ -248,7 +248,22 @@ familyAnnals.addEventListener("click", async function(event) {
 
         const popup = document.createElement("div");
         popup.id = "annalsMemberPopup";
-
+        // Force the popup to cover the entire screen.
+popup.style.cssText = `
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    height: 100dvh;
+    z-index: 2147483647;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    background: rgba(35, 25, 18, 0.80);
+`;
         popup.innerHTML = `
             <div class="annals-member-popup-card">
                 <button

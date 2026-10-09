@@ -1,308 +1,210 @@
 import { supabase } from "./supabase.js";
 
-
 // =========================================
-// FAMILY ANNALS
+// FAMILY ANNALS — HISTORICAL TIMELINE
 // =========================================
 
-const familyAnnals =
-    document.getElementById("familyAnnals");
+const familyAnnals = document.getElementById("familyAnnals");
 
+// Safely display text received from the database.
+function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, character => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+    })[character]);
+}
+
+// Format a date without accidentally changing the calendar day.
+function formatEventDate(dateString) {
+    if (!dateString) return "Date not recorded";
+
+    const parts = dateString.split("-").map(Number);
+
+    if (parts.length !== 3 || parts.some(Number.isNaN)) {
+        return "Date not recorded";
+    }
+
+    const [year, month, day] = parts;
+    const date = new Date(Date.UTC(year, month - 1, day));
+
+    if (
+        date.getUTCFullYear() !== year ||
+        date.getUTCMonth() !== month - 1 ||
+        date.getUTCDate() !== day
+    ) {
+        return "Date not recorded";
+    }
+
+    return date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        timeZone: "UTC"
+    });
+}
 
 // =========================================
 // LOAD FAMILY ANNALS
 // =========================================
 
 async function loadFamilyAnnals() {
-
-    if (!familyAnnals) {
-        return;
-    }
+    if (!familyAnnals) return;
 
     familyAnnals.innerHTML = `
         <div class="annals-loading">
-            <div class="annals-loading-icon">
-                📖
-            </div>
-
-            <p>
-                Loading family history...
-            </p>
+            <div class="annals-loading-icon">📖</div>
+            <p>Loading family history...</p>
         </div>
     `;
 
-
-    // =====================================
-    // LOAD ANNALS
-    // =====================================
-
-    const {
-        data: annals,
-        error: annalsError
-    } = await supabase
-        .from("family_annals")
-        .select(`
-            id,
-            title,
-            event_date,
-            event_type,
-            person_id,
-            description,
-            photo_url,
-            is_highlighted
-        `)
-        .order(
-            "event_date",
-            {
+    try {
+        // Load historical events.
+        const { data: annals, error: annalsError } = await supabase
+            .from("family_annals")
+            .select(`
+                id,
+                title,
+                event_date,
+                event_type,
+                person_id,
+                description,
+                photo_url,
+                is_highlighted
+            `)
+            .order("event_date", {
+                ascending: true,
+                nullsFirst: false
+            })
+            .order("created_at", {
                 ascending: true
+            });
+
+        if (annalsError) throw annalsError;
+
+        if (!annals || annals.length === 0) {
+            familyAnnals.innerHTML = `
+                <div class="annals-empty">
+                    <div class="annals-empty-icon">📜</div>
+                    <h3>Our story is waiting to be written</h3>
+                    <p>
+                        Family historical events will appear here
+                        as they are added.
+                    </p>
+                </div>
+            `;
+            return;
+        }
+
+        // Load family members for the event connections.
+        const { data: members, error: membersError } = await supabase
+            .from("members")
+            .select("id, full_name, photo_url, biography");
+
+        if (membersError) throw membersError;
+
+        const memberMap = new Map(
+            (members || []).map(member => [member.id, member])
+        );
+
+        familyAnnals.innerHTML = "";
+
+        // Render events in chronological order.
+        annals.forEach((annal, index) => {
+            const member = memberMap.get(annal.person_id);
+            const formattedDate = formatEventDate(annal.event_date);
+
+            const year = annal.event_date &&
+                /^\d{4}-\d{2}-\d{2}$/.test(annal.event_date)
+                ? annal.event_date.slice(0, 4)
+                : "Year unknown";
+
+            const card = document.createElement("article");
+            card.className = "annals-event";
+
+            if (annal.is_highlighted) {
+                card.classList.add("annals-event-highlighted");
             }
-        );
 
+            const safeTitle = escapeHTML(annal.title || "Untitled event");
+            const safeType = escapeHTML(annal.event_type || "Family event");
+            const safeDescription = escapeHTML(annal.description || "");
 
-    if (annalsError) {
+            const photoHTML = annal.photo_url
+                ? `
+                    <img
+                        src="${escapeHTML(annal.photo_url)}"
+                        alt="${safeTitle}"
+                        class="annals-event-image"
+                        loading="lazy"
+                    >
+                `
+                : "";
 
-        console.error(
-            "Error loading family annals:",
-            annalsError
-        );
+            const memberHTML = member
+                ? `
+                    <div class="annals-event-person">
+                        👤
+                        <span>${escapeHTML(member.full_name)}</span>
+                    </div>
+                `
+                : "";
 
-        familyAnnals.innerHTML = `
-            <div class="relationship-message">
+            card.innerHTML = `
+                <div class="annals-marker">
+                    <span>${index + 1}</span>
+                </div>
 
-                <strong>
-                    Unable to load family history.
-                </strong>
+                <div class="annals-event-card">
+                    <div class="annals-event-year">
+                        ${escapeHTML(year)}
+                    </div>
 
-                <p>
-                    Please try again later.
-                </p>
+                    <div class="annals-event-content">
+                        ${photoHTML}
 
-            </div>
-        `;
+                        <div class="annals-event-details">
+                            <span class="annals-event-type">
+                                ${safeType}
+                            </span>
 
-        return;
-    }
+                            <h3>${safeTitle}</h3>
 
+                            <div class="annals-event-date">
+                                📅 ${escapeHTML(formattedDate)}
+                            </div>
 
-    // =====================================
-    // NO EVENTS
-    // =====================================
+                            ${memberHTML}
 
-    if (!annals || annals.length === 0) {
+                            ${
+                                safeDescription
+                                    ? `<p>${safeDescription}</p>`
+                                    : ""
+                            }
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            familyAnnals.appendChild(card);
+        });
+
+    } catch (error) {
+        console.error("Error loading family annals:", error);
 
         familyAnnals.innerHTML = `
             <div class="annals-empty">
-
-                <div class="annals-empty-icon">
-                    📜
-                </div>
-
-                <h3>
-                    Our story is waiting to be written
-                </h3>
-
+                <h3>Unable to load family history</h3>
                 <p>
-                    Family historical events will
-                    appear here as they are added.
+                    Please refresh the page and try again.
+                    If the problem continues, check the browser console.
                 </p>
-
             </div>
         `;
-
-        return;
     }
-
-
-    // =====================================
-    // LOAD FAMILY MEMBERS
-    // =====================================
-
-    const {
-        data: members,
-        error: membersError
-    } = await supabase
-        .from("members")
-        .select(`
-            id,
-            full_name
-        `);
-
-
-    if (membersError) {
-
-        console.error(
-            "Error loading family members:",
-            membersError
-        );
-
-        return;
-    }
-
-
-    // =====================================
-    // CREATE TIMELINE
-    // =====================================
-
-    familyAnnals.innerHTML = "";
-
-
-    annals.forEach(
-        (annal, index) => {
-
-            const member =
-                members.find(
-                    person =>
-                        person.id ===
-                        annal.person_id
-                );
-
-
-            const eventDate =
-                annal.event_date
-                    ? new Date(
-                        annal.event_date
-                    )
-                    : null;
-
-
-            const formattedDate =
-                eventDate
-                    ? eventDate.toLocaleDateString(
-                        "en-US",
-                        {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric"
-                        }
-                    )
-                    : "Date not recorded";
-
-
-            const year =
-                eventDate
-                    ? eventDate.getFullYear()
-                    : "—";
-
-
-            const card =
-                document.createElement(
-                    "article"
-                );
-
-
-            card.className =
-                "annals-event";
-
-
-            if (annal.is_highlighted) {
-
-                card.classList.add(
-                    "annals-event-highlighted"
-                );
-
-            }
-
-
-            card.innerHTML = `
-
-                <div class="annals-marker">
-
-                    <span>
-                        ${index + 1}
-                    </span>
-
-                </div>
-
-
-                <div class="annals-event-card">
-
-
-                    <div class="annals-event-year">
-                        ${year}
-                    </div>
-
-
-                    <div class="annals-event-content">
-
-
-                        ${
-                            annal.photo_url
-                                ? `
-                                    <img
-                                        src="${annal.photo_url}"
-                                        alt="${annal.title}"
-                                        class="annals-event-image"
-                                    >
-                                `
-                                : ""
-                        }
-
-
-                        <div class="annals-event-details">
-
-
-                            <span
-                                class="annals-event-type"
-                            >
-                                ${annal.event_type}
-                            </span>
-
-
-                            <h3>
-                                ${annal.title}
-                            </h3>
-
-
-                            <div
-                                class="annals-event-date"
-                            >
-                                📅 ${formattedDate}
-                            </div>
-
-
-                            ${
-                                member
-                                    ? `
-                                        <div
-                                            class="annals-event-person"
-                                        >
-                                            👤
-                                            ${member.full_name}
-                                        </div>
-                                    `
-                                    : ""
-                            }
-
-
-                            ${
-                                annal.description
-                                    ? `
-                                        <p>
-                                            ${annal.description}
-                                        </p>
-                                    `
-                                    : ""
-                            }
-
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            `;
-
-
-            familyAnnals.appendChild(
-                card
-            );
-
-        }
-    );
-
 }
-
 
 // =========================================
 // START

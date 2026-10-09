@@ -4005,3 +4005,78 @@ footer {
         font-size: 0.96rem;
     }
     }
+/* ==========================================
+   ANNALS MEMBER PROFILE POPUP
+   ========================================== */
+
+.annals-member-link {
+    border: none;
+    padding: 0;
+    background: transparent;
+    color: #8b641d;
+    font: inherit;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+}
+
+.annals-member-link:hover {
+    color: #3b241b;
+}
+
+#annalsMemberPopup {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    background: rgba(35, 25, 18, 0.75);
+    overflow-y: auto;
+}
+
+.annals-member-popup-card {
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 28px;
+    border: 1px solid #e7dfce;
+    border-radius: 18px;
+    background: #fffdf8;
+    color: #382920;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.2);
+    line-height: 1.8;
+}
+
+.annals-member-popup-card h2,
+.annals-member-popup-card h3 {
+    color: #3b241b;
+}
+
+.annals-member-popup-photo {
+    display: block;
+    width: 130px;
+    height: 130px;
+    margin: 0 auto 18px;
+    border: 3px solid #c49a45;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.annals-member-popup-close {
+    position: sticky;
+    top: 0;
+    float: right;
+    width: 38px;
+    height: 38px;
+    border: none;
+    border-radius: 50%;
+    background: #3b241b;
+    color: white;
+    font-size: 26px;
+    cursor: pointer;
+    }

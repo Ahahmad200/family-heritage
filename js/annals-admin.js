@@ -37,11 +37,17 @@ const annalDescription =
 const annalPhoto =
     document.getElementById("annalPhoto");
 
-const annalPhotoFile = document.getElementById("annalPhotoFile");
-const annalPhotoPreviewContainer = document.getElementById("annalPhotoPreviewContainer");
-const annalPhotoPreview = document.getElementById("annalPhotoPreview");
-const removeAnnalPhoto = document.getElementById("removeAnnalPhoto");
+const annalPhotoFile =
+    document.getElementById("annalPhotoFile");
 
+const annalPhotoPreviewContainer =
+    document.getElementById("annalPhotoPreviewContainer");
+
+const annalPhotoPreview =
+    document.getElementById("annalPhotoPreview");
+
+const removeAnnalPhoto =
+    document.getElementById("removeAnnalPhoto");
 let selectedAnnalPhoto = null;
 let existingAnnalPhotoUrl = "";
 
@@ -400,48 +406,36 @@ function renderAdminAnnals() {
 // SAVE HISTORICAL EVENT
 // =========================================
 
-annalForm.addEventListener(
-    "submit",
-    async event => {
+annalForm.addEventListener("submit", async event => {
+    event.preventDefault();
 
-        event.preventDefault();
-
+    try {
         const title = annalTitle.value.trim();
         const eventType = annalType.value;
 
         if (!title || !eventType) {
-
             annalMessage.textContent =
                 "Please enter an event title and type.";
-
             return;
         }
 
         const eventData = {
-    title,
-    event_date: annalDate.value || null,
-    event_type: eventType,
-    person_id: annalPerson.value || null,
-    description: annalDescription.value.trim() || null,
-    photo_url: existingAnnalPhotoUrl || annalPhoto.value.trim() || null,
-    is_highlighted: annalHighlighted.checked
-};
+            title: title,
+            event_date: annalDate.value || null,
+            event_type: eventType,
+            person_id: annalPerson.value || null,
+            description: annalDescription.value.trim() || null,
+            photo_url: annalPhoto.value.trim() || null,
+            is_highlighted: annalHighlighted.checked
+        };
 
-try {
-    if (selectedAnnalPhoto) {
-        annalMessage.textContent = "Uploading photo...";
+        // Upload a new photo if one was selected.
+        if (selectedAnnalPhoto) {
+            annalMessage.textContent = "Uploading photo...";
 
-        eventData.photo_url =
-            await uploadAnnalPhoto(selectedAnnalPhoto);
-    }
-} catch (error) {
-    console.error("Photo upload failed:", error);
-
-    annalMessage.textContent =
-        "Photo upload failed: " + error.message;
-
-    return;
-}
+            eventData.photo_url =
+                await uploadAnnalPhoto(selectedAnnalPhoto);
+        }
 
         annalMessage.textContent =
             "Saving historical event...";
@@ -449,29 +443,24 @@ try {
         let result;
 
         if (annalId.value) {
-
             result = await supabase
                 .from("family_annals")
                 .update(eventData)
                 .eq("id", annalId.value);
-
         } else {
-
             result = await supabase
                 .from("family_annals")
                 .insert([eventData]);
-
         }
 
         if (result.error) {
-
             console.error(
                 "Error saving historical event:",
                 result.error
             );
 
             annalMessage.textContent =
-                "Could not save the event. Make sure you are logged in as an administrator.";
+                "Save failed: " + result.error.message;
 
             return;
         }
@@ -483,10 +472,15 @@ try {
         );
 
         closeForm();
-
         await loadAdminAnnals();
+
+    } catch (error) {
+        console.error("Historical event save error:", error);
+
+        annalMessage.textContent =
+            "Error: " + error.message;
     }
-);
+});
 
 
 // =========================================

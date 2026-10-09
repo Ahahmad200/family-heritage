@@ -144,13 +144,19 @@ async function loadFamilyAnnals() {
                 : "";
 
             const memberHTML = member
-                ? `
-                    <div class="annals-event-person">
-                        👤
-                        <span>${escapeHTML(member.full_name)}</span>
-                    </div>
-                `
-                : "";
+    ? `
+        <div class="annals-event-person">
+            👤
+            <button
+                type="button"
+                class="annals-member-link"
+                data-member-id="${escapeHTML(member.id)}"
+            >
+                ${escapeHTML(member.full_name)}
+            </button>
+        </div>
+    `
+    : "";
 
             card.innerHTML = `
                 <div class="annals-marker">

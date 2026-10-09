@@ -211,7 +211,104 @@ async function loadFamilyAnnals() {
         `;
     }
 }
+// =========================================
+// CLICK FAMILY MEMBER NAME
+// =========================================
 
+familyAnnals.addEventListener("click", async function(event) {
+    const button = event.target.closest(".annals-member-link");
+
+    if (!button) return;
+
+    const memberId = button.dataset.memberId;
+
+    try {
+        const { data: member, error } = await supabase
+            .from("members")
+            .select(`
+                id,
+                full_name,
+                gender,
+                is_deceased,
+                photo_url,
+                biography,
+                date_of_birth,
+                place_of_birth,
+                date_of_death
+            `)
+            .eq("id", memberId)
+            .single();
+
+        if (error) throw error;
+
+        // Show the member's details in a simple popup.
+        const existingPopup = document.getElementById("annalsMemberPopup");
+
+        if (existingPopup) existingPopup.remove();
+
+        const popup = document.createElement("div");
+        popup.id = "annalsMemberPopup";
+
+        popup.innerHTML = `
+            <div class="annals-member-popup-card">
+                <button
+                    type="button"
+                    class="annals-member-popup-close"
+                    aria-label="Close profile"
+                >×</button>
+
+                ${
+                    member.photo_url
+                        ? `<img
+                            class="annals-member-popup-photo"
+                            src="${escapeHTML(member.photo_url)}"
+                            alt="${escapeHTML(member.full_name)}"
+                        >`
+                        : ""
+                }
+
+                <h2>${escapeHTML(member.full_name)}</h2>
+
+                <p>
+                    ${member.is_deceased ? "Deceased" : "Living"}
+                </p>
+
+                ${
+                    member.date_of_birth
+                        ? `<p>🎂 Date of birth: ${escapeHTML(member.date_of_birth)}</p>`
+                        : ""
+                }
+
+                ${
+                    member.place_of_birth
+                        ? `<p>📍 Place of birth: ${escapeHTML(member.place_of_birth)}</p>`
+                        : ""
+                }
+
+                <h3>Biography</h3>
+
+                <p>
+                    ${escapeHTML(member.biography || "Biography will be added soon.")}
+                </p>
+            </div>
+        `;
+
+        document.body.appendChild(popup);
+
+        popup.addEventListener("click", function(closeEvent) {
+            if (
+                closeEvent.target === popup ||
+                closeEvent.target.closest(".annals-member-popup-close")
+            ) {
+                popup.remove();
+            }
+        });
+
+    } catch (error) {
+        console.error("Unable to load member profile:", error);
+        alert("Unable to load this family member's profile. Please try again.");
+    }
+});
 // =========================================
 // START
 // =========================================

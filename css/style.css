@@ -4025,16 +4025,29 @@ footer {
     color: #3b241b;
 }
 
+/* Family member profile overlay */
 #annalsMemberPopup {
-    position: fixed;
-    inset: 0;
-    z-index: 10000;
+    position: fixed !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    box-sizing: border-box;
+
+    z-index: 2147483647 !important;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
     padding: 18px;
-    background: rgba(35, 25, 18, 0.75);
     overflow-y: auto;
+
+    background: rgba(35, 25, 18, 0.75);
 }
 
 .annals-member-popup-card {

@@ -410,9 +410,29 @@ annalForm.addEventListener("submit", async event => {
     event.preventDefault();
 
     try {
-        const title = annalTitle.value.trim();
-        const eventType = annalType.value;
+        // Check that all required form elements exist
+const requiredFields = {
+    annalId,
+    annalTitle,
+    annalDate,
+    annalType,
+    annalPerson,
+    annalDescription,
+    annalPhoto,
+    annalHighlighted
+};
 
+for (const [name, element] of Object.entries(requiredFields)) {
+    if (!element) {
+        throw new Error(
+            "Missing HTML element: " + name +
+            ". Please check its ID in admin.html."
+        );
+    }
+}
+
+const title = annalTitle.value.trim();
+const eventType = annalType.value;
         if (!title || !eventType) {
             annalMessage.textContent =
                 "Please enter an event title and type.";

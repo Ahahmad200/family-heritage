@@ -37,6 +37,14 @@ const annalDescription =
 const annalPhoto =
     document.getElementById("annalPhoto");
 
+const annalPhotoFile = document.getElementById("annalPhotoFile");
+const annalPhotoPreviewContainer = document.getElementById("annalPhotoPreviewContainer");
+const annalPhotoPreview = document.getElementById("annalPhotoPreview");
+const removeAnnalPhoto = document.getElementById("removeAnnalPhoto");
+
+let selectedAnnalPhoto = null;
+let existingAnnalPhotoUrl = "";
+
 const annalHighlighted =
     document.getElementById("annalHighlighted");
 
@@ -54,7 +62,39 @@ const cancelAnnalForm =
 
 let familyMembers = [];
 let familyAnnals = [];
+// Preview a photo selected from the phone
+annalPhotoFile.addEventListener("change", () => {
+    const file = annalPhotoFile.files[0];
 
+    if (!file) {
+        return;
+    }
+
+    if (!file.type.startsWith("image/")) {
+        alert("Please select an image file.");
+        annalPhotoFile.value = "";
+        return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+        alert("Please choose an image smaller than 5 MB.");
+        annalPhotoFile.value = "";
+        return;
+    }
+
+    selectedAnnalPhoto = file;
+
+    annalPhotoPreview.src = URL.createObjectURL(file);
+    annalPhotoPreviewContainer.style.display = "block";
+});
+
+// Remove the selected photo
+removeAnnalPhoto.addEventListener("click", () => {
+    selectedAnnalPhoto = null;
+    annalPhotoFile.value = "";
+    annalPhotoPreview.src = "";
+    annalPhotoPreviewContainer.style.display = "none";
+});
 
 // =========================================
 // OPEN AND CLOSE FORM
@@ -98,7 +138,46 @@ cancelAnnalForm.addEventListener(
     closeForm
 );
 
+// Upload a historical photo to Supabase Storage
+async function uploadAnnalPhoto(file) {
+    const allowedTypes = [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+    ];
 
+    if (!allowedTypes.includes(file.type)) {
+        throw new Error("Choose a JPG, PNG, or WebP image.");
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+        throw new Error("The photo must be smaller than 5 MB.");
+    }
+
+    const extension = file.type === "image/jpeg"
+        ? "jpg"
+        : file.type.split("/")[1];
+
+    const filePath =
+        `annals/${crypto.randomUUID()}.${extension}`;
+
+    const { error: uploadError } = await supabase.storage
+        .from("family-photos")
+        .upload(filePath, file, {
+            contentType: file.type,
+            upsert: false
+        });
+
+    if (uploadError) {
+        throw uploadError;
+    }
+
+    const { data } = supabase.storage
+        .from("family-photos")
+        .getPublicUrl(filePath);
+
+    return data.publicUrl;
+}
 // =========================================
 // LOAD FAMILY MEMBERS
 // =========================================
@@ -339,25 +418,30 @@ annalForm.addEventListener(
         }
 
         const eventData = {
-            title: title,
+    title,
+    event_date: annalDate.value || null,
+    event_type: eventType,
+    person_id: annalPerson.value || null,
+    description: annalDescription.value.trim() || null,
+    photo_url: existingAnnalPhotoUrl || annalPhoto.value.trim() || null,
+    is_highlighted: annalHighlighted.checked
+};
 
-            event_date:
-                annalDate.value || null,
+try {
+    if (selectedAnnalPhoto) {
+        annalMessage.textContent = "Uploading photo...";
 
-            event_type: eventType,
+        eventData.photo_url =
+            await uploadAnnalPhoto(selectedAnnalPhoto);
+    }
+} catch (error) {
+    console.error("Photo upload failed:", error);
 
-            person_id:
-                annalPerson.value || null,
+    annalMessage.textContent =
+        "Photo upload failed: " + error.message;
 
-            description:
-                annalDescription.value.trim() || null,
-
-            photo_url:
-                annalPhoto.value.trim() || null,
-
-            is_highlighted:
-                annalHighlighted.checked
-        };
+    return;
+}
 
         annalMessage.textContent =
             "Saving historical event...";

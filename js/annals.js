@@ -338,6 +338,49 @@ familyAnnals.addEventListener("click", async function(event) {
             .single();
 
         if (error) throw error;
+        const connections = await getFamilyConnections(memberId);
+
+const connectionHTML = (label, person, icon) => `
+    <div style="
+        margin: 10px 0;
+        padding: 12px;
+        background: #f5eddf;
+        border-radius: 10px;
+    ">
+        <strong>${icon} ${label}:</strong>
+        <span>${person ? escapeHTML(person.full_name) : "Not recorded"}</span>
+    </div>
+`;
+
+const childrenHTML = connections.children.length
+    ? connections.children.map(child => `
+        <li style="margin: 8px 0;">
+            ${escapeHTML(child.full_name)}
+        </li>
+    `).join("")
+    : "<li>No children recorded.</li>";
+
+const relationshipsHTML = `
+    <section style="margin-top: 20px;">
+        <h3 style="color: #80552b;">🌳 Family Relationships</h3>
+
+        ${connectionHTML("Father", connections.father, "👨")}
+        ${connectionHTML("Mother", connections.mother, "👩")}
+        ${connectionHTML("Spouse", connections.spouse, "💍")}
+
+        <div style="
+            margin-top: 14px;
+            padding: 12px;
+            background: #f5eddf;
+            border-radius: 10px;
+        ">
+            <strong>👶 Children (${connections.children.length})</strong>
+            <ul style="padding-left: 22px;">
+                ${childrenHTML}
+            </ul>
+        </div>
+    </section>
+`;
 
         // Show the member's details in a simple popup.
         const existingPopup = document.getElementById("annalsMemberPopup");

@@ -1,5 +1,103 @@
 import { supabase } from "./supabase.js";
 
+async function getFamilyConnections(memberId) {
+    const { data: relationships, error } = await supabase
+        .from("relationships")
+        .select("person_id, related_person_id, relationship_type");
+
+    if (error) {
+        console.error("Unable to load family relationships:", error);
+        return {
+            father: null,
+            mother: null,
+            spouse: null,
+            children: []
+        };
+    }
+
+    const { data: members, error: membersError } = await supabase
+        .from("members")
+        .select("id, full_name, gender");
+
+    if (membersError) {
+        console.error("Unable to load family members:", membersError);
+        return {
+            father: null,
+            mother: null,
+            spouse: null,
+            children: []
+        };
+    }
+
+    const connections = {
+        father: null,
+        mother: null,
+        spouse: null,
+        children: []
+    };
+
+    const memberMap = new Map(
+        (members || []).map(person => [person.id, person])
+    );
+
+    for (const relationship of relationships || []) {
+        const type = (relationship.relationship_type || "")
+            .trim()
+            .toLowerCase();
+
+        // Stored direction: child -> parent.
+        if (
+            type === "child" &&
+            relationship.person_id === memberId
+        ) {
+            const parent = memberMap.get(
+                relationship.related_person_id
+            );
+
+            if (parent) {
+                if (parent.gender?.toLowerCase() === "male") {
+                    connections.father = parent;
+                } else if (parent.gender?.toLowerCase() === "female") {
+                    connections.mother = parent;
+                }
+            }
+        }
+
+        // Find children of the selected member.
+        if (
+            type === "child" &&
+            relationship.related_person_id === memberId
+        ) {
+            const child = memberMap.get(relationship.person_id);
+
+            if (child) {
+                connections.children.push(child);
+            }
+        }
+
+        // Spouse records may be stored in either direction.
+        if (
+            type === "spouse" &&
+            (
+                relationship.person_id === memberId ||
+                relationship.related_person_id === memberId
+            )
+        ) {
+            const spouseId =
+                relationship.person_id === memberId
+                    ? relationship.related_person_id
+                    : relationship.person_id;
+
+            connections.spouse = memberMap.get(spouseId) || null;
+        }
+    }
+
+    connections.children.sort((a, b) =>
+        a.full_name.localeCompare(b.full_name)
+    );
+
+    return connections;
+}
 // =========================================
 // FAMILY ANNALS — HISTORICAL TIMELINE
 // =========================================

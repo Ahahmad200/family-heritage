@@ -441,7 +441,9 @@ popup.innerHTML = `
 
         <h3>Biography</h3>
 
-        <p>${escapeHTML(member.biography || "Biography will be added soon.")}</p>
+<p>${escapeHTML(member.biography || "Biography will be added soon.")}</p>
+
+${relationshipsHTML}
     </div>
 `;
 

@@ -355,7 +355,22 @@ const connectionHTML = (label, person, icon) => `
 const childrenHTML = connections.children.length
     ? connections.children.map(child => `
         <li style="margin: 8px 0;">
-            ${escapeHTML(child.full_name)}
+            <button
+                type="button"
+                class="annals-relative-link"
+                data-member-id="${escapeHTML(child.id)}"
+                style="
+                    border: none;
+                    background: none;
+                    color: #80552b;
+                    text-decoration: underline;
+                    cursor: pointer;
+                    font: inherit;
+                    text-align: left;
+                "
+            >
+                ${escapeHTML(child.full_name)}
+            </button>
         </li>
     `).join("")
     : "<li>No children recorded.</li>";

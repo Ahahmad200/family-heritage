@@ -494,6 +494,28 @@ popup.showModal();
         alert("Unable to load this family member's profile. Please try again.");
     }
 });
+// Open a family member's profile when a relative's name is clicked.
+document.addEventListener("click", function(event) {
+    const button = event.target.closest(".annals-relative-link");
+
+    if (!button) return;
+
+    const memberId = button.dataset.memberId;
+
+    if (memberId) {
+        const profileButton = document.querySelector(
+            `.annals-member-link[data-member-id="${memberId}"]`
+        );
+
+        if (profileButton) {
+            profileButton.click();
+        } else {
+            alert(
+                "This relative's profile could not be opened from this page."
+            );
+        }
+    }
+});
 // =========================================
 // START
 // =========================================

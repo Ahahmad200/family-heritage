@@ -494,26 +494,161 @@ popup.showModal();
         alert("Unable to load this family member's profile. Please try again.");
     }
 });
-// Open a family member's profile when a relative's name is clicked.
-document.addEventListener("click", function(event) {
+// Open any relative's profile directly.
+document.addEventListener("click", async function(event) {
     const button = event.target.closest(".annals-relative-link");
 
     if (!button) return;
 
     const memberId = button.dataset.memberId;
 
-    if (memberId) {
-        const profileButton = document.querySelector(
-            `.annals-member-link[data-member-id="${memberId}"]`
-        );
+    if (!memberId) return;
 
-        if (profileButton) {
-            profileButton.click();
-        } else {
-            alert(
-                "This relative's profile could not be opened from this page."
-            );
+    try {
+        const { data: member, error } = await supabase
+            .from("members")
+            .select(`
+                id,
+                full_name,
+                gender,
+                is_deceased,
+                photo_url,
+                biography,
+                date_of_birth,
+                place_of_birth,
+                date_of_death
+            `)
+            .eq("id", memberId)
+            .single();
+
+        if (error) throw error;
+
+        // Remove the previous profile dialog if one exists.
+        const oldPopup = document.getElementById("annalsMemberPopup");
+
+        if (oldPopup) {
+            if (oldPopup.open) oldPopup.close();
+            oldPopup.remove();
         }
+
+        // Get this person's family relationships.
+        const connections = await getFamilyConnections(member.id);
+
+        const relativeLine = (label, person, icon) => `
+            <div style="
+                margin: 10px 0;
+                padding: 12px;
+                background: #f5eddf;
+                border-radius: 10px;
+            ">
+                <strong>${icon} ${label}:</strong>
+                ${person ? escapeHTML(person.full_name) : "Not recorded"}
+            </div>
+        `;
+
+        const childrenHTML = connections.children.length
+            ? connections.children.map(child => `
+                <li style="margin: 8px 0;">
+                    <button
+                        type="button"
+                        class="annals-relative-link"
+                        data-member-id="${escapeHTML(child.id)}"
+                        style="
+                            border: none;
+                            background: none;
+                            color: #80552b;
+                            text-decoration: underline;
+                            cursor: pointer;
+                            font: inherit;
+                        "
+                    >${escapeHTML(child.full_name)}</button>
+                </li>
+            `).join("")
+            : "<li>No children recorded.</li>";
+
+        const popup = document.createElement("dialog");
+        popup.id = "annalsMemberPopup";
+
+        popup.style.cssText = `
+            position: fixed;
+            inset: 0;
+            margin: auto;
+            width: min(500px, calc(100% - 30px));
+            max-width: 500px;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 24px;
+            border: none;
+            border-radius: 18px;
+            box-sizing: border-box;
+            background: #fffaf0;
+            color: #382719;
+        `;
+
+        popup.innerHTML = `
+            <button
+                type="button"
+                class="annals-member-popup-close"
+                aria-label="Close profile"
+                style="float:right;font-size:28px;border:none;background:none;cursor:pointer;"
+            >×</button>
+
+            ${member.photo_url ? `
+                <img
+                    src="${escapeHTML(member.photo_url)}"
+                    alt="${escapeHTML(member.full_name)}"
+                    style="display:block;max-width:100%;max-height:250px;object-fit:contain;margin:15px auto;border-radius:12px;"
+                >
+            ` : ""}
+
+            <h2>${escapeHTML(member.full_name)}</h2>
+
+            <p>${member.is_deceased ? "Deceased" : "Living"}</p>
+
+            ${member.date_of_birth ? `
+                <p>🎂 Date of birth: ${escapeHTML(member.date_of_birth)}</p>
+            ` : ""}
+
+            ${member.place_of_birth ? `
+                <p>📍 Place of birth: ${escapeHTML(member.place_of_birth)}</p>
+            ` : ""}
+
+            <h3>Biography</h3>
+            <p>${escapeHTML(member.biography || "Biography will be added soon.")}</p>
+
+            <h3 style="color:#80552b;">🌳 Family Relationships</h3>
+
+            ${relativeLine("Father", connections.father, "👨")}
+            ${relativeLine("Mother", connections.mother, "👩")}
+            ${relativeLine("Spouse", connections.spouse, "💍")}
+
+            <div style="margin-top:14px;padding:12px;background:#f5eddf;border-radius:10px;">
+                <strong>👶 Children (${connections.children.length})</strong>
+                <ul style="padding-left:22px;">${childrenHTML}</ul>
+            </div>
+        `;
+
+        document.body.appendChild(popup);
+
+        popup.addEventListener("click", function(closeEvent) {
+            if (
+                closeEvent.target === popup ||
+                closeEvent.target.closest(".annals-member-popup-close")
+            ) {
+                popup.close();
+                popup.remove();
+            }
+        });
+
+        popup.addEventListener("cancel", function() {
+            popup.remove();
+        });
+
+        popup.showModal();
+
+    } catch (error) {
+        console.error("Unable to open relative profile:", error);
+        alert("Unable to open this relative's profile. Please try again.");
     }
 });
 // =========================================

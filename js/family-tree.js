@@ -263,7 +263,118 @@ window.familyRelationships = relationships;
         generationContainer
     );
 
+// =========================================
+// CHILDREN FROM PREVIOUS MARRIAGES
+// =========================================
 
+// Find children connected to the father only.
+const fatherOnlyChildren = fatherChildren.filter(
+    child =>
+        !motherChildren.some(
+            motherChild => motherChild.id === child.id
+        )
+);
+
+// Find children connected to the mother only.
+const motherOnlyChildren = motherChildren.filter(
+    child =>
+        !fatherChildren.some(
+            fatherChild => fatherChild.id === child.id
+        )
+);
+
+// Create a section for the two additional family branches.
+if (
+    fatherOnlyChildren.length > 0 ||
+    motherOnlyChildren.length > 0
+) {
+    const previousMarriageSection =
+        document.createElement("section");
+
+    previousMarriageSection.className =
+        "previous-marriage-children";
+
+    previousMarriageSection.style.cssText = `
+        margin-top: 35px;
+        padding: 20px;
+        border-radius: 16px;
+        background: #fffaf0;
+        border: 1px solid #e5d5bd;
+    `;
+
+    previousMarriageSection.innerHTML = `
+        <h3 style="text-align:center;color:#80552b;">
+            🌳 Children from Previous Marriages
+        </h3>
+
+        <p style="text-align:center;">
+            These family members are connected through
+            their respective biological parents.
+        </p>
+    `;
+
+    // Father's side.
+    if (fatherOnlyChildren.length > 0) {
+        const fatherSection =
+            document.createElement("div");
+
+        fatherSection.style.cssText =
+            "margin-top:20px;";
+
+        fatherSection.innerHTML = `
+            <h4>👨 Father's Side</h4>
+            <p>
+                Children of Alh Aliyu Abdulmuninu Gandu
+                from another marriage.
+            </p>
+        `;
+
+        fatherOnlyChildren.forEach(child => {
+            const branch = document.createElement("div");
+
+            branch.innerHTML = createMemberCard(
+                child,
+                "Father's side — paternal half-sibling"
+            );
+
+            fatherSection.appendChild(branch);
+        });
+
+        previousMarriageSection.appendChild(fatherSection);
+    }
+
+    // Mother's side.
+    if (motherOnlyChildren.length > 0) {
+        const motherSection =
+            document.createElement("div");
+
+        motherSection.style.cssText =
+            "margin-top:25px;";
+
+        motherSection.innerHTML = `
+            <h4>👩 Mother's Side</h4>
+            <p>
+                Children of Hajiya Aisha Mukhtar
+                from another marriage.
+            </p>
+        `;
+
+        motherOnlyChildren.forEach(child => {
+            const branch = document.createElement("div");
+
+            branch.innerHTML = createMemberCard(
+                child,
+                "Mother's side — maternal half-sibling"
+            );
+
+            motherSection.appendChild(branch);
+        });
+
+        previousMarriageSection.appendChild(motherSection);
+    }
+
+    tree.appendChild(previousMarriageSection);
+}
     familyTree.appendChild(tree);
 
 }

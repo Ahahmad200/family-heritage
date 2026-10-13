@@ -751,119 +751,277 @@ function getInitials(name) {
 // MEMBER BIOGRAPHY POPUP
 // =========================================
 
-const memberModal =
-    document.getElementById("memberModal");
-
-const modalMemberContent =
-    document.getElementById("modalMemberContent");
-
-const closeMemberModal =
-    document.getElementById("closeMemberModal");
-
-
 function openMemberModal(member) {
 
-    const status =
-        member.is_deceased
-            ? "Deceased"
-            : "Living";
+const status = member.is_deceased ? "Deceased" : "Living";
+const statusClass = member.is_deceased ? "deceased" : "";
 
+const escapeHTML = (value) => {
+    return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+    }[char]));
+};
 
-    const statusClass =
-        member.is_deceased
-            ? "deceased"
-            : "";
-
-
-    const photo =
-        member.photo_url
-
-            ? `
-                <img
-                    src="${member.photo_url}"
-                    alt="${member.full_name}"
-                >
-            `
-
-            : `
-                <div class="modal-member-placeholder">
-                    ${getInitials(member.full_name)}
-                </div>
-            `;
-
-
-    const biography =
-        member.biography
-            ? member.biography
-            : "Biography will be added soon.";
-
-
-    modalMemberContent.innerHTML = `
-
-        <div class="modal-member-photo">
-
-            ${photo}
-
+const photo = member.photo_url
+    ? `
+        <img
+            src="${escapeHTML(member.photo_url)}"
+            alt="${escapeHTML(member.full_name)}"
+        >
+    `
+    : `
+        <div class="modal-member-placeholder">
+            ${escapeHTML(getInitials(member.full_name))}
         </div>
-
-
-        <h2 class="modal-member-name">
-            ${member.full_name}
-        </h2>
-
-
-        <p class="modal-member-status ${statusClass}">
-            ${status}
-        </p>
-
-
-        <div class="modal-member-details">
-
-            ${
-                member.date_of_birth
-                    ? `
-                        <p>
-                            🎂
-                            <strong>Date of Birth:</strong>
-                            ${member.date_of_birth}
-                        </p>
-                    `
-                    : ""
-            }
-
-
-            ${
-                member.place_of_birth
-                    ? `
-                        <p>
-                            📍
-                            <strong>Place of Birth:</strong>
-                            ${member.place_of_birth}
-                        </p>
-                    `
-                    : ""
-            }
-
-        </div>
-
-
-        <div class="modal-member-biography">
-
-            <h3 class="modal-member-biography-title">
-                Biography
-            </h3>
-
-            <p>
-                ${biography}
-            </p>
-
-        </div>
-
     `;
 
+const biography = member.biography
+    ? escapeHTML(member.biography)
+    : "Biography will be added soon.";
 
-    memberModal.style.display =
-        "flex";
+// Get the member's parents, children and spouses
+const parents = getParents(member.id);
+const children = getChildrenOf(member.id);
+const spouses = getSpouses(member.id);
+
+const father = parents.find(person => person.gender === "Male");
+const mother = parents.find(person => person.gender === "Female");
+
+// Find siblings through shared biological parents
+const siblings = getSiblings(member.id);
+
+// Classify full and half-siblings
+const memberParentIds = new Set(
+    parents.map(person => person.id)
+);
+
+const classifiedSiblings = siblings.map(sibling => {
+    const siblingParents = getParents(sibling.id);
+
+    const sharedParents = siblingParents.filter(parent =>
+        memberParentIds.has(parent.id)
+    );
+
+    let relationship = "Half-sibling";
+
+    if (
+        memberParentIds.size >= 2 &&
+        sharedParents.length >= 2
+    ) {
+        relationship = "Full sibling";
+    } else if (
+        sharedParents.length === 1 &&
+        sharedParents[0].gender === "Male"
+    ) {
+        relationship = "Paternal half-sibling";
+    } else if (
+        sharedParents.length === 1 &&
+        sharedParents[0].gender === "Female"
+    ) {
+        relationship = "Maternal half-sibling";
+    }
+
+    return {
+        ...sibling,
+        relationship
+    };
+});
+
+// Determine the member's family branch
+const patriarch = window.familyMembers.find(person =>
+    person.full_name === "Alh Aliyu Abdulmuninu Gandu"
+);
+
+const matriarch = window.familyMembers.find(person =>
+    person.full_name === "Haj Aisha Mukhtar"
+);
+
+const familyBranch = [];
+
+if (patriarch) {
+    const fatherSide = getExtendedRelationship(
+        member.id,
+        patriarch.id
+    );
+
+    if (member.id === patriarch.id || fatherSide) {
+        familyBranch.push("Father's Side");
+    }
+}
+
+if (matriarch) {
+    const motherSide = getExtendedRelationship(
+        member.id,
+        matriarch.id
+    );
+
+    if (member.id === matriarch.id || motherSide) {
+        familyBranch.push("Mother's Side");
+    }
+}
+
+// Build clickable profile links
+const createPersonLinks = (people, emptyMessage) => {
+    if (!people.length) {
+        return `<p>${escapeHTML(emptyMessage)}</p>`;
+    }
+
+    return `
+        <ul class="member-connection-list">
+            ${people.map(person => `
+                <li>
+                    <button
+                        type="button"
+                        class="member-connection-link"
+                        data-member-id="${escapeHTML(person.id)}"
+                    >
+                        ${escapeHTML(person.full_name)}
+                    </button>
+                </li>
+            `).join("")}
+        </ul>
+    `;
+};
+
+const createConnectionSection = (title, content) => `
+    <section class="member-connection-section">
+        <h3>${title}</h3>
+        ${content}
+    </section>
+`;
+
+modalMemberContent.innerHTML = `
+
+    <div class="modal-member-photo">
+        ${photo}
+    </div>
+
+    <h2 class="modal-member-name">
+        ${escapeHTML(member.full_name)}
+    </h2>
+
+    <p class="modal-member-status ${statusClass}">
+        ${status}
+    </p>
+
+    <div class="modal-member-details">
+
+        ${
+            member.date_of_birth
+                ? `
+                    <p>
+                        🎂 <strong>Date of Birth:</strong>
+                        ${escapeHTML(member.date_of_birth)}
+                    </p>
+                `
+                : ""
+        }
+
+        ${
+            member.place_of_birth
+                ? `
+                    <p>
+                        📍 <strong>Place of Birth:</strong>
+                        ${escapeHTML(member.place_of_birth)}
+                    </p>
+                `
+                : ""
+        }
+
+    </div>
+
+    <div class="modal-member-biography">
+        <h3 class="modal-member-biography-title">
+            Biography
+        </h3>
+        <p>${biography}</p>
+    </div>
+
+    <div class="modal-member-connections">
+
+        <h2>🌳 Family Connections</h2>
+
+        ${createConnectionSection(
+            "👨 Father",
+            father
+                ? createPersonLinks([father], "")
+                : "<p>Father's information has not been recorded.</p>"
+        )}
+
+        ${createConnectionSection(
+            "👩 Mother",
+            mother
+                ? createPersonLinks([mother], "")
+                : "<p>Mother's information has not been recorded.</p>"
+        )}
+
+        ${createConnectionSection(
+            "💍 Spouse",
+            createPersonLinks(spouses, "No spouse recorded.")
+        )}
+
+        ${createConnectionSection(
+            "👶 Children",
+            createPersonLinks(children, "No children recorded.")
+        )}
+
+        ${createConnectionSection(
+            "👨‍👩‍👧‍👦 Siblings",
+            classifiedSiblings.length
+                ? `
+                    <ul class="member-connection-list">
+                        ${classifiedSiblings.map(sibling => `
+                            <li>
+                                <button
+                                    type="button"
+                                    class="member-connection-link"
+                                    data-member-id="${escapeHTML(sibling.id)}"
+                                >
+                                    ${escapeHTML(sibling.full_name)}
+                                </button>
+                                <span>
+                                    — ${escapeHTML(sibling.relationship)}
+                                </span>
+                            </li>
+                        `).join("")}
+                    </ul>
+                `
+                : "<p>No siblings recorded.</p>"
+        )}
+
+        ${createConnectionSection(
+            "🌿 Family Branch",
+            familyBranch.length
+                ? `<p>${familyBranch.map(escapeHTML).join(" and ")}</p>`
+                : "<p>Family branch has not been established.</p>"
+        )}
+
+    </div>
+
+`;
+
+// Allow users to open the profiles of connected family members
+modalMemberContent
+    .querySelectorAll(".member-connection-link")
+    .forEach(button => {
+        button.addEventListener("click", () => {
+            const memberId = button.dataset.memberId;
+
+            const selectedMember = window.familyMembers.find(
+                person => String(person.id) === String(memberId)
+            );
+
+            if (selectedMember) {
+                openMemberModal(selectedMember);
+            }
+        });
+    });
+
+memberModal.style.display = "flex";
 
 }
 // Allow other pages to open a family member's profile.

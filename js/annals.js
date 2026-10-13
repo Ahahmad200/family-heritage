@@ -341,15 +341,38 @@ familyAnnals.addEventListener("click", async function(event) {
         const connections = await getFamilyConnections(memberId);
 
 const connectionHTML = (label, person, icon) => `
-    <div style="
-        margin: 10px 0;
-        padding: 12px;
-        background: #f5eddf;
-        border-radius: 10px;
-    ">
-        <strong>${icon} ${label}:</strong>
-        <span>${person ? escapeHTML(person.full_name) : "Not recorded"}</span>
-    </div>
+<div style="
+margin: 10px 0;
+padding: 12px;
+background: #f5eddf;
+border-radius: 10px;
+">
+<strong>${icon} ${label}:</strong>
+
+    ${
+        person
+            ? `
+                <button
+                    type="button"
+                    class="annals-relative-link"
+                    data-member-id="${escapeHTML(person.id)}"
+                    style="
+                        border: none;
+                        background: none;
+                        color: #80552b;
+                        text-decoration: underline;
+                        cursor: pointer;
+                        font: inherit;
+                        text-align: left;
+                    "
+                >
+                    ${escapeHTML(person.full_name)}
+                </button>
+            `
+            : "Not recorded"
+    }
+</div>
+
 `;
 
 const childrenHTML = connections.children.length

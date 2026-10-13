@@ -4093,3 +4093,60 @@ footer {
     font-size: 26px;
     cursor: pointer;
     }
+/* Family connections inside member profile popup */
+.modal-member-connections {
+margin-top: 25px;
+padding-top: 15px;
+border-top: 1px solid #e5e7eb;
+}
+
+.modal-member-connections > h2 {
+color: #80552b;
+text-align: center;
+margin-bottom: 20px;
+}
+
+.member-connection-section {
+margin: 15px 0;
+padding: 14px;
+background: #fffaf0;
+border: 1px solid #eadfce;
+border-radius: 12px;
+}
+
+.member-connection-section h3 {
+margin: 0 0 10px;
+color: #80552b;
+font-size: 16px;
+}
+
+.member-connection-section p {
+margin: 5px 0;
+line-height: 1.6;
+}
+
+.member-connection-list {
+list-style: none;
+padding: 0;
+margin: 0;
+}
+
+.member-connection-list li {
+margin: 8px 0;
+line-height: 1.6;
+}
+
+.member-connection-link {
+border: none;
+background: transparent;
+color: #2563eb;
+font: inherit;
+font-weight: 600;
+padding: 2px 0;
+cursor: pointer;
+text-align: left;
+}
+
+.member-connection-link:hover {
+text-decoration: underline;
+    }

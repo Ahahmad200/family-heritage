@@ -1705,27 +1705,41 @@ relationshipResult.innerHTML = `
 
 function getParents(memberId) {
 
-    return (window.familyRelationships || [])
-        .filter(relationship =>
-            relationship.person_id === memberId &&
-            relationship.relationship_type === "child"
+const relationships = window.familyRelationships || [];
+const members = window.familyMembers || [];
+
+return relationships
+    .filter(relationship =>
+        String(relationship.person_id) === String(memberId) &&
+        relationship.relationship_type === "child"
+    )
+    .map(relationship =>
+        members.find(member =>
+            String(member.id) === String(relationship.related_person_id)
         )
-        .map(relationship =>
-            relationship.related_person_id
-        );
+    )
+    .filter(Boolean);
+
 }
 
 
 function getChildrenOf(memberId) {
 
-    return (window.familyRelationships || [])
-        .filter(relationship =>
-            relationship.related_person_id === memberId &&
-            relationship.relationship_type === "child"
+const relationships = window.familyRelationships || [];
+const members = window.familyMembers || [];
+
+return relationships
+    .filter(relationship =>
+        String(relationship.related_person_id) === String(memberId) &&
+        relationship.relationship_type === "child"
+    )
+    .map(relationship =>
+        members.find(member =>
+            String(member.id) === String(relationship.person_id)
         )
-        .map(relationship =>
-            relationship.person_id
-        );
+    )
+    .filter(Boolean);
+
 }
 
 
@@ -1749,27 +1763,24 @@ function getSpouses(memberId) {
 
 function getSiblings(memberId) {
 
-    const parents =
-        getParents(memberId);
+const parents = getParents(memberId);
+const siblings = new Map();
 
-    const siblings = new Set();
+parents.forEach(parent => {
 
-    parents.forEach(parentId => {
+    getChildrenOf(parent.id).forEach(child => {
 
-        getChildrenOf(parentId)
-            .forEach(childId => {
-
-                if (childId !== memberId) {
-                    siblings.add(childId);
-                }
-
-            });
+        if (String(child.id) !== String(memberId)) {
+            siblings.set(String(child.id), child);
+        }
 
     });
 
-    return [...siblings];
-}
+});
 
+return [...siblings.values()];
+
+}
 
 function getMemberName(memberId) {
 

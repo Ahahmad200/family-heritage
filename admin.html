@@ -294,6 +294,62 @@
                 </form>
 
             </div>
+
+
+<!-- ================================= -->
+<!-- LINK UNLISTED PARENT TO CHILD -->
+<!-- ================================= -->
+
+<div class="relationship-form">
+
+    <h3>Connect Parent to Child</h3>
+
+    <p>
+        Link a parent without a full profile
+        to an existing family member.
+    </p>
+
+    <form id="parentChildLinkForm">
+
+        <label for="unlistedParentSelect">
+            Select Parent
+        </label>
+
+        <select
+            id="unlistedParentSelect"
+            required
+        >
+            <option value="">
+                Select unlisted parent
+            </option>
+        </select>
+
+        <label for="parentChildSelect">
+            Select Child
+        </label>
+
+        <select
+            id="parentChildSelect"
+            required
+        >
+            <option value="">
+                Select family member
+            </option>
+        </select>
+
+        <button
+            type="submit"
+            class="admin-primary-button"
+        >
+            Link Parent to Child
+        </button>
+
+        <p id="parentChildLinkMessage"></p>
+
+    </form>
+
+</div>
+            
             <!-- ================================= -->
 <!-- RELATIONSHIP MANAGEMENT -->
 <!-- ================================= -->

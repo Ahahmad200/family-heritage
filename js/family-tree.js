@@ -872,14 +872,25 @@ console.log(
     member.full_name,
     allParents
 );
-// Identify father and mother
-const father = allParents.find(
-    person => person.gender === "Male"
-);
+// Identify father and mother.
+// Prefer unlisted-parent records because they contain
+// the additional notes and date of death.
 
-const mother = allParents.find(
-    person => person.gender === "Female"
-);
+const father =
+    memberUnlistedParents.find(
+        person => person.gender === "Male"
+    ) ||
+    parents.find(
+        person => person.gender === "Male"
+    );
+
+const mother =
+    memberUnlistedParents.find(
+        person => person.gender === "Female"
+    ) ||
+    parents.find(
+        person => person.gender === "Female"
+    );
 // Find siblings through shared biological parents
 const siblings = getSiblings(member.id);
 

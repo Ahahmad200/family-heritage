@@ -152,6 +152,21 @@ const unlistedParentNotes =
 const unlistedParentMessage =
     document.getElementById("unlistedParentMessage");
 
+// ===============================
+// PARENT-CHILD LINK FORM ELEMENTS
+// ===============================
+
+const parentChildLinkForm =
+    document.getElementById("parentChildLinkForm");
+
+const unlistedParentSelect =
+    document.getElementById("unlistedParentSelect");
+
+const parentChildSelect =
+    document.getElementById("parentChildSelect");
+
+const parentChildLinkMessage =
+    document.getElementById("parentChildLinkMessage");
 
 // ===============================
 // STORE ALL MEMBERS
@@ -2305,7 +2320,132 @@ unlistedParentForm.addEventListener(
 
     }
 );
+// =================================
+// LOAD PARENT-CHILD LINK OPTIONS
+// =================================
 
+async function loadParentChildLinkOptions() {
+
+    // Load parents without full profiles
+    const { data: parents, error: parentError } =
+        await supabase
+            .from("family_parents")
+            .select("id, full_name")
+            .order("full_name");
+
+    if (parentError) {
+        console.error("LOAD PARENTS ERROR:", parentError);
+        parentChildLinkMessage.textContent =
+            "Unable to load parents: " + parentError.message;
+        return;
+    }
+
+    unlistedParentSelect.innerHTML =
+        '<option value="">Select unlisted parent</option>';
+
+    (parents || []).forEach(parent => {
+
+        const option = document.createElement("option");
+
+        option.value = parent.id;
+        option.textContent = parent.full_name;
+
+        unlistedParentSelect.appendChild(option);
+
+    });
+
+    // Load existing family members as children
+    parentChildSelect.innerHTML =
+        '<option value="">Select family member</option>';
+
+    (allMembers || []).forEach(member => {
+
+        const option = document.createElement("option");
+
+        option.value = member.id;
+        option.textContent = member.full_name;
+
+        parentChildSelect.appendChild(option);
+
+    });
+
+}
+// =================================
+// SAVE PARENT-CHILD LINK
+// =================================
+
+parentChildLinkForm.addEventListener(
+    "submit",
+    async function(event) {
+
+        event.preventDefault();
+
+        const parentId = unlistedParentSelect.value;
+        const childId = parentChildSelect.value;
+
+        if (!parentId || !childId) {
+
+            parentChildLinkMessage.textContent =
+                "Please select both the parent and child.";
+
+            return;
+        }
+
+        parentChildLinkMessage.textContent =
+            "Saving relationship...";
+
+        try {
+
+            // Check whether this link already exists
+            const { data: existingLink, error: checkError } =
+                await supabase
+                    .from("family_parent_links")
+                    .select("id")
+                    .eq("parent_id", parentId)
+                    .eq("child_id", childId)
+                    .maybeSingle();
+
+            if (checkError) {
+                throw checkError;
+            }
+
+            if (existingLink) {
+
+                parentChildLinkMessage.textContent =
+                    "This parent is already linked to this child.";
+
+                return;
+            }
+
+            // Save the parent-child connection
+            const { error: saveError } =
+                await supabase
+                    .from("family_parent_links")
+                    .insert([{
+                        parent_id: parentId,
+                        child_id: childId
+                    }]);
+
+            if (saveError) {
+                throw saveError;
+            }
+
+            parentChildLinkMessage.textContent =
+                "Parent linked to child successfully!";
+
+            parentChildLinkForm.reset();
+
+        } catch (error) {
+
+            console.error("PARENT-CHILD LINK ERROR:", error);
+
+            parentChildLinkMessage.textContent =
+                "Unable to link parent: " + error.message;
+
+        }
+
+    }
+);
 // =================================
 // START ADMIN PAGE
 // =================================

@@ -2460,11 +2460,8 @@ checkAdminAccess().then(
 
         await loadMembers();
 
+loadRelationshipMembers();
 
-        loadRelationshipMembers();
+loadRelationships();
 
-
-        loadRelationships();
-
-    }
-);
+await loadParentChildLinkOptions();

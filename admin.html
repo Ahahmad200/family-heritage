@@ -390,7 +390,92 @@
         <p id="relationshipMessage"></p>
 
     </div>
+    
+<!-- ================================= -->
+<!-- UNLISTED PARENT MANAGEMENT -->
+<!-- ================================= -->
 
+<div class="relationship-form">
+
+    <h3>Manage Parents Without Profiles</h3>
+
+    <p>
+        Record a parent who does not have a full
+        profile in the family members list.
+    </p>
+
+    <form id="unlistedParentForm">
+
+        <label for="unlistedParentName">
+            Parent's Full Name
+        </label>
+
+        <input
+            type="text"
+            id="unlistedParentName"
+            placeholder="Enter parent's full name"
+            required
+        >
+
+        <label for="unlistedParentGender">
+            Gender
+        </label>
+
+        <select id="unlistedParentGender">
+
+            <option value="">
+                Select gender
+            </option>
+
+            <option value="Male">
+                Male
+            </option>
+
+            <option value="Female">
+                Female
+            </option>
+
+        </select>
+
+        <label for="unlistedParentStatus">
+            Status
+        </label>
+
+        <select id="unlistedParentStatus">
+
+            <option value="false">
+                Living
+            </option>
+
+            <option value="true">
+                Deceased
+            </option>
+
+        </select>
+
+        <label for="unlistedParentNotes">
+            Additional Information
+        </label>
+
+        <textarea
+            id="unlistedParentNotes"
+            placeholder="Optional information about this parent"
+            rows="3"
+        ></textarea>
+
+        <button
+            type="submit"
+            id="saveUnlistedParentButton"
+            class="admin-primary-button"
+        >
+            Save Parent
+        </button>
+
+        <p id="unlistedParentMessage"></p>
+
+    </form>
+
+</div>
 
     <!-- EXISTING RELATIONSHIPS -->
 

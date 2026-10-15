@@ -845,9 +845,32 @@ const parents = getParents(member.id);
 const children = getChildrenOf(member.id);
 const spouses = getSpouses(member.id);
 
-const father = parents.find(person => person.gender === "Male");
-const mother = parents.find(person => person.gender === "Female");
+// Find parents recorded without full member profiles
+const parentLinks = window.familyParentLinks || [];
+const unlistedParents = window.familyParents || [];
 
+const memberUnlistedParents = parentLinks
+    .filter(link =>
+        String(link.child_id) === String(member.id)
+    )
+    .map(link =>
+        unlistedParents.find(parent =>
+            String(parent.id) === String(link.parent_id)
+        )
+    )
+    .filter(Boolean);
+
+// Combine the parents from both database tables
+const allParents = [...parents, ...memberUnlistedParents];
+
+// Identify the father and mother
+const father = allParents.find(
+    person => person.gender === "Male"
+);
+
+const mother = allParents.find(
+    person => person.gender === "Female"
+);
 // Find siblings through shared biological parents
 const siblings = getSiblings(member.id);
 

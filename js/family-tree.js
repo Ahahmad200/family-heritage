@@ -1820,8 +1820,10 @@ function getSpouses(memberId) {
 
 function getSiblings(memberId) {
 
-const parents = getParents(memberId);
 const siblings = new Map();
+
+// 1. Find siblings through parents with full profiles
+const parents = getParents(memberId);
 
 parents.forEach(parent => {
 
@@ -1835,10 +1837,42 @@ parents.forEach(parent => {
 
 });
 
+// 2. Find siblings through parents without full profiles
+const parentLinks = window.familyParentLinks || [];
+const members = window.familyMembers || [];
+
+const parentIds = parentLinks
+    .filter(link =>
+        String(link.child_id) === String(memberId)
+    )
+    .map(link => String(link.parent_id));
+
+parentIds.forEach(parentId => {
+
+    parentLinks.forEach(link => {
+
+        if (
+            String(link.parent_id) === parentId &&
+            String(link.child_id) !== String(memberId)
+        ) {
+
+            const sibling = members.find(member =>
+                String(member.id) === String(link.child_id)
+            );
+
+            if (sibling) {
+                siblings.set(String(sibling.id), sibling);
+            }
+
+        }
+
+    });
+
+});
+
 return [...siblings.values()];
 
 }
-
 function getMemberName(memberId) {
 
     const member =

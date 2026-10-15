@@ -95,12 +95,13 @@ const { data: familyParents, error: familyParentsError } =
     await supabase
         .from("family_parents")
         .select(`
-            id,
-            full_name,
-            gender,
-            is_deceased,
-            notes
-        `);
+    id,
+    full_name,
+    gender,
+    is_deceased,
+    date_of_death,
+    notes
+`);
 
 if (familyParentsError) {
     console.error(

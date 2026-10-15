@@ -846,9 +846,7 @@ const children = getChildrenOf(member.id);
 const spouses = getSpouses(member.id);
 
 // Find parents recorded without full member profiles
-const parentLinks = window.familyParentLinks || [];
 const unlistedParents = window.familyParents || [];
-
 const memberUnlistedParents = parentLinks
     .filter(link =>
         String(link.child_id) === String(member.id)

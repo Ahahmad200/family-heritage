@@ -1060,15 +1060,11 @@ async function loadRelationships() {
         let relationshipText =
             relationship.relationship_type;
 
-        if (relationship.relationship_type === "child") {
+        if (relationshipText === "child") {
             relationshipText = "Child of";
-        }
-
-        if (relationship.relationship_type === "parent") {
+        } else if (relationshipText === "parent") {
             relationshipText = "Parent of";
-        }
-
-        if (relationship.relationship_type === "spouse") {
+        } else if (relationshipText === "spouse") {
             relationshipText = "Spouse of";
         }
 
@@ -1076,36 +1072,44 @@ async function loadRelationships() {
 
         row.className = "relationship-row";
 
-        row.innerHTML = `
-            <div class="relationship-info">
-                <strong></strong>
-                <span></span>
-                <strong></strong>
-            </div>
+        const info = document.createElement("div");
+        info.className = "relationship-info";
 
-            <div class="relationship-actions">
-                <button
-                    type="button"
-                    class="admin-edit-button edit-relationship-button"
-                    data-id="${relationship.id}">
-                    Edit
-                </button>
+        const firstName = document.createElement("strong");
+        firstName.textContent = personName;
 
-                <button
-                    type="button"
-                    class="admin-delete-button delete-relationship-button"
-                    data-id="${relationship.id}">
-                    Delete
-                </button>
-            </div>
-        `;
+        const type = document.createElement("span");
+        type.textContent = relationshipText;
 
-        const info = row.querySelector(".relationship-info");
-        const names = info.querySelectorAll("strong");
+        const secondName = document.createElement("strong");
+        secondName.textContent = relatedPersonName;
 
-        names[0].textContent = personName;
-        info.querySelector("span").textContent = relationshipText;
-        names[1].textContent = relatedPersonName;
+        info.appendChild(firstName);
+        info.appendChild(type);
+        info.appendChild(secondName);
+
+        const actions = document.createElement("div");
+        actions.className = "relationship-actions";
+
+        const editButton = document.createElement("button");
+        editButton.type = "button";
+        editButton.className =
+            "admin-edit-button edit-relationship-button";
+        editButton.textContent = "Edit";
+        editButton.dataset.id = relationship.id;
+
+        const deleteButton = document.createElement("button");
+        deleteButton.type = "button";
+        deleteButton.className =
+            "admin-delete-button delete-relationship-button";
+        deleteButton.textContent = "Delete";
+        deleteButton.dataset.id = relationship.id;
+
+        actions.appendChild(editButton);
+        actions.appendChild(deleteButton);
+
+        row.appendChild(info);
+        row.appendChild(actions);
 
         relationshipsList.appendChild(row);
     });
@@ -1126,7 +1130,6 @@ async function loadRelationships() {
             });
         });
 }
-
 
 // =================================
 // SAVE RELATIONSHIP

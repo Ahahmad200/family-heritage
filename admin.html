@@ -462,97 +462,83 @@
 
     <form id="unlistedParentForm">
 
-        <label for="unlistedParentName">
-            Parent's Full Name
-        </label>
+    <label for="unlistedParentName">
+        Parent's Full Name
+    </label>
 
-        <input
-            type="text"
-            id="unlistedParentName"
-            placeholder="Enter parent's full name"
-            required
-        >
+    <input
+        type="text"
+        id="unlistedParentName"
+        placeholder="Enter parent's full name"
+        required
+    >
 
-        <label for="unlistedParentGender">
-            Gender
-        </label>
+    <label for="unlistedParentGender">
+        Gender
+    </label>
 
-        <select id="unlistedParentGender">
+    <select id="unlistedParentGender">
 
-            <option value="">
-                Select gender
-            </option>
+        <option value="">
+            Select gender
+        </option>
 
-            <option value="Male">
-                Male
-            </option>
+        <option value="Male">
+            Male
+        </option>
 
-            <option value="Female">
-                Female
-            </option>
+        <option value="Female">
+            Female
+        </option>
 
-        </select>
+    </select>
 
-        <label for="unlistedParentStatus">
-            Status
-        </label>
+    <label for="unlistedParentStatus">
+        Status
+    </label>
 
-        <select id="unlistedParentStatus">
+    <select id="unlistedParentStatus">
 
-            <option value="false">
-                Living
-            </option>
+        <option value="false">
+            Living
+        </option>
 
-            <option value="true">
-                Deceased
-            </option>
+        <option value="true">
+            Deceased
+        </option>
 
-        </select>
+    </select>
 
-        <label for="unlistedParentNotes">
-            Additional Information
-        </label>
+    <label for="unlistedParentDateOfDeath">
+        Date of Death (if applicable)
+    </label>
 
-        <textarea
-            id="unlistedParentNotes"
-            placeholder="Optional information about this parent"
-            rows="3"
-        ></textarea>
+    <input
+        type="date"
+        id="unlistedParentDateOfDeath"
+    >
 
-        <button
-            type="submit"
-            id="saveUnlistedParentButton"
-            class="admin-primary-button"
-        >
-            Save Parent
-        </button>
+    <label for="unlistedParentNotes">
+        Additional Information
+    </label>
 
-        <p id="unlistedParentMessage"></p>
+    <textarea
+        id="unlistedParentNotes"
+        placeholder="Optional information about this parent"
+        rows="3"
+    ></textarea>
 
-    </form>
+    <button
+        type="submit"
+        id="saveUnlistedParentButton"
+        class="admin-primary-button"
+    >
+        Save Parent
+    </button>
 
-</div>
+    <p id="unlistedParentMessage"></p>
 
-    <!-- EXISTING RELATIONSHIPS -->
-
-    <div class="relationship-list-section">
-
-        <h3>
-            Existing Relationships
-        </h3>
-
-
-        <div id="relationshipsList">
-
-            <p class="admin-loading">
-                Loading relationships...
-            </p>
-
-        </div>
-
-    </div>
-
-</div>
+</form>
                         <!-- ================================= -->
             <!-- FAMILY ANNALS MANAGEMENT -->
             <!-- ================================= -->

@@ -851,41 +851,105 @@ const mother = parents.find(person => person.gender === "Female");
 // Find siblings through shared biological parents
 const siblings = getSiblings(member.id);
 
-// Classify full and half-siblings
+// Get parents recorded with full profiles
 const memberParentIds = new Set(
-    parents.map(person => person.id)
+    parents.map(person => String(person.id))
 );
 
-const classifiedSiblings = siblings.map(sibling => {
-    const siblingParents = getParents(sibling.id);
+// Get parents recorded without full profiles
+const parentLinks = window.familyParentLinks || [];
 
-    const sharedParents = siblingParents.filter(parent =>
-        memberParentIds.has(parent.id)
+const memberUnlistedParentIds = new Set(
+    parentLinks
+        .filter(link =>
+            String(link.child_id) === String(member.id)
+        )
+        .map(link => String(link.parent_id))
+);
+
+// Combine both types of parent IDs
+const allMemberParentIds = new Set([
+    ...memberParentIds,
+    ...memberUnlistedParentIds
+]);
+
+// Find the gender of an unlisted parent
+const getUnlistedParentGender = parentId => {
+    const parent = (window.familyParents || []).find(
+        person => String(person.id) === String(parentId)
     );
 
-    let relationship = "Half-sibling";
+    return parent ? parent.gender : null;
+};
+
+// Classify each sibling
+const classifiedSiblings = siblings.map(sibling => {
+
+    const siblingParents = getParents(sibling.id);
+
+    const siblingParentIds = new Set(
+        siblingParents.map(person => String(person.id))
+    );
+
+    const siblingUnlistedParentIds = new Set(
+        parentLinks
+            .filter(link =>
+                String(link.child_id) === String(sibling.id)
+            )
+            .map(link => String(link.parent_id))
+    );
+
+    const allSiblingParentIds = new Set([
+        ...siblingParentIds,
+        ...siblingUnlistedParentIds
+    ]);
+
+    const sharedParentIds = [...allMemberParentIds].filter(
+        parentId => allSiblingParentIds.has(parentId)
+    );
+
+    let relationship = "Sibling (parentage incomplete)";
 
     if (
-        memberParentIds.size >= 2 &&
-        sharedParents.length >= 2
+        allMemberParentIds.size >= 2 &&
+        allSiblingParentIds.size >= 2 &&
+        sharedParentIds.length >= 2
     ) {
+
         relationship = "Full sibling";
-    } else if (
-        sharedParents.length === 1 &&
-        sharedParents[0].gender === "Male"
-    ) {
-        relationship = "Paternal half-sibling";
-    } else if (
-        sharedParents.length === 1 &&
-        sharedParents[0].gender === "Female"
-    ) {
-        relationship = "Maternal half-sibling";
+
+    } else if (sharedParentIds.length === 1) {
+
+        const sharedParentId = sharedParentIds[0];
+
+        const fullProfileParent = parents.find(
+            person =>
+                String(person.id) === sharedParentId
+        );
+
+        const parentGender = fullProfileParent
+            ? fullProfileParent.gender
+            : getUnlistedParentGender(sharedParentId);
+
+        if (parentGender === "Male") {
+            relationship = "Paternal half-sibling";
+        } else if (parentGender === "Female") {
+            relationship = "Maternal half-sibling";
+        } else {
+            relationship = "Half-sibling (parent's gender unknown)";
+        }
+
+    } else if (sharedParentIds.length === 0) {
+
+        relationship = "Sibling (relationship unconfirmed)";
+
     }
 
     return {
         ...sibling,
         relationship
     };
+
 });
 
 // Determine the member's family branch

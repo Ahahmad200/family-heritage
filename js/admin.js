@@ -2452,16 +2452,14 @@ parentChildLinkForm.addEventListener(
 
 checkAdminAccess().then(
     async isAdmin => {
-
-        if (!isAdmin) {
-            return;
-        }
-
+        if (!isAdmin) return;
 
         await loadMembers();
 
-loadRelationshipMembers();
+        loadRelationshipMembers();
 
-loadRelationships();
+        loadRelationships();
 
-await loadParentChildLinkOptions();
+        await loadParentChildLinkOptions();
+    }
+);

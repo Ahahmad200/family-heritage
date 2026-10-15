@@ -146,6 +146,9 @@ const unlistedParentGender =
 const unlistedParentStatus =
     document.getElementById("unlistedParentStatus");
 
+const unlistedParentDateOfDeath =
+    document.getElementById("unlistedParentDateOfDeath");
+
 const unlistedParentNotes =
     document.getElementById("unlistedParentNotes");
 

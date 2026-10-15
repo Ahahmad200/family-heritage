@@ -1097,11 +1097,36 @@ ${createConnectionSection(
         ? `
             <div class="parent-information">
                 ${createPersonLinks([father], "")}
+
                 <span class="parent-status ${
                     father.is_deceased ? "deceased" : "living"
                 }">
                     (${father.is_deceased ? "Deceased" : "Living"})
                 </span>
+
+                ${
+                    father.date_of_death
+                        ? `<p><strong>Date of death:</strong>
+                            ${escapeHTML(
+                                new Date(
+                                    father.date_of_death + "T00:00:00"
+                                ).toLocaleDateString("en-GB", {
+                                    day: "numeric",
+                                    month: "long",
+                                    year: "numeric"
+                                })
+                            )}
+                           </p>`
+                        : ""
+                }
+
+                ${
+                    father.notes
+                        ? `<p><strong>Additional information:</strong>
+                            ${escapeHTML(father.notes)}
+                           </p>`
+                        : ""
+                }
             </div>
         `
         : "<p>Father's information has not been recorded.</p>"
@@ -1113,11 +1138,36 @@ ${createConnectionSection(
         ? `
             <div class="parent-information">
                 ${createPersonLinks([mother], "")}
+
                 <span class="parent-status ${
                     mother.is_deceased ? "deceased" : "living"
                 }">
                     (${mother.is_deceased ? "Deceased" : "Living"})
                 </span>
+
+                ${
+                    mother.date_of_death
+                        ? `<p><strong>Date of death:</strong>
+                            ${escapeHTML(
+                                new Date(
+                                    mother.date_of_death + "T00:00:00"
+                                ).toLocaleDateString("en-GB", {
+                                    day: "numeric",
+                                    month: "long",
+                                    year: "numeric"
+                                })
+                            )}
+                           </p>`
+                        : ""
+                }
+
+                ${
+                    mother.notes
+                        ? `<p><strong>Additional information:</strong>
+                            ${escapeHTML(mother.notes)}
+                           </p>`
+                        : ""
+                }
             </div>
         `
         : "<p>Mother's information has not been recorded.</p>"

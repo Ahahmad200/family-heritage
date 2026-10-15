@@ -867,7 +867,11 @@ const allParents = [
     ...parents,
     ...memberUnlistedParents
 ];
-
+console.log(
+    "Parent details for:",
+    member.full_name,
+    allParents
+);
 // Identify father and mother
 const father = allParents.find(
     person => person.gender === "Male"

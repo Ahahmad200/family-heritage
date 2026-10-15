@@ -1091,19 +1091,37 @@ modalMemberContent.innerHTML = `
 
         <h2>🌳 Family Connections</h2>
 
-        ${createConnectionSection(
-            "👨 Father",
-            father
-                ? createPersonLinks([father], "")
-                : "<p>Father's information has not been recorded.</p>"
-        )}
+${createConnectionSection(
+    "👨 Father",
+    father
+        ? `
+            <div class="parent-information">
+                ${createPersonLinks([father], "")}
+                <span class="parent-status ${
+                    father.is_deceased ? "deceased" : "living"
+                }">
+                    (${father.is_deceased ? "Deceased" : "Living"})
+                </span>
+            </div>
+        `
+        : "<p>Father's information has not been recorded.</p>"
+)}
 
-        ${createConnectionSection(
-            "👩 Mother",
-            mother
-                ? createPersonLinks([mother], "")
-                : "<p>Mother's information has not been recorded.</p>"
-        )}
+${createConnectionSection(
+    "👩 Mother",
+    mother
+        ? `
+            <div class="parent-information">
+                ${createPersonLinks([mother], "")}
+                <span class="parent-status ${
+                    mother.is_deceased ? "deceased" : "living"
+                }">
+                    (${mother.is_deceased ? "Deceased" : "Living"})
+                </span>
+            </div>
+        `
+        : "<p>Mother's information has not been recorded.</p>"
+)}
 
         ${createConnectionSection(
             "💍 Spouse",

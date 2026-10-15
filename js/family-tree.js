@@ -845,8 +845,11 @@ const parents = getParents(member.id);
 const children = getChildrenOf(member.id);
 const spouses = getSpouses(member.id);
 
-// Find parents recorded without full member profiles
+// Load parent-child connections before using them
+const parentLinks = window.familyParentLinks || [];
 const unlistedParents = window.familyParents || [];
+
+// Find parents without full member profiles
 const memberUnlistedParents = parentLinks
     .filter(link =>
         String(link.child_id) === String(member.id)
@@ -858,10 +861,13 @@ const memberUnlistedParents = parentLinks
     )
     .filter(Boolean);
 
-// Combine the parents from both database tables
-const allParents = [...parents, ...memberUnlistedParents];
+// Combine parents from both database tables
+const allParents = [
+    ...parents,
+    ...memberUnlistedParents
+];
 
-// Identify the father and mother
+// Identify father and mother
 const father = allParents.find(
     person => person.gender === "Male"
 );
@@ -878,8 +884,6 @@ const memberParentIds = new Set(
 );
 
 // Get parents recorded without full profiles
-const parentLinks = window.familyParentLinks || [];
-
 const memberUnlistedParentIds = new Set(
     parentLinks
         .filter(link =>

@@ -2240,47 +2240,54 @@ unlistedParentForm.addEventListener(
         const parentDeceased =
             unlistedParentStatus.value === "true";
 
+        const parentDateOfDeath =
+            unlistedParentDateOfDeath.value || null;
+
         const parentNotes =
             unlistedParentNotes.value.trim() || null;
 
-
         if (!parentName) {
-
             unlistedParentMessage.textContent =
                 "Please enter the parent's name.";
-
             return;
         }
 
+        if (!parentDeceased && parentDateOfDeath) {
+            unlistedParentMessage.textContent =
+                "A living parent cannot have a date of death.";
+            return;
+        }
+
+        if (parentDeceased && !parentDateOfDeath) {
+            unlistedParentMessage.textContent =
+                "Please enter the date of death for a deceased parent.";
+            return;
+        }
 
         unlistedParentMessage.textContent =
             "Saving parent...";
 
-
         try {
 
             // Check for an existing parent
-            const { data: existingParent, error: searchError } =
-                await supabase
-                    .from("family_parents")
-                    .select("id, full_name")
-                    .ilike("full_name", parentName);
-
+            const {
+                data: existingParent,
+                error: searchError
+            } = await supabase
+                .from("family_parents")
+                .select("id, full_name")
+                .ilike("full_name", parentName);
 
             if (searchError) {
                 throw searchError;
             }
 
-
             if (existingParent && existingParent.length > 0) {
-
                 unlistedParentMessage.textContent =
                     "A parent with this name already exists. " +
                     "Please check the existing record.";
-
                 return;
             }
-
 
             // Save the parent
             const { error: saveError } =
@@ -2291,22 +2298,19 @@ unlistedParentForm.addEventListener(
                             full_name: parentName,
                             gender: parentGender,
                             is_deceased: parentDeceased,
+                            date_of_death: parentDateOfDeath,
                             notes: parentNotes
                         }
                     ]);
-
 
             if (saveError) {
                 throw saveError;
             }
 
-
             unlistedParentMessage.textContent =
                 "Parent saved successfully!";
 
-
             unlistedParentForm.reset();
-
 
         } catch (error) {
 
@@ -2318,9 +2322,7 @@ unlistedParentForm.addEventListener(
             unlistedParentMessage.textContent =
                 "Unable to save parent: " +
                 error.message;
-
         }
-
     }
 );
 // =================================

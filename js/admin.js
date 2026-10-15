@@ -131,6 +131,29 @@ const relationshipsList =
 
 
 // ===============================
+// UNLISTED PARENT FORM ELEMENTS
+// ===============================
+
+const unlistedParentForm =
+    document.getElementById("unlistedParentForm");
+
+const unlistedParentName =
+    document.getElementById("unlistedParentName");
+
+const unlistedParentGender =
+    document.getElementById("unlistedParentGender");
+
+const unlistedParentStatus =
+    document.getElementById("unlistedParentStatus");
+
+const unlistedParentNotes =
+    document.getElementById("unlistedParentNotes");
+
+const unlistedParentMessage =
+    document.getElementById("unlistedParentMessage");
+
+
+// ===============================
 // STORE ALL MEMBERS
 // ===============================
 
@@ -2180,6 +2203,108 @@ async function findFamilyRelationship(
     );
 }
 
+// =================================
+// SAVE UNLISTED PARENT
+// =================================
+
+unlistedParentForm.addEventListener(
+    "submit",
+    async function(event) {
+
+        event.preventDefault();
+
+        const parentName =
+            unlistedParentName.value.trim();
+
+        const parentGender =
+            unlistedParentGender.value || null;
+
+        const parentDeceased =
+            unlistedParentStatus.value === "true";
+
+        const parentNotes =
+            unlistedParentNotes.value.trim() || null;
+
+
+        if (!parentName) {
+
+            unlistedParentMessage.textContent =
+                "Please enter the parent's name.";
+
+            return;
+        }
+
+
+        unlistedParentMessage.textContent =
+            "Saving parent...";
+
+
+        try {
+
+            // Check for an existing parent
+            const { data: existingParent, error: searchError } =
+                await supabase
+                    .from("family_parents")
+                    .select("id, full_name")
+                    .ilike("full_name", parentName);
+
+
+            if (searchError) {
+                throw searchError;
+            }
+
+
+            if (existingParent && existingParent.length > 0) {
+
+                unlistedParentMessage.textContent =
+                    "A parent with this name already exists. " +
+                    "Please check the existing record.";
+
+                return;
+            }
+
+
+            // Save the parent
+            const { error: saveError } =
+                await supabase
+                    .from("family_parents")
+                    .insert([
+                        {
+                            full_name: parentName,
+                            gender: parentGender,
+                            is_deceased: parentDeceased,
+                            notes: parentNotes
+                        }
+                    ]);
+
+
+            if (saveError) {
+                throw saveError;
+            }
+
+
+            unlistedParentMessage.textContent =
+                "Parent saved successfully!";
+
+
+            unlistedParentForm.reset();
+
+
+        } catch (error) {
+
+            console.error(
+                "SAVE UNLISTED PARENT ERROR:",
+                error
+            );
+
+            unlistedParentMessage.textContent =
+                "Unable to save parent: " +
+                error.message;
+
+        }
+
+    }
+);
 
 // =================================
 // START ADMIN PAGE

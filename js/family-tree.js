@@ -86,6 +86,63 @@ loadRelationshipMembers();
     }
 window.familyRelationships = relationships;
 
+    
+// =====================================
+// LOAD PARENTS WITHOUT FULL PROFILES
+// =====================================
+
+const { data: familyParents, error: familyParentsError } =
+    await supabase
+        .from("family_parents")
+        .select(`
+            id,
+            full_name,
+            gender,
+            is_deceased,
+            notes
+        `);
+
+if (familyParentsError) {
+    console.error(
+        "Unable to load family parents:",
+        familyParentsError
+    );
+    throw familyParentsError;
+}
+
+window.familyParents = familyParents || [];
+
+// =====================================
+// LOAD PARENT-CHILD CONNECTIONS
+// =====================================
+
+const { data: parentLinks, error: parentLinksError } =
+    await supabase
+        .from("family_parent_links")
+        .select(`
+            parent_id,
+            child_id
+        `);
+
+if (parentLinksError) {
+    console.error(
+        "Unable to load parent-child connections:",
+        parentLinksError
+    );
+    throw parentLinksError;
+}
+
+window.familyParentLinks = parentLinks || [];
+
+console.log(
+    "Additional parents loaded:",
+    window.familyParents.length
+);
+
+console.log(
+    "Parent-child connections loaded:",
+    window.familyParentLinks.length
+);
     // =========================================
     // FIND FOUNDING COUPLE
     // =========================================

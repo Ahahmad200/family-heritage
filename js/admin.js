@@ -989,99 +989,141 @@ async function loadRelationships() {
 
         const relatedPersonData =
             allMembers.find(
-                member =>
-                    member.id ===
-                    relationship.related_person_id
-            );
+// =================================
+// LOAD EXISTING RELATIONSHIPS
+// =================================
 
-        if (!person || !relatedPersonData) {
-            return;
-        }
+async function loadRelationships() {
 
-        const row =
-            document.createElement("div");
+    relationshipsList.innerHTML = `
+        <p class="admin-loading">
+            Loading relationships...
+        </p>
+    `;
 
-        row.className =
-            "relationship-row";
+    const { data, error } = await supabase
+        .from("relationships")
+        .select(`
+            id,
+            person_id,
+            related_person_id,
+            relationship_type
+        `);
+
+    if (error) {
+        console.error("LOAD RELATIONSHIPS ERROR:", error);
+
+        relationshipsList.innerHTML = `
+            <p class="admin-error">
+                Unable to load relationships.
+                <br>
+                ${error.message}
+            </p>
+        `;
+
+        return;
+    }
+
+    if (!data || data.length === 0) {
+        relationshipsList.innerHTML = `
+            <p class="admin-empty">
+                No relationships have been added yet.
+            </p>
+        `;
+
+        return;
+    }
+
+    relationshipsList.innerHTML = "";
+
+    data.forEach(relationship => {
+
+        const person = allMembers.find(
+            member =>
+                String(member.id) ===
+                String(relationship.person_id)
+        );
+
+        const relatedPersonData = allMembers.find(
+            member =>
+                String(member.id) ===
+                String(relationship.related_person_id)
+        );
+
+        const personName =
+            person?.full_name || "Unknown family member";
+
+        const relatedPersonName =
+            relatedPersonData?.full_name ||
+            "Unknown family member";
 
         let relationshipText =
             relationship.relationship_type;
 
-        if (
-            relationship.relationship_type ===
-            "child"
-        ) {
-            relationshipText =
-                "Child of";
+        if (relationship.relationship_type === "child") {
+            relationshipText = "Child of";
         }
 
-        if (
-            relationship.relationship_type ===
-            "parent"
-        ) {
-            relationshipText =
-                "Parent of";
+        if (relationship.relationship_type === "parent") {
+            relationshipText = "Parent of";
         }
 
-        if (
-            relationship.relationship_type ===
-            "spouse"
-        ) {
-            relationshipText =
-                "Spouse of";
+        if (relationship.relationship_type === "spouse") {
+            relationshipText = "Spouse of";
         }
+
+        const row = document.createElement("div");
+
+        row.className = "relationship-row";
 
         row.innerHTML = `
-
             <div class="relationship-info">
-
-                <strong>
-                    ${person.full_name}
-                </strong>
-
-                <span>
-                    ${relationshipText}
-                </span>
-
-                <strong>
-                    ${relatedPersonData.full_name}
-                </strong>
-
+                <strong></strong>
+                <span></span>
+                <strong></strong>
             </div>
 
-            <button
-                class="admin-delete-button delete-relationship-button"
-                data-id="${relationship.id}"
-            >
-                Delete
-            </button>
+            <div class="relationship-actions">
+                <button
+                    type="button"
+                    class="admin-edit-button edit-relationship-button"
+                    data-id="${relationship.id}">
+                    Edit
+                </button>
 
+                <button
+                    type="button"
+                    class="admin-delete-button delete-relationship-button"
+                    data-id="${relationship.id}">
+                    Delete
+                </button>
+            </div>
         `;
 
-        relationshipsList.appendChild(
-            row
-        );
+        const info = row.querySelector(".relationship-info");
+        const names = info.querySelectorAll("strong");
 
+        names[0].textContent = personName;
+        info.querySelector("span").textContent = relationshipText;
+        names[1].textContent = relatedPersonName;
+
+        relationshipsList.appendChild(row);
     });
 
-
-    document
-        .querySelectorAll(
-            ".delete-relationship-button"
-        )
+    relationshipsList
+        .querySelectorAll(".delete-relationship-button")
         .forEach(button => {
+            button.addEventListener("click", () => {
+                deleteRelationship(button.dataset.id);
+            });
+        });
 
-            button.addEventListener(
-                "click",
-                () => {
-
-                    deleteRelationship(
-                        button.dataset.id
-                    );
-
-                }
-            );
-
+    relationshipsList
+        .querySelectorAll(".edit-relationship-button")
+        .forEach(button => {
+            button.addEventListener("click", () => {
+                editRelationship(button.dataset.id);
+            });
         });
 }
 

@@ -225,7 +225,8 @@ async function loadMembers() {
     }
 
     allMembers = data || [];
-
+console.log("Members returned from Supabase:", data);
+console.log("Total members loaded:", allMembers.length);
     updateStatistics();
 
     displayMembers(allMembers);

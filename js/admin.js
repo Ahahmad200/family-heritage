@@ -1166,7 +1166,44 @@ saveRelationshipButton.addEventListener(
     }
 );
 
+// =================================
+// EDIT RELATIONSHIP
+// =================================
 
+async function editRelationship(id) {
+
+    const { data, error } = await supabase
+        .from("relationships")
+        .select(`
+            id,
+            person_id,
+            related_person_id,
+            relationship_type
+        `)
+        .eq("id", id)
+        .single();
+
+    if (error) {
+        console.error("EDIT RELATIONSHIP ERROR:", error);
+
+        alert(
+            "Unable to load relationship: " +
+            error.message
+        );
+
+        return;
+    }
+
+    relationshipPerson.value = data.person_id;
+
+    relationshipType.value = data.relationship_type;
+
+    relatedPerson.value = data.related_person_id;
+
+    relationshipMessage.textContent =
+        "Relationship loaded. Make your changes and save.";
+
+    }
 // =================================
 // DELETE RELATIONSHIP
 // =================================

@@ -1115,11 +1115,6 @@ saveRelationshipButton.addEventListener(
 
 if (editingRelationshipId) {
 
-    console.log(
-    "Saving relationship ID:",
-    editingRelationshipId
-);
-
     const result = await supabase
         .from("relationships")
         .update({
@@ -1221,11 +1216,6 @@ async function editRelationship(id) {
 
     editingRelationshipId = data.id;
 
-    console.log(
-    "Editing relationship ID:",
-    editingRelationshipId
-);
-    
     relationshipPerson.value = data.person_id;
 
     relationshipType.value = data.relationship_type;

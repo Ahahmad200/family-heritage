@@ -1195,6 +1195,8 @@ async function editRelationship(id) {
         return;
     }
 
+    editingRelationshipId = data.id;
+    
     relationshipPerson.value = data.person_id;
 
     relationshipType.value = data.relationship_type;
@@ -1202,8 +1204,10 @@ async function editRelationship(id) {
     relatedPerson.value = data.related_person_id;
 
     relationshipMessage.textContent =
-        "Relationship loaded. Make your changes and save.";
+    "Editing relationship. Make your changes and save.";
 
+saveRelationshipButton.textContent =
+    "Update Relationship";
     }
 // =================================
 // DELETE RELATIONSHIP

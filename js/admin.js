@@ -1111,21 +1111,35 @@ saveRelationshipButton.addEventListener(
         relationshipMessage.textContent =
             "Saving relationship...";
 
-        const { error } =
-            await supabase
-                .from("relationships")
-                .insert([
-                    {
-                        person_id:
-                            personId,
+        let error;
 
-                        related_person_id:
-                            relatedPersonId,
+if (editingRelationshipId) {
 
-                        relationship_type:
-                            type
-                    }
-                ]);
+    const result = await supabase
+        .from("relationships")
+        .update({
+            person_id: personId,
+            related_person_id: relatedPersonId,
+            relationship_type: type
+        })
+        .eq("id", editingRelationshipId);
+
+    error = result.error;
+
+} else {
+
+    const result = await supabase
+        .from("relationships")
+        .insert([
+            {
+                person_id: personId,
+                related_person_id: relatedPersonId,
+                relationship_type: type
+            }
+        ]);
+
+    error = result.error;
+}
 
         if (error) {
 
@@ -1151,8 +1165,13 @@ saveRelationshipButton.addEventListener(
             return;
         }
 
-        relationshipMessage.textContent =
-            "Relationship saved successfully!";
+        editingRelationshipId = null;
+
+saveRelationshipButton.textContent =
+    "Save Relationship";
+
+relationshipMessage.textContent =
+    "Relationship saved successfully!";
 
         relationshipPerson.value =
             "";

@@ -1215,6 +1215,11 @@ async function editRelationship(id) {
     }
 
     editingRelationshipId = data.id;
+
+    console.log(
+    "Editing relationship ID:",
+    editingRelationshipId
+);
     
     relationshipPerson.value = data.person_id;
 

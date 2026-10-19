@@ -1115,6 +1115,11 @@ saveRelationshipButton.addEventListener(
 
 if (editingRelationshipId) {
 
+    console.log(
+    "Saving relationship ID:",
+    editingRelationshipId
+);
+
     const result = await supabase
         .from("relationships")
         .update({

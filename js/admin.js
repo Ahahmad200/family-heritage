@@ -125,6 +125,7 @@ const saveRelationshipButton =
 
 const relationshipMessage =
     document.getElementById("relationshipMessage");
+let editingRelationshipId = null;
 
 const relationshipsList =
     document.getElementById("relationshipsList");

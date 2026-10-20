@@ -437,10 +437,80 @@ if (
 
     tree.appendChild(previousMarriageSection);
 }
-    familyTree.appendChild(tree);
+    // =========================================
+// RAISED CHILD OF THE FAMILY
+// =========================================
+
+const raisedChildRelationships =
+    relationships.filter(
+        relationship =>
+            relationship.relationship_type === "raised_child" &&
+            (
+                relationship.related_person_id === patriarch.id ||
+                relationship.related_person_id === matriarch.id
+            )
+    );
+
+const raisedChildIds = [
+    ...new Set(
+        raisedChildRelationships.map(
+            relationship => relationship.person_id
+        )
+    )
+];
+
+const raisedChildren = members.filter(
+    member => raisedChildIds.includes(member.id)
+);
+
+if (raisedChildren.length > 0) {
+
+    const raisedSection =
+        document.createElement("section");
+
+    raisedSection.className =
+        "raised-family-children";
+
+    raisedSection.style.cssText = `
+        margin-top: 35px;
+        padding: 20px;
+        border-radius: 16px;
+        background: #f4f8f2;
+        border: 1px solid #c8d9c1;
+    `;
+
+    raisedSection.innerHTML = `
+        <h3 style="text-align:center;color:#42633b;">
+            💚 Children Raised by the Family
+        </h3>
+
+        <p style="text-align:center;">
+            These members were raised within the family
+            and are recorded separately from biological children.
+        </p>
+    `;
+
+    raisedChildren.forEach(member => {
+
+        const branch =
+            document.createElement("div");
+
+        branch.innerHTML = createMemberCard(
+            member,
+            "Raised son of Alh Aliyu Abdulmuninu Gandu and Haj Aisha Mukhtar"
+        );
+
+        raisedSection.appendChild(branch);
+
+    });
+
+    tree.appendChild(raisedSection);
 
 }
 
+familyTree.appendChild(tree);
+
+}
 
 // =========================================
 // GET CHILDREN

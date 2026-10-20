@@ -1495,57 +1495,53 @@ if (calculateRelationshipButton) {
 
 
             // -------------------------------
-            // ADD RELATIONSHIPS
-            // -------------------------------
+// ADD RELATIONSHIPS
+// -------------------------------
 
-            window.familyRelationships.forEach(
-                relationship => {
+        window.familyRelationships.forEach(
+            relationship => {
 
-                    const person =
-                        relationship.person_id;
+                const person =
+                    relationship.person_id;
 
-                    const related =
-                        relationship.related_person_id;
+                const related =
+                    relationship.related_person_id;
 
+                if (
+                    relationship.relationship_type === "child" ||
+                    relationship.relationship_type === "raised_child"
+                ) {
 
-                    if (
-                        relationship.relationship_type ===
-                        "child"
-                    ) {
+                    // Child → Parent
 
-                        // Child → Parent
+                    connections[person].push(
+                        related
+                    );
 
-                        connections[person].push(
-                            related
-                        );
+                    // Parent → Child
 
-
-                        // Parent → Child
-
-                        connections[related].push(
-                            person
-                        );
-
-                    }
-
-
-                    if (
-                        relationship.relationship_type ===
-                        "spouse"
-                    ) {
-
-                        connections[person].push(
-                            related
-                        );
-
-                        connections[related].push(
-                            person
-                        );
-
-                    }
+                    connections[related].push(
+                        person
+                    );
 
                 }
-            );
+
+                if (
+                    relationship.relationship_type === "spouse"
+                ) {
+
+                    connections[person].push(
+                        related
+                    );
+
+                    connections[related].push(
+                        person
+                    );
+
+                }
+
+            }
+        );
 
 
             // -------------------------------

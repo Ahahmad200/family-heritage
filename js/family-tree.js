@@ -54,6 +54,10 @@ async function loadFamilyTree() {
 
 
     window.familyMembers = members;
+    console.log("TOTAL MEMBERS LOADED:", members.length);
+console.log("MUHAMMADU ALIYU:", members.find(
+    member => member.full_name === "Muhammadu Aliyu"
+));
 loadRelationshipMembers();
 
     // =========================================

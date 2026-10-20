@@ -995,16 +995,17 @@ async function loadRelationships() {
             relatedPersonData?.full_name ||
             "Unknown family member";
 
-        let relationshipText =
-            relationship.relationship_type;
+        let relationshipText = relationship.relationship_type;
 
-        if (relationshipText === "child") {
-            relationshipText = "Child of";
-        } else if (relationshipText === "parent") {
-            relationshipText = "Parent of";
-        } else if (relationshipText === "spouse") {
-            relationshipText = "Spouse of";
-        }
+if (relationshipText === "child") {
+relationshipText = "Child of";
+} else if (relationshipText === "parent") {
+relationshipText = "Parent of";
+} else if (relationshipText === "spouse") {
+relationshipText = "Spouse of";
+} else if (relationshipText === "raised_child") {
+relationshipText = "Raised son of";
+}
 
         const row = document.createElement("div");
 

@@ -491,18 +491,16 @@ if (raisedChildren.length > 0) {
     `;
 
     raisedChildren.forEach(member => {
+    const branch = createGenerationBranch(
+        member,
+        relationships,
+        members,
+        1,
+        "Raised son of Alh Aliyu Abdulmuninu Gandu and Haj Aisha Mukhtar"
+    );
 
-        const branch =
-            document.createElement("div");
-
-        branch.innerHTML = createMemberCard(
-            member,
-            "Raised son of Alh Aliyu Abdulmuninu Gandu and Haj Aisha Mukhtar"
-        );
-
-        raisedSection.appendChild(branch);
-
-    });
+    raisedSection.appendChild(branch);
+});
 
     tree.appendChild(raisedSection);
 

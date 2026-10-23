@@ -1346,6 +1346,76 @@ window.openFamilyMemberProfile = function(memberId) {
 };
 
 // =========================================
+// FULL-SCREEN FAMILY PHOTO VIEWER
+// =========================================
+
+function openFamilyPhotoViewer(photoUrl, memberName) {
+
+let viewer = document.getElementById("familyPhotoViewer");
+
+if (!viewer) {
+
+    viewer = document.createElement("div");
+
+    viewer.id = "familyPhotoViewer";
+
+    viewer.innerHTML = `
+        <button
+            type="button"
+            id="closeFamilyPhotoViewer"
+            aria-label="Close full-screen photograph"
+        >
+            &times;
+        </button>
+
+        <img
+            id="familyPhotoViewerImage"
+            src=""
+            alt=""
+        >
+
+        <p id="familyPhotoViewerName"></p>
+    `;
+
+    document.body.appendChild(viewer);
+
+    document.getElementById("closeFamilyPhotoViewer")
+        .addEventListener("click", closeFamilyPhotoViewer);
+
+    viewer.addEventListener("click", function(event) {
+
+        if (event.target === viewer) {
+            closeFamilyPhotoViewer();
+        }
+
+    });
+
+}
+
+document.getElementById("familyPhotoViewerImage").src = photoUrl;
+
+document.getElementById("familyPhotoViewerImage").alt = memberName;
+
+document.getElementById("familyPhotoViewerName").textContent = memberName;
+
+viewer.style.display = "flex";
+
+document.body.style.overflow = "hidden";
+
+}
+
+function closeFamilyPhotoViewer() {
+
+const viewer = document.getElementById("familyPhotoViewer");
+
+if (viewer) {
+    viewer.style.display = "none";
+}
+
+document.body.style.overflow = "";
+
+}
+// =========================================
 // CLOSE MEMBER MODAL
 // =========================================
 

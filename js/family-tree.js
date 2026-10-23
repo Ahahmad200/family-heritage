@@ -580,7 +580,12 @@ function createGenerationBranch(
             relationships,
             members
         );
-
+console.log(
+    "BRANCH CHECK:",
+    member.full_name,
+    "Children found:",
+    children.map(child => child.full_name)
+);
 
     // =========================================
     // NO CHILDREN

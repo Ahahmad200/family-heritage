@@ -1452,8 +1452,11 @@ document.addEventListener("click", function(event) {
 
 function closeMemberModalWindow() {
 
-    memberModal.style.display =
-        "none";
+    memberModal.style.display = "none";
+
+    // Restore website scrolling.
+    document.body.style.overflow = "";
+    document.documentElement.style.overflow = "";
 
 }
 
@@ -1476,7 +1479,6 @@ memberModal.addEventListener(
 
     }
 );
-
 
 // =========================================
 // CLICK MEMBER CARD

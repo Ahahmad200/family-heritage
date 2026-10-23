@@ -1415,9 +1415,6 @@ if (viewer) {
 document.body.style.overflow = "";
 
 }
-// =========================================
-// MAKE FAMILY PHOTOS CLICKABLE
-// =========================================
 
 // =========================================
 // MAKE FAMILY PHOTOS CLICKABLE

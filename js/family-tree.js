@@ -1377,7 +1377,15 @@ if (!viewer) {
         <p id="familyPhotoViewerName"></p>
     `;
 
-    document.body.appendChild(viewer);
+    // Place the viewer directly under the page body.
+document.body.appendChild(viewer);
+
+// Ensure the viewer is positioned relative to the screen.
+viewer.style.position = "fixed";
+viewer.style.inset = "0";
+viewer.style.width = "100%";
+viewer.style.height = "100dvh";
+viewer.style.zIndex = "100000";
 
     document.getElementById("closeFamilyPhotoViewer")
         .addEventListener("click", closeFamilyPhotoViewer);

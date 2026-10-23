@@ -548,7 +548,8 @@ function createGenerationBranch(
     member,
     relationships,
     members,
-    generation
+    generation,
+    relationshipLabel = null
 ) {
 
     const wrapper =

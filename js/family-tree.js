@@ -392,15 +392,17 @@ if (
         `;
 
         fatherOnlyChildren.forEach(child => {
-            const branch = document.createElement("div");
+const branch = createGenerationBranch(
+child,
+relationships,
+members,
+1,
+"Father's side — paternal half-sibling"
+);
 
-            branch.innerHTML = createMemberCard(
-                child,
-                "Father's side — paternal half-sibling"
-            );
+fatherSection.appendChild(branch);
 
-            fatherSection.appendChild(branch);
-        });
+});
 
         previousMarriageSection.appendChild(fatherSection);
     }

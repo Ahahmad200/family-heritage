@@ -1440,10 +1440,12 @@ document.addEventListener("click", function(event) {
     event.stopPropagation();
     event.stopImmediatePropagation();
 
-    openFamilyPhotoViewer(
-        photo.currentSrc || photo.src,
-        photo.alt || "Family Photograph"
-    );
+    console.log("PHOTO CLICK DETECTED:", photo.src);
+
+openFamilyPhotoViewer(
+    photo.currentSrc || photo.src,
+    photo.alt || "Family Photograph"
+);
 
 }, true);
 // =========================================

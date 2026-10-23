@@ -1416,6 +1416,29 @@ document.body.style.overflow = "";
 
 }
 // =========================================
+// MAKE FAMILY PHOTOS CLICKABLE
+// =========================================
+
+document.addEventListener("click", function(event) {
+
+    const photo = event.target.closest(
+        ".member-photo img, .modal-member-photo img"
+    );
+
+    if (!photo) {
+        return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    openFamilyPhotoViewer(
+        photo.currentSrc || photo.src,
+        photo.alt || "Family Photograph"
+    );
+
+}, true);
+// =========================================
 // CLOSE MEMBER MODAL
 // =========================================
 

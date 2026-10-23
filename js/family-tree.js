@@ -424,16 +424,17 @@ fatherSection.appendChild(branch);
         `;
 
         motherOnlyChildren.forEach(child => {
-            const branch = document.createElement("div");
+const branch = createGenerationBranch(
+child,
+relationships,
+members,
+1,
+"Mother's side — maternal half-sibling"
+);
 
-            branch.innerHTML = createMemberCard(
-                child,
-                "Mother's side — maternal half-sibling"
-            );
+motherSection.appendChild(branch);
 
-            motherSection.appendChild(branch);
-        });
-
+});
         previousMarriageSection.appendChild(motherSection);
     }
 

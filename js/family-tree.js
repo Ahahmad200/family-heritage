@@ -563,11 +563,10 @@ function createGenerationBranch(
     // MEMBER CARD
     // =========================================
 
-    wrapper.innerHTML =
-        createMemberCard(
-            member,
-            getGenerationLabel(generation)
-        );
+    wrapper.innerHTML = createMemberCard(
+    member,
+    relationshipLabel || getGenerationLabel(generation)
+);
 
 
     // =========================================

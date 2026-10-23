@@ -1419,9 +1419,19 @@ document.body.style.overflow = "";
 // MAKE FAMILY PHOTOS CLICKABLE
 // =========================================
 
+// =========================================
+// MAKE FAMILY PHOTOS CLICKABLE
+// =========================================
+
 document.addEventListener("click", function(event) {
 
-    const photo = event.target.closest(
+    const target = event.target;
+
+    if (!(target instanceof Element)) {
+        return;
+    }
+
+    const photo = target.closest(
         ".member-photo img, .modal-member-photo img"
     );
 
@@ -1431,6 +1441,7 @@ document.addEventListener("click", function(event) {
 
     event.preventDefault();
     event.stopPropagation();
+    event.stopImmediatePropagation();
 
     openFamilyPhotoViewer(
         photo.currentSrc || photo.src,

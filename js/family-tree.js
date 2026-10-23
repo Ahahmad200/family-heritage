@@ -1478,22 +1478,27 @@ document.addEventListener(
     "click",
     function(event) {
 
+        // Ignore clicks on photographs.
+        // The full-screen photo viewer handles those.
+        if (
+            event.target.closest(
+                ".member-photo img, .modal-member-photo img"
+            )
+        ) {
+            return;
+        }
+
         const card =
             event.target.closest(
                 ".member-card"
             );
 
-
         if (!card) {
-
             return;
-
         }
-
 
         const memberId =
             card.dataset.memberId;
-
 
         const member =
             window.familyMembers?.find(
@@ -1501,11 +1506,8 @@ document.addEventListener(
                     member.id === memberId
             );
 
-
         if (member) {
-
             openMemberModal(member);
-
         }
 
     }

@@ -4580,3 +4580,95 @@ padding: 12px;
 }
 
 }
+/* =========================================
+   ACTUAL RECURSIVE FAMILY TREE LAYOUT
+========================================= */
+
+/* Individual family branches */
+.generation-branch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 100%;
+    min-width: 0;
+
+    box-sizing: border-box;
+}
+
+/* Arrange siblings side by side */
+.generation-children {
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fit, minmax(190px, 1fr));
+
+    gap: 22px;
+
+    width: 100%;
+    max-width: 1100px;
+
+    margin: 25px auto 0;
+    padding: 20px 10px;
+
+    box-sizing: border-box;
+
+    justify-items: center;
+    align-items: start;
+}
+
+/* Keep each child branch organized */
+.generation-children > .generation-branch {
+    width: 100%;
+    min-width: 0;
+}
+
+/* Descendant expansion area */
+.collapsible-descendants {
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 15px;
+}
+
+/* Mobile layout */
+@media (max-width: 600px) {
+
+    .generation-children {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 12px;
+
+        padding: 15px 4px;
+    }
+
+    .generation-children .member-card {
+        width: 100%;
+        max-width: 100%;
+
+        padding: 14px 8px;
+    }
+
+    .generation-children .member-photo {
+        width: 65px;
+        height: 65px;
+    }
+
+    .generation-children .member-info h4 {
+        font-size: 13px;
+    }
+
+    .generation-children .member-relationship {
+        font-size: 10px;
+    }
+
+}
+
+/* Very narrow phones */
+@media (max-width: 340px) {
+
+    .generation-children {
+        grid-template-columns: 1fr;
+    }
+
+}

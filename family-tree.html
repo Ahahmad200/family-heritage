@@ -4,7 +4,6 @@
 <head>
 
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Family Tree | Our Family Heritage</title>
@@ -15,32 +14,53 @@
 
 <body>
 
-    <header>
+    <!-- WEBSITE HEADER -->
+    <header class="site-header">
 
-        <h1>Our Family Tree</h1>
+        <div class="header-content">
 
-        <p>Our Roots • Our Branches • Our Generations</p>
+            <div class="site-brand">
+                <h1>Our Family Heritage</h1>
+                <p>Our Roots • Our Story • Our Generations</p>
+            </div>
+
+            <!-- MAIN NAVIGATION -->
+            <nav class="main-navigation">
+
+                <a href="index.html">Home</a>
+
+                <a href="family-tree.html" class="active">
+                    Family Tree
+                </a>
+
+                <a href="annals.html">Family Annals</a>
+
+            </nav>
+
+        </div>
 
     </header>
 
-<!-- MEMBER BIOGRAPHY POPUP -->
 
-<div id="memberModal" class="member-modal">
+    <!-- MEMBER BIOGRAPHY POPUP -->
+    <div id="memberModal" class="member-modal">
 
-    <div class="member-modal-content">
+        <div class="member-modal-content">
 
-        <button
-            id="closeMemberModal"
-            class="close-member-modal">
-            ×
-        </button>
+            <button
+                id="closeMemberModal"
+                class="close-member-modal">
+                ×
+            </button>
 
-        <div id="modalMemberContent">
+            <div id="modalMemberContent"></div>
+
         </div>
 
     </div>
 
-</div>
+
+    <!-- MAIN CONTENT -->
     <main>
 
         <section class="family-tree-section">
@@ -51,137 +71,139 @@
                 Explore our family connections and discover
                 how each member is connected to the family.
             </p>
-<div class="family-branch-legend">
-
-    <div class="family-branch-legend-title">
-        🌳 Family Branches
-    </div>
-
-    <div class="family-branch-item family-branch-main">
-        <span class="family-branch-dot"></span>
-        Main Family Branch
-    </div>
-
-    <div class="family-branch-item family-branch-previous">
-        <span class="family-branch-dot"></span>
-        Previous Marriage Branch
-    </div>
-
-</div>
-            <!-- =========================================
-     GENERATION GUIDE
-     ========================================= -->
-
-<div class="generation-guide">
-
-    <div class="generation-guide-title">
-        🌳 Our Family Generations
-    </div>
-
-    <div class="generation-guide-steps">
-
-        <div class="generation-guide-step">
-            <span class="generation-guide-icon">❤️</span>
-            <span>Founding Couple</span>
-        </div>
-
-        <span class="generation-guide-arrow">→</span>
-
-        <div class="generation-guide-step">
-            <span class="generation-guide-icon">👨‍👩‍👧‍👦</span>
-            <span>Their Children</span>
-        </div>
-
-        <span class="generation-guide-arrow">→</span>
-
-        <div class="generation-guide-step">
-            <span class="generation-guide-icon">🌿</span>
-            <span>Grandchildren</span>
-        </div>
-
-        <span class="generation-guide-arrow">→</span>
-
-        <div class="generation-guide-step">
-            <span class="generation-guide-icon">🌱</span>
-            <span>Later Generations</span>
-        </div>
-
-    </div>
-
-    <p class="generation-guide-note">
-        ✨ Explore each family branch to discover
-        the generations that follow.
-    </p>
-
-</div>
-<!-- =========================================
-     HOW AM I RELATED?
-     ========================================= -->
-
-<div class="relationship-explorer">
-
-    <div class="relationship-explorer-icon">
-        🔗
-    </div>
-
-    <h2>
-        How Am I Related?
-    </h2>
-
-    <p class="relationship-explorer-intro">
-        Discover the family connection between two members.
-    </p>
-
-    <div class="relationship-form">
-
-        <div class="relationship-field">
-
-            <label for="relationshipPerson">
-                👤 Select a family member
-            </label>
-
-            <select id="relationshipPerson">
-                <option value="">
-                    Select family member
-                </option>
-            </select>
-
-        </div>
 
 
-        <div class="relationship-field">
+            <!-- FAMILY BRANCH LEGEND -->
+            <div class="family-branch-legend">
 
-            <label for="relatedPerson">
-                🌳 Find their connection to
-            </label>
+                <div class="family-branch-legend-title">
+                    🌳 Family Branches
+                </div>
 
-            <select id="relatedPerson">
-                <option value="">
-                    Select family member
-                </option>
-            </select>
+                <div class="family-branch-item family-branch-main">
+                    <span class="family-branch-dot"></span>
+                    Main Family Branch
+                </div>
 
-        </div>
+                <div class="family-branch-item family-branch-previous">
+                    <span class="family-branch-dot"></span>
+                    Previous Marriage Branch
+                </div>
 
-
-        <button
-            type="button"
-            id="calculateRelationshipButton"
-            class="find-relationship-button"
-        >
-            🔗 Find Relationship
-        </button>
-
-    </div>
+            </div>
 
 
-    <div
-        id="relationshipResult"
-        class="relationship-result"
-    >
-    </div>
+            <!-- GENERATION GUIDE -->
+            <div class="generation-guide">
 
-</div>
+                <div class="generation-guide-title">
+                    🌳 Our Family Generations
+                </div>
+
+                <div class="generation-guide-steps">
+
+                    <div class="generation-guide-step">
+                        <span class="generation-guide-icon">❤️</span>
+                        <span>Founding Couple</span>
+                    </div>
+
+                    <span class="generation-guide-arrow">→</span>
+
+                    <div class="generation-guide-step">
+                        <span class="generation-guide-icon">👨‍👩‍👧‍👦</span>
+                        <span>Their Children</span>
+                    </div>
+
+                    <span class="generation-guide-arrow">→</span>
+
+                    <div class="generation-guide-step">
+                        <span class="generation-guide-icon">🌿</span>
+                        <span>Grandchildren</span>
+                    </div>
+
+                    <span class="generation-guide-arrow">→</span>
+
+                    <div class="generation-guide-step">
+                        <span class="generation-guide-icon">🌱</span>
+                        <span>Later Generations</span>
+                    </div>
+
+                </div>
+
+                <p class="generation-guide-note">
+                    ✨ Explore each family branch to discover
+                    the generations that follow.
+                </p>
+
+            </div>
+
+
+            <!-- HOW AM I RELATED? -->
+            <div class="relationship-explorer">
+
+                <div class="relationship-explorer-icon">
+                    🔗
+                </div>
+
+                <h2>How Am I Related?</h2>
+
+                <p class="relationship-explorer-intro">
+                    Discover the family connection between two members.
+                </p>
+
+                <div class="relationship-form">
+
+                    <div class="relationship-field">
+
+                        <label for="relationshipPerson">
+                            👤 Select a family member
+                        </label>
+
+                        <select id="relationshipPerson">
+                            <option value="">
+                                Select family member
+                            </option>
+                        </select>
+
+                    </div>
+
+
+                    <div class="relationship-field">
+
+                        <label for="relatedPerson">
+                            🌳 Find their connection to
+                        </label>
+
+                        <select id="relatedPerson">
+                            <option value="">
+                                Select family member
+                            </option>
+                        </select>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        id="calculateRelationshipButton"
+                        class="find-relationship-button">
+
+                        🔗 Find Relationship
+
+                    </button>
+
+                </div>
+
+
+                <div
+                    id="relationshipResult"
+                    class="relationship-result">
+                </div>
+
+            </div>
+
+
+            <!-- FAMILY TREE DISPLAY -->
             <div id="familyTree">
 
                 <p>Loading family tree...</p>
@@ -189,18 +211,21 @@
             </div>
 
         </section>
-        
 
     </main>
 
 
-    <footer>
+    <!-- WEBSITE FOOTER -->
+    <footer class="site-footer">
 
-        <p>© 2026 Our Family Heritage</p>
+        <p>© 2026 Our Family Heritage. All Rights Reserved.</p>
+
+        <a href="admin-login.html">Administrator Login</a>
 
     </footer>
 
 
+    <!-- FAMILY TREE JAVASCRIPT -->
     <script type="module" src="js/family-tree.js"></script>
 
 </body>

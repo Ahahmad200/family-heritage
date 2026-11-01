@@ -4672,3 +4672,309 @@ padding: 12px;
     }
 
 }
+    
+/* =========================================
+   OUR FAMILY HERITAGE
+   ROYAL HERITAGE DESIGN THEME
+========================================= */
+
+:root {
+    --royal-green: #123d2b;
+    --deep-green: #092c1e;
+    --heritage-gold: #c49a45;
+    --light-gold: #e8d4a4;
+    --warm-ivory: #faf7ef;
+    --pure-white: #ffffff;
+    --heritage-text: #26352b;
+    --muted-text: #77796f;
+}
+
+/* GLOBAL WEBSITE APPEARANCE */
+
+body {
+    font-family: Georgia, "Times New Roman", serif;
+    background: var(--warm-ivory);
+    color: var(--heritage-text);
+    line-height: 1.6;
+}
+
+main {
+    background: var(--warm-ivory);
+}
+
+/* =========================================
+   PREMIUM WEBSITE HEADER
+========================================= */
+
+header.site-header {
+    background: linear-gradient(
+        135deg,
+        var(--deep-green),
+        var(--royal-green)
+    );
+
+    color: white;
+    padding: 25px 20px 20px;
+    border-bottom: 4px solid var(--heritage-gold);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+}
+
+.header-content {
+    max-width: 1250px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+
+.site-brand h1 {
+    color: var(--light-gold);
+    font-size: clamp(25px, 4vw, 36px);
+    margin: 0;
+    letter-spacing: 1px;
+}
+
+.site-brand p {
+    color: #eee3c9;
+    margin: 5px 0 0;
+    font-size: 14px;
+}
+
+/* =========================================
+   MAIN NAVIGATION
+========================================= */
+
+.main-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.main-navigation a {
+    display: inline-block;
+    padding: 10px 17px;
+    border-radius: 25px;
+    color: white;
+    text-decoration: none;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    transition: 0.25s ease;
+}
+
+.main-navigation a:hover,
+.main-navigation a.active {
+    background: var(--heritage-gold);
+    color: var(--deep-green);
+}
+
+/* =========================================
+   PREMIUM FOOTER
+========================================= */
+
+footer.site-footer {
+    background: var(--deep-green);
+    color: white;
+    padding: 28px 20px;
+    border-top: 3px solid var(--heritage-gold);
+    text-align: center;
+}
+
+.site-footer p {
+    margin: 5px 0 10px;
+    color: #eee3c9;
+}
+
+.site-footer a {
+    color: var(--light-gold);
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.site-footer a:hover {
+    text-decoration: underline;
+}
+
+/* =========================================
+   HOMEPAGE WELCOME SECTION
+========================================= */
+
+.welcome {
+    max-width: 1050px;
+    padding: 65px 30px;
+    background: linear-gradient(
+        135deg,
+        var(--deep-green),
+        var(--royal-green)
+    );
+    color: white;
+    border: 1px solid var(--heritage-gold);
+    border-radius: 22px;
+    box-shadow: 0 15px 35px rgba(9, 44, 30, 0.16);
+}
+
+.welcome h2 {
+    color: var(--light-gold);
+    font-size: clamp(27px, 4vw, 38px);
+}
+
+.welcome p {
+    color: #f3ead8;
+}
+
+/* Homepage buttons */
+
+.explore-button {
+    display: inline-block;
+    padding: 13px 25px;
+    background: var(--heritage-gold);
+    color: var(--deep-green);
+    text-decoration: none;
+    border-radius: 30px;
+    font-family: Arial, sans-serif;
+    font-weight: 700;
+    transition: 0.25s ease;
+}
+
+.explore-button:hover {
+    background: var(--light-gold);
+    transform: translateY(-2px);
+}
+
+/* Homepage feature cards */
+
+.home-sections {
+    max-width: 1050px;
+    margin: 35px auto;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+}
+
+.home-card {
+    background: white;
+    padding: 28px;
+    border: 1px solid #e6dcc5;
+    border-left: 4px solid var(--heritage-gold);
+    border-radius: 16px;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.06);
+}
+
+.home-card h3 {
+    color: var(--royal-green);
+}
+
+.home-card a {
+    color: #987020;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+/* =========================================
+   SECTION HEADINGS
+========================================= */
+
+.family-tree-section > h2,
+.family-annals-section h2,
+.admin-section > h2 {
+    color: var(--royal-green);
+}
+
+.generation-title {
+    color: var(--royal-green);
+}
+
+/* =========================================
+   PREMIUM BUTTON APPEARANCE
+========================================= */
+
+button {
+    background: var(--royal-green);
+    color: white;
+    transition: background 0.2s ease;
+}
+
+button:hover {
+    background: var(--deep-green);
+}
+
+/* Primary admin buttons */
+
+.admin-primary-button {
+    background: var(--royal-green);
+    border: 1px solid var(--heritage-gold);
+}
+
+.admin-primary-button:hover {
+    background: var(--deep-green);
+}
+
+/* =========================================
+   PREMIUM FORM ELEMENTS
+========================================= */
+
+input,
+select,
+textarea {
+    accent-color: var(--royal-green);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--heritage-gold);
+    box-shadow: 0 0 0 3px rgba(196, 154, 69, 0.15);
+}
+
+/* =========================================
+   MOBILE RESPONSIVENESS
+========================================= */
+
+@media (max-width: 700px) {
+
+    .header-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 18px;
+    }
+
+    .main-navigation {
+        width: 100%;
+        gap: 5px;
+    }
+
+    .main-navigation a {
+        padding: 9px 12px;
+        font-size: 13px;
+    }
+
+    .home-sections {
+        grid-template-columns: 1fr;
+        margin: 20px 10px;
+    }
+
+    .welcome {
+        padding: 40px 20px;
+        margin: 20px auto;
+    }
+
+    header.site-header {
+        padding: 22px 12px;
+    }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .main-navigation a,
+    .explore-button,
+    button {
+        transition: none;
+    }
+
+}

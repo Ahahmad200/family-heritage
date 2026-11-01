@@ -1,125 +1,106 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
 
-<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta charset="UTF-8">
+<title>Family Annals | Our Family Heritage</title>
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+<link rel="stylesheet" href="css/style.css">
 
-    <title>Family Annals | Our Family Heritage</title>
+</head><body><!-- WEBSITE HEADER -->
+<header class="site-header">
 
-    <link
-        rel="stylesheet"
-        href="css/style.css"
-    >
+    <div class="header-content">
 
-</head>
+        <div class="site-brand">
 
+            <h1>Our Family Heritage</h1>
 
-<body>
+            <p>Our Roots • Our Story • Our Generations</p>
 
+        </div>
 
-    <!-- ============================= -->
-    <!-- HEADER -->
-    <!-- ============================= -->
+        <!-- MAIN NAVIGATION -->
+        <nav class="main-navigation">
 
-    <header>
+            <a href="index.html">Home</a>
 
-        <h1>
-            Our Family Annals
-        </h1>
+            <a href="family-tree.html">Family Tree</a>
 
-        <p>
-            Our History • Our Memories • Our Legacy
-        </p>
+            <a href="annals.html" class="active">
+                Family Annals
+            </a>
 
-    </header>
+        </nav>
+
+    </div>
+
+</header>
 
 
-    <!-- ============================= -->
-    <!-- MAIN CONTENT -->
-    <!-- ============================= -->
+<!-- MAIN CONTENT -->
+<main>
 
-    <main>
+    <section class="family-annals-section">
 
-        <section class="family-annals-section">
+        <div class="annals-introduction">
+
+            <span class="annals-icon">
+                📜
+            </span>
+
+            <h2>
+                The Story of Our Family
+            </h2>
+
+            <p>
+                A collection of important moments,
+                memories and events that shaped
+                our family across generations.
+            </p>
+
+        </div>
 
 
-            <div class="annals-introduction">
+        <!-- ANNALS TIMELINE -->
+        <div
+            id="familyAnnals"
+            class="family-annals-timeline"
+        >
 
-                <span class="annals-icon">
-                    📜
-                </span>
+            <div class="annals-loading">
 
-                <h2>
-                    The Story of Our Family
-                </h2>
+                <div class="annals-loading-icon">
+                    📖
+                </div>
 
                 <p>
-                    A collection of important moments,
-                    memories and events that shaped
-                    our family across generations.
+                    Loading family history...
                 </p>
 
             </div>
 
+        </div>
 
-            <!-- ============================= -->
-            <!-- ANNALS TIMELINE -->
-            <!-- ============================= -->
+    </section>
 
-            <div
-                id="familyAnnals"
-                class="family-annals-timeline"
-            >
-
-                <div class="annals-loading">
-
-                    <div class="annals-loading-icon">
-                        📖
-                    </div>
-
-                    <p>
-                        Loading family history...
-                    </p>
-
-                </div>
-
-            </div>
+</main>
 
 
-        </section>
+<!-- WEBSITE FOOTER -->
+<footer class="site-footer">
 
-    </main>
+    <p>
+        © 2026 Our Family Heritage. All Rights Reserved.
+    </p>
 
+    <a href="admin-login.html">
+        Administrator Login
+    </a>
 
-    <!-- ============================= -->
-    <!-- FOOTER -->
-    <!-- ============================= -->
-
-    <footer>
-
-        <p>
-            © 2026 Our Family Heritage
-        </p>
-
-    </footer>
+</footer>
 
 
-    <!-- ============================= -->
-    <!-- JAVASCRIPT -->
-    <!-- ============================= -->
+<!-- ANNALS JAVASCRIPT -->
+<script type="module" src="js/annals.js"></script>
 
-    <script
-        type="module"
-        src="js/annals.js"
-    ></script>
-
-
-</body>
-
-  </html>
+</body></html>

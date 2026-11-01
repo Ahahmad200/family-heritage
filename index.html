@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,14 +12,38 @@
 
 <body>
 
-    <header>
-        <h1>Our Family Heritage</h1>
-        <p>Our Roots • Our Story • Our Generations</p>
+    <!-- WEBSITE HEADER -->
+    <header class="site-header">
+
+        <div class="header-content">
+
+            <div class="site-brand">
+                <h1>Our Family Heritage</h1>
+                <p>Our Roots • Our Story • Our Generations</p>
+            </div>
+
+            <!-- MAIN NAVIGATION -->
+            <nav class="main-navigation">
+
+                <a href="index.html" class="active">Home</a>
+
+                <a href="family-tree.html">Family Tree</a>
+
+                <a href="annals.html">Family Annals</a>
+
+            </nav>
+
+        </div>
+
     </header>
 
+
+    <!-- MAIN CONTENT -->
     <main>
 
+        <!-- WELCOME SECTION -->
         <section class="welcome">
+
             <h2>Welcome to Our Family Archive</h2>
 
             <p>
@@ -26,14 +51,57 @@
                 our relationships and the generations that came before us.
             </p>
 
-            <button>Explore Family</button>
+            <a href="family-tree.html" class="explore-button">
+                Explore Our Family
+            </a>
+
+        </section>
+
+
+        <!-- WEBSITE SECTIONS -->
+        <section class="home-sections">
+
+            <div class="home-card">
+
+                <h3>Our Family Tree</h3>
+
+                <p>
+                    Discover our family connections, explore different
+                    branches and learn how each member is related.
+                </p>
+
+                <a href="family-tree.html">Explore Family Tree →</a>
+
+            </div>
+
+
+            <div class="home-card">
+
+                <h3>Our Family Annals</h3>
+
+                <p>
+                    Discover our history, preserve important memories
+                    and read the stories of generations past.
+                </p>
+
+                <a href="annals.html">Explore Family Annals →</a>
+
+            </div>
+
         </section>
 
     </main>
 
-    <footer>
-        <p>© 2026 Our Family Heritage</p>
+
+    <!-- WEBSITE FOOTER -->
+    <footer class="site-footer">
+
+        <p>© 2026 Our Family Heritage. All Rights Reserved.</p>
+
+        <a href="admin-login.html">Administrator Login</a>
+
     </footer>
+
 
 </body>
 </html>

@@ -4309,6 +4309,127 @@ text-align: left;
 text-decoration: underline;
     }
 /* =========================================
+   FAMILY ANNALS — IMPROVED MOBILE TIMELINE
+========================================= */
+
+@media (max-width: 800px) {
+
+    .family-annals-section {
+        width: 100%;
+        max-width: 100%;
+        padding: 35px 15px 55px;
+        box-sizing: border-box;
+    }
+
+    .annals-introduction {
+        margin-bottom: 35px;
+    }
+
+    .annals-introduction h1,
+    .annals-introduction h2 {
+        font-size: 25px;
+        line-height: 1.4;
+    }
+
+    /* Move timeline line to the left */
+
+    .family-annals-timeline::before {
+        left: 12px;
+        width: 3px;
+        transform: none;
+    }
+
+    /* Stack all historical events vertically */
+
+    .annals-event,
+    .annals-event:nth-child(odd),
+    .annals-event:nth-child(even) {
+        display: block;
+        position: relative;
+        left: 0;
+        width: 100%;
+        padding: 10px 0 25px 42px;
+        text-align: left;
+        box-sizing: border-box;
+    }
+
+    /* Correct timeline marker dimensions */
+
+    .annals-marker,
+    .annals-event:nth-child(odd) .annals-marker,
+    .annals-event:nth-child(even) .annals-marker {
+        position: absolute;
+        top: 27px;
+        left: 3px;
+        right: auto;
+
+        width: 18px;
+        min-width: 18px;
+        height: 18px;
+
+        padding: 0;
+        border: 4px solid #fff;
+        border-radius: 50%;
+        background: var(--heritage-gold);
+        box-shadow: 0 0 0 3px rgba(196, 154, 69, 0.2);
+    }
+
+    .annals-marker span {
+        display: none;
+    }
+
+    /* Historical event cards */
+
+    .annals-event-card {
+        width: 100%;
+        padding: 20px;
+        box-sizing: border-box;
+        border-radius: 16px;
+        background: #fffdf8;
+    }
+
+    .annals-event-content {
+        display: block;
+    }
+
+    .annals-event-details h3 {
+        font-size: 19px;
+        line-height: 1.5;
+    }
+
+    .annals-event-details p {
+        font-size: 14px;
+        line-height: 1.8;
+    }
+
+    .annals-event-image {
+        width: 100%;
+        max-height: 240px;
+        object-fit: cover;
+    }
+
+}
+
+/* =========================================
+   SMALL PHONE ADJUSTMENTS
+========================================= */
+
+@media (max-width: 380px) {
+
+    .annals-event-card {
+        padding: 15px;
+    }
+
+    .annals-event-details h3 {
+        font-size: 17px;
+    }
+
+    .annals-event-person {
+        font-size: 12px;
+    }
+
+}
+/* =========================================
 FAMILY HERITAGE ADMIN DASHBOARD LAYOUT
 Safe layout improvements
 ========================================= */

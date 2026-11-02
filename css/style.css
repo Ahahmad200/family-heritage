@@ -3921,7 +3921,10 @@ footer {
 .annals-event-details p {
     margin: 0;
     color: #655e58;
-    font-size:
+    font-size: 14px;
+    line-height: 1.8;
+}
+
 /* ==========================================
    FAMILY ANNALS — HISTORICAL ARCHIVE DESIGN
    ========================================== */
@@ -4977,18 +4980,4 @@ textarea:focus {
         transition: none;
     }
 
-}
-body {
-    outline: 8px solid red !important;
-        }
-    .site-header {
-    background: #092c1e !important;
-    color: #ffffff !important;
-    padding: 30px 20px !important;
-    border-bottom: 5px solid #c49a45 !important;
-}
-
-.site-header h1 {
-    color: #ffffff !important;
-    font-size: 32px !important;
 }
